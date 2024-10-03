@@ -1,0 +1,174 @@
+
+<input type="hidden" id="tabla" value="usuarios" />
+<input type="hidden" id="pk" value="autocod" /> 
+<!--  -->
+<input type="hidden" id="descrip" value="nombre" />
+
+<div class="az-content az-content-dashboard" >
+  <div class="" style="margin-left: 10%;margin-right: 10%; ">
+    <div class="az-econtent-body">
+      <div class="az-dashboard-one-title">
+        <div>
+              <h2 class="az-dashboard-title" id="nombreformulariodistrito" >Mantenimiento de Distritos</h2>
+              
+            </div>
+            
+          </div><!-- az-dashboard-one-title -->
+          <div class="az-dashboard-nav" > 
+            <nav class="nav" id="paginasformularioCargos">
+              <a class="btn btn-dark" data-toggle="tab" href="#">Mantenimiento</a>
+              <a onclick="abrirModal()" class="btn btn-dark" data-toggle="tab" href="#">Busqueda</a>
+            </nav>
+
+            <nav  class="nav">
+              <a class="btn btn-imprimir" onclick="excelbanco()"><i class="far fa-save"></i> Exportar a Excel</a>                          
+            </nav>
+          </div>
+          <div class="row row-sm mg-b-20" style="margin-top: -2%;">
+            <div class="col-lg-12 ht-lg-100p">
+              <div class="card card-dashboard-one">
+                <div class="card-header">
+                  <div>
+                   
+                  </div>
+                  
+                </div><!-- card-header -->
+                <div class="card-body" id="formularioDistrito" style="margin-top: -5%;">
+                  <div id="paginaDistrito" class="pagina" style="margin: 5%;align-items: center;">
+                    <div class="row" hidden>
+                      <div class="col-md-2">
+                         <label>Autocod</label>
+                      </div>
+                      <div class="col-md-6">
+                         <input class="form-control dato" id="autocod"  placeholder="" />
+                       </div>
+                       
+                    </div>
+                    <div class="row">
+                       <div class="col-md-2">
+                          <label>Usuario</label>
+                       </div>
+                       <div class="col-md-6">
+                          <input class="form-control dato" id="usuario"  placeholder="Nombre de Usuario" />
+                        </div>
+                        
+                     </div>
+                     <div class="row">
+                      <div class="col-md-2">
+                         <label>Clave</label>
+                      </div>
+                      <div class="col-md-6">
+                         <input class="form-control dato" id="clave"  placeholder="Clave Usuario" />
+                       </div>
+                       
+                    </div>
+                     <div class="row">
+                      <div class="col-md-2">
+                         <label>Nombre</label>
+                      </div>
+                      <div class="col-md-6">
+                         <input type="text" class="form-control dato user" id="nombre" placeholder="Ingrese Nombre" />
+                       </div>
+                     </div>
+   
+                     <div class="row-md" style="padding-top: 3%;" >      <!-- <a href="Crearplanilla.html">Crear planilla</a> --> 
+                      <button type="button" onclick="guardarusuario()" class="btn btn-dark">Guardar</button>
+                      <button type="button" onclick="modificarusuario()" class="btn btn-dark">Modificar</button>
+                      <button  type="button" onclick="eliminar()" class="btn btn-danger" >Eliminar</button>
+                      
+                  </div>  
+                     
+                    </div> 
+                  </div>
+                </div><!-- card-body -->
+
+                <table class="table table-bordered table-sm">
+                  <thead>
+                      <tr>
+                       
+                        <th>Nombre Usuario</th> 
+                        <th>Nombre</th> 
+                      </tr>
+                  </thead>
+                  <tbody id="tblbusquedausuario">
+
+
+                  </tbody>
+                </table>
+
+              </div><!-- card -->
+            </div><!-- col -->
+          </div>  
+
+        </div><!-- az-content-body -->
+      </div>
+    </div><!-- az-content -->
+
+    <div class="az-footer ht-40">
+
+ 
+      
+    </div><!-- az-footer -->
+
+    <script>
+       function guardarusuario() {
+        var _tabla = $("#tabla").val();
+        var _usuario = $("#usuario").val();
+        var _clave = $("#clave").val();
+        var _nombre = $("#nombre").val();
+        $.get( _url + "?verif=scm64&q=agregaruser&usuario=" + _usuario + "&clave=" + _clave + "&nombre=" + _nombre
+        + "&tabla=" + _tabla, function( data, status ) {
+         
+      });
+        
+       
+      }
+
+      function modificarusuario() {
+        var _tabla = $("#tabla").val();
+        var _usuario = $("#usuario").val();
+        var _clave = $("#clave").val();
+        var _nombre = $("#nombre").val();
+        var _autocod = $("#autocod").val();
+       
+        $.get( _url + "?verif=scm64&q=modificaruser&autocod=" + _autocod +"&usuario=" + _usuario + "&clave=" + _clave + "&nombre=" + _nombre
+        + "&tabla=" + _tabla, function( data, status ) {
+         
+      });
+        
+       
+      }
+      buscarusuario()
+      function buscarusuario() {
+        var _tabla = $("#tabla").val();
+        //var _codigo = $("#codigo").attr('id');
+        var _codigo = $("#pk").val();
+        var _descrip = $("#descrip").val();
+        var _valorcodigobusqueda =$("#txtCodigobusqueda").val();
+        var _valordescripbusqueda = $("#txtDescripbusqueda").val();
+        
+
+        var _filtro = " 1 ";
+        if (_valorcodigobusqueda.length > 0)
+        {
+           _filtro+= " and " + _codigo +  "='" + _valorcodigobusqueda + "' ";
+        }
+        if (_valordescripbusqueda.length > 0)
+        {
+          _filtro+= " and " + _descrip +  " LIKE '%" + _valordescripbusqueda + "%' ";
+        }
+        // Convertir el array de objetos en un string JSON
+        
+        // Convertir el objeto en un string de key-value
+        $.get( _url + "?verif=scm64&q=buscaruser&tabla=" + _tabla + 
+              "&codigo=" + _codigo + "&descrip=" + _descrip + "&filtro="+  _filtro, function( data, status ) {
+              
+              $("#tblbusquedausuario").html(data);
+                
+          
+          });
+        
+       
+      }
+    </script>
+   
