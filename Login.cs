@@ -1,4 +1,5 @@
 ﻿
+using DotNetEnv;
 using MySqlConnector;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -16,12 +17,36 @@ namespace JobmeServiceSyscome
     public class Login
     {
 
+        public static MySqlConnection Conexion()
+        {
+            Env.Load();
+
+            // Leer una variable de entorno
+            string CONECCTION = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+            if (File.Exists("conn.ini") == false)
+            {
+                File.WriteAllText("conn.ini", CONECCTION);
+            }
+            String _connstring = File.ReadAllText("conn.ini");
+            MySqlConnection _conn = new MySqlConnection();
+            _conn.ConnectionString = _connstring;
+            return _conn;
+
+        }
+
+        public static MySqlCommand Comando(MySqlConnection pConn)
+        {
+            MySqlCommand _comm = new MySqlCommand();
+
+            _comm.Connection = pConn;
+            return _comm;
+        }
 
         //Funciones de loggin
         public string body = "";
         public void HandleLogin(HttpListenerContext context)
         {
-
+           
             string rootDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "vistas");
             string rootDirectorylogin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "vistaslogin");
             string filePath = Path.Combine(rootDirectory, "Login/login.html");
@@ -42,6 +67,27 @@ namespace JobmeServiceSyscome
                     // if (ValidateUser(username, password))
                     if (ValidateUser(username, password))
                     {
+
+                        // Crear una nueva sesión
+                        string sessionId = SessionManager.CreateSession(username);
+
+                        // Configurar la cookie de sesión
+                        Cookie sessionCookie = new Cookie("sessionId", sessionId)
+                        {
+                            Expires = DateTime.Now.AddHours(8),
+                            HttpOnly = true, // Hace que la cookie sea inaccesible desde el lado del cliente (JavaScript)
+                            Path = "/"
+                        };
+                        context.Response.Cookies.Add(sessionCookie);
+
+                        Program p = new Program();
+                        context.Response.StatusCode = (int)HttpStatusCode.OK;
+                        context.Response.ContentType = "text/html";
+                        byte[] buffer = Encoding.UTF8.GetBytes("Inicio de sesion exitoso, Sesion creada.");
+                        context.Response.OutputStream.Write(buffer, 0, buffer.Length);
+                    }
+                    else if(Validateempleador(username,password))
+                        {
 
                         // Crear una nueva sesión
                         string sessionId = SessionManager.CreateSession(username);
@@ -171,18 +217,22 @@ namespace JobmeServiceSyscome
 
         private static bool ValidateUser(string username, string password)
         {
+            Env.Load();
+
+            // Leer una variable de entorno
+            string CONECCTION = Environment.GetEnvironmentVariable("CONNECTION_STRING");
             bool isValid = false;
 
             if (File.Exists("conn.ini") == false)
             {
-                File.WriteAllText("conn.ini", "Server=LOCALhost;Database=myplan_jobpost;Uid=root;Pwd=230680");
+                File.WriteAllText("conn.ini", CONECCTION);
             }
             String _connstring = File.ReadAllText("conn.ini");
             using (var connection = new MySqlConnection(_connstring))
             {
                
                     connection.Open();
-                    string query = "SELECT COUNT(*) FROM empleador WHERE usuario = @username AND clave = @password";
+                    string query = "SELECT COUNT(*) FROM candidato WHERE usuario = @username AND clave = @password";
 
                     using (var command = new MySqlCommand(query, connection))
                     {
@@ -193,6 +243,40 @@ namespace JobmeServiceSyscome
                         isValid = result > 0;
                     }
                 
+
+            }
+
+            return isValid;
+        }
+
+        private static bool Validateempleador(string username, string password)
+        {
+            Env.Load();
+
+            // Leer una variable de entorno
+            string CONECCTION = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+            bool isValid = false;
+
+            if (File.Exists("conn.ini") == false)
+            {
+                File.WriteAllText("conn.ini", CONECCTION);
+            }
+            String _connstring = File.ReadAllText("conn.ini");
+            using (var connection = new MySqlConnection(_connstring))
+            {
+
+                connection.Open();
+                string query = "SELECT COUNT(*) FROM empleador WHERE usuario = @username AND clave = @password";
+
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@username", username);
+                    command.Parameters.AddWithValue("@password", password); // Asegúrate de manejar el hash de la contraseña en producción
+
+                    var result = Convert.ToInt32(command.ExecuteScalar());
+                    isValid = result > 0;
+                }
+
 
             }
 
@@ -341,6 +425,7 @@ namespace JobmeServiceSyscome
 
         public void SendResponseLogin(HttpListenerContext request, string rootDirectory)
         {
+           
             string url = request.Request.Url.AbsolutePath.Trim('/');
             string url2 = request.Request.Url.PathAndQuery;
             string url3 = request.Request.Url.Query;
@@ -367,78 +452,408 @@ namespace JobmeServiceSyscome
             {
                 try
                 {
+                    JObject json = JObject.Parse(body);
+                    string _q = (string)json["q"];
 
-
-                    if (url4 == "/index")
+                    if (_q != null)
                     {
-                        filePath = Path.Combine(rootDirectory, "index.html");
-                    }
-                    if (url == "/loginempleador")
-                    {
-                        filePath = Path.Combine(rootDirectory, "loginempleador.html");
-                    }
-                    if (url == "/logincandidato")
-                    {
-                        filePath = Path.Combine(rootDirectory, "logincandidato.html");
-                    }
+
+                        Program _c = new Program();      
+                        String _insert = "";
+                       
+                        if (_q == "guardarImagenes")
+                        {
+
+                            bool b = false;
+                            String msj = "Error";
+                            String cvdataexist = (string)json["cv"];
+                            string _nombre = (string)json["nombre"];
+                            string _apellido = (string)json["apellido"];
+                            String _usuario = (string)json["user"]; ;
+                            String cv = (string)json["cv"];
+                           
+                            if (!string.IsNullOrEmpty(cvdataexist))
+                            {
+
+                                _nombre = _nombre + "-" + _apellido;
+
+                                string directorioBase = Path.Combine(Environment.CurrentDirectory, "CV");
+                                //La direccion de abajo es la ruta de pruebas local (Josue Lopez)
+                                //String directorioBase = Path.Combine("C:\\", "Users", "PC", "Documents", "Github", "BancoopreEstandar", "BancoopreWeb00", "Imagenes", "MaeascoDui");
+                                if (!Directory.Exists(directorioBase))
+                                {
+                                    Directory.CreateDirectory(directorioBase);
+                                }
+
+                                byte[] imageBytes = Convert.FromBase64String(cv);
+                                string fileType = _c.TipoArch(imageBytes);
+                                String ext = fileType == "PDF" ? ".pdf" : ".png";
+                                //File.WriteAllBytes(directorioBase, imageBytes);
+                                String ruta = _usuario + "_N-" + _nombre + ext;
+                                File.WriteAllBytes(Path.Combine(directorioBase + "\\" + _usuario + "_N-" + _nombre + ext), imageBytes);
+                                _insert = String.Format("insert into cv_candidatos(usuario , nombre, rutacv) values('{0}', '{1}', '{2}')",
+                                     _usuario, _nombre, ruta);
+                                var _conn = _c.Conexion3();
+                                var _comm = _c.Comando3(_conn);
+                                _conn.Open();
+                                _comm.CommandText = String.Format("delete from cv_candidatos where usuario = '{0}'", _usuario);
+
+                                _comm.ExecuteNonQuery();
+                                _conn.Close();
+                               
 
 
-                    if (File.Exists(filePath))
-                    {
-                        ServeFile(request.Response, filePath);
+
+                                _conn.Open();
+                                _comm.CommandText = _insert;
+                                try
+                                {
+                                    _comm.ExecuteNonQuery();
+                                    _conn.Close();
+                                }
+                                catch (Exception ex)
+                                {
+                                    //ServeHTMLError(request.Response, ex.Message);
+                                    Console.WriteLine("Error al guardar la imagen: " + ex.Message);
+                                    b = false;
+                                }
+                                finally
+                                {
+                                    
+                                    b = true;
+                                    _conn.Open();
+                                    _comm.CommandText = String.Format("UPDATE candidato SET cv = {0} WHERE usuario = {1}", ruta, _usuario);
+                                    _conn.Close();
+                                    _conn.Dispose();
+                                }
+                            }
+
+                            if (b)
+                            {
+
+                                if (b == false)
+                                {
+                                    var _conn = _c.Conexion3();
+                                    var _comm = _c.Comando3(_conn);
+                                    _conn.Open();
+                                    _comm.CommandText = String.Format("delete from cv_candidatos where usuario = '{0}'", _usuario);
+                                    _comm.ExecuteNonQuery();
+                                    _conn.Close();
+                                    _conn.Dispose();
+                                }
+
+                            }
+                        }
+                        if (_q == "guardarImagenesempleador")
+                        {
+
+                            bool b = false;
+                            String msj = "Error";
+                            String logodataexist = (string)json["logo"];
+                            string _nombre = (string)json["nombre"];                                                 
+                            String logo = (string)json["logo"];
+
+                            if (!string.IsNullOrEmpty(logodataexist))
+                            {
+
+                                
+
+                                string directorioBase = Path.Combine(Environment.CurrentDirectory, "LOGOEMPRES");
+                                //La direccion de abajo es la ruta de pruebas local (Josue Lopez)
+                                //String directorioBase = Path.Combine("C:\\", "Users", "PC", "Documents", "Github", "BancoopreEstandar", "BancoopreWeb00", "Imagenes", "MaeascoDui");
+                                if (!Directory.Exists(directorioBase))
+                                {
+                                    Directory.CreateDirectory(directorioBase);
+                                }
+
+                                byte[] imageBytes = Convert.FromBase64String(logo);
+                                string fileType = _c.TipoArch(imageBytes);
+                                String ext = fileType == "PDF" ? ".pdf" : ".png";
+                                //File.WriteAllBytes(directorioBase, imageBytes);
+                                String ruta = "_E-" + _nombre + ext;
+                                File.WriteAllBytes(Path.Combine(directorioBase + "\\" + "_E-" + _nombre + ext), imageBytes);
+                                _insert = String.Format("update empleador set logoruta = '{0}' where nombre = {1}",
+                                      ruta,_nombre);
+                                var _conn = _c.Conexion3();
+                                var _comm = _c.Comando3(_conn);            
+
+
+
+
+                                _conn.Open();
+                                _comm.CommandText = _insert;
+                                try
+                                {
+                                    _comm.ExecuteNonQuery();
+                                    _conn.Close();
+                                }
+                                catch (Exception ex)
+                                {
+                                    //ServeHTMLError(request.Response, ex.Message);
+                                    Console.WriteLine("Error al guardar la imagen: " + ex.Message);
+                                    b = false;
+                                }
+                               
+                            }
+                        }
+                    }
+                    else {
+                        try
+                        {
+                            if (url4 == "/index")
+                            {
+                                filePath = Path.Combine(rootDirectory, "index.html");
+                            }
+                            if (url == "/loginempleador")
+                            {
+                                filePath = Path.Combine(rootDirectory, "loginempleador.html");
+                            }
+                            if (url == "/logincandidato")
+                            {
+                                filePath = Path.Combine(rootDirectory, "logincandidato.html");
+                            }
+                            if (url == "form_candidatos")
+                            {
+                                filePath = Path.Combine(rootDirectory, "form_candidatos.html");
+                            }
+
+                            if (File.Exists(filePath))
+                            {
+                                ServeFile(request.Response, filePath);
+                            }
+                            else
+                            {
+                                Serve404(request.Response);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                            Console.WriteLine("Error al enviar las vistas");
+                        }
+
+
+
+
                     }
 
-
-                    else
-                    {
-                        Serve404(request.Response);
-                    }
-
-                }
-                catch (Exception ex)
+                } catch (Exception ex)
                 {
 
-                    Console.WriteLine("Error al enviar las vistas");
+                    Console.WriteLine("Error en alguna q");
                 }
             }
             if (requestType.Equals("GET", StringComparison.OrdinalIgnoreCase))
             {
                 try
                 {
+                    String _q = query["q"];
+
+                    if (_q!=null) {
+
+                        if (_q == "agregar_sin")
+                        {
+                            DataTable t = JsonConvert.DeserializeObject<DataTable>(query["datos"]);
+
+                            try
+                            {
+                                DataTable _t = t;
+
+                                String _tabla = "candidato";
+                                String _insert = "replace into " + _tabla + " set ";
+                                Int32 _llevo = 0;
+                                foreach (DataRow _r in _t.Rows)
+                                {
+                                    _llevo++;
+                                    if (_llevo > 1)
+                                        _insert += ", ";
+                                    _insert += String.Format("{0} = '{1}'", _r[0], _r[1]);
+                                }
+                                var _conn = Conexion();
+                                var _comm = Comando(_conn);
+                                _conn.Open();
+                                _comm.CommandText = _insert;
+                                try
+                                {
+                                    _comm.ExecuteNonQuery();
+                                }
+                                catch (Exception ex)
+                                {
+                                    ServeHTMLError(request.Response, ex.Message);
+                                }
+                                finally
+                                {
+                                    _conn.Close();
+                                    _conn.Dispose();
+                                    ServeHTML(request.Response, "Registro Guardado Con éxito");
+                                }
+
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Error al guardar datos: " + ex.Message);
+                            }
+                        }
+
+                        if (_q == "agregar_sin_empleador")
+                        {
+                            DataTable t = JsonConvert.DeserializeObject<DataTable>(query["datos"]);
+
+                            try
+                            {
+                                DataTable _t = t;
+
+                                String _tabla = "empleador";
+                                String _insert = "replace into " + _tabla + " set ";
+                                Int32 _llevo = 0;
+                                foreach (DataRow _r in _t.Rows)
+                                {
+                                    _llevo++;
+                                    if (_llevo > 1)
+                                        _insert += ", ";
+                                    _insert += String.Format("{0} = '{1}'", _r[0], _r[1]);
+                                }
+                                var _conn = Conexion();
+                                var _comm = Comando(_conn);
+                                _conn.Open();
+                                _comm.CommandText = _insert;
+                                try
+                                {
+                                    _comm.ExecuteNonQuery();
+                                }
+                                catch (Exception ex)
+                                {
+                                    ServeHTMLError(request.Response, ex.Message);
+                                }
+                                finally
+                                {
+                                    _conn.Close();
+                                    _conn.Dispose();
+                                    ServeHTML(request.Response, "Registro Guardado Con éxito");
+                                }
+
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Error al guardar datos: " + ex.Message);
+                            }
+                        }
+
+                        if (_q == "llenadopais")
+                        {
+
+                           
+                            //String _tabla = query["tabla"];
+                            var _conn = Conexion();
+                            var _comm = Comando(_conn);
+                            String _retval = "";
+                            _conn.Open();
+                            _comm.CommandText = String.Format("Select * from pais");
+                            var _reader = _comm.ExecuteReader();
+                            while (_reader.Read())
+                            {
+                                _retval += String.Format("<option value='{0}'>{1}</option>", _reader.GetValue(0).ToString(), _reader.GetValue(1).ToString());
+                            }
+
+                            _conn.Close();
+                            _conn.Dispose();
+                            ServeHTML(request.Response, _retval);
+
+                        }
+                        if (_q == "llenadodep")
+                        {
 
 
-                    if (string.IsNullOrEmpty(url) || url == "/")
-                    {
+                            //String _tabla = query["tabla"];
+                            var _conn = Conexion();
+                            var _comm = Comando(_conn);
+                            String _retval = "";
+                            _conn.Open();
+                            _comm.CommandText = String.Format("Select * from departamento");
+                            var _reader = _comm.ExecuteReader();
+                            while (_reader.Read())
+                            {
+                                _retval += String.Format("<option value='{0}'>{1}</option>", _reader.GetValue(0).ToString(), _reader.GetValue(1).ToString());
+                            }
 
-                        filePath = Path.Combine(rootDirectory, "index.html");
+                            _conn.Close();
+                            _conn.Dispose();
+                            ServeHTML(request.Response, _retval);
 
+                        }
+                        if (_q == "llenadodis")
+                        {
+
+
+                            //String _tabla = query["tabla"];
+                            var _conn = Conexion();
+                            var _comm = Comando(_conn);
+                            String _retval = "";
+                            _conn.Open();
+                            _comm.CommandText = String.Format("Select * from distrito");
+                            var _reader = _comm.ExecuteReader();
+                            while (_reader.Read())
+                            {
+                                _retval += String.Format("<option value='{0}'>{1}</option>", _reader.GetValue(0).ToString(), _reader.GetValue(1).ToString());
+                            }
+
+                            _conn.Close();
+                            _conn.Dispose();
+                            ServeHTML(request.Response, _retval);
+
+                        }
+
+                    } else {
+
+                        try
+                        {
+                            if (string.IsNullOrEmpty(url) || url == "/")
+                            {
+
+                                filePath = Path.Combine(rootDirectory, "index.html");
+
+                            }
+                            if (url == "loginempleadores")
+                            {
+                                filePath = Path.Combine(rootDirectory, "loginempleadores.html");
+                            }
+                            if (url == "logincandidatos")
+                            {
+                                filePath = Path.Combine(rootDirectory, "logincandidatos.html");
+                            }
+                            if (url == "form_candidatos")
+                            {
+                                filePath = Path.Combine(rootDirectory, "views/formularios/form_candidatos.html");
+                            }
+                            if (url == "form_empleadores")
+                            {
+                                filePath = Path.Combine(rootDirectory, "views/formularios/form_empleadores.html");
+                            }
+
+                            if (File.Exists(filePath))
+                            {
+                                ServeFile(request.Response, filePath);
+                            }
+
+
+                            else
+                            {
+                                Serve404(request.Response);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                            Console.WriteLine("Error al enviar las vistas");
+                        }
                     }
-                    if (url == "loginempleadores")
-                    {
-                        filePath = Path.Combine(rootDirectory, "loginempleadores.html");
-                    }
-                    if (url == "logincandidatos")
-                    {
-                        filePath = Path.Combine(rootDirectory, "logincandidatos.html");
-                    }
 
-
-                    if (File.Exists(filePath))
-                    {
-                        ServeFile(request.Response, filePath);
-                    }
-
-
-                    else
-                    {
-                        Serve404(request.Response);
-                    }
 
                 }
                 catch (Exception ex)
                 {
 
-                    Console.WriteLine("Error al enviar las vistas");
+                    Console.WriteLine("Error en la solicitud");
                 }
 
 
@@ -517,6 +932,36 @@ namespace JobmeServiceSyscome
             return _retval;
         }
 
+
+        private static void ServeHTML(HttpListenerResponse response, String pHTML)
+        {
+            try
+            {
+                response.StatusCode = (int)HttpStatusCode.OK;
+                byte[] buffer = Encoding.UTF8.GetBytes(pHTML);
+                response.ContentLength64 = buffer.Length;
+                response.OutputStream.Write(buffer, 0, buffer.Length);
+                response.OutputStream.Close();
+            }
+            catch (Exception ex)
+            {
+
+                Serve500(response);
+            }
+            finally
+            {
+                response.OutputStream.Close();
+            }
+
+        }
+        private static void ServeHTMLError(HttpListenerResponse response, String pHTML)
+        {
+            response.StatusCode = (int)HttpStatusCode.NotFound;
+            byte[] buffer = Encoding.UTF8.GetBytes(String.Format("<span class='badge badge-danger'>{0}</span>", pHTML));
+            response.ContentLength64 = buffer.Length;
+            response.OutputStream.Write(buffer, 0, buffer.Length);
+            response.OutputStream.Close();
+        }
         private static void Serve500(HttpListenerResponse response)
         {
             response.StatusCode = (int)HttpStatusCode.InternalServerError;

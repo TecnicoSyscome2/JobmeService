@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Empleador</title>
+    <style>
+         .navbar-frm-candidato {
+            width: 100%;
+            background-color: #f8f9fa;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+  .frm-candidato {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .container-wrapper-frm-candidato {
+            display: flex;
+            gap: 20px;
+        }
+        .form-container-frm-candidato, .second-container-frm-candidato {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        .form-group-frm-candidato {
+            margin-bottom: 15px;
+        }
+        .form-group-frm-candidato label {
+            display: block;
+            font-weight: bold;
+        }
+        .form-group-frm-candidato input[type="text"],
+        .form-group-frm-candidato input[type="password"],
+        .form-group-frm-candidato input[type="date"],
+        .form-group-frm-candidato input[type="tel"],
+        .form-group-frm-candidato input[type="email"],
+        .form-group-frm-candidato input[type="url"],
+        .form-group-frm-candidato select,
+        .form-group-frm-candidato input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        /* .form-group input[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+        } */
+        /* .form-group input[type="submit"]:hover {
+            background-color: #45a049;
+        } */
+    </style>
+      <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
+      <!-- Bootstrap icons-->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css" />
+      <!-- Google fonts-->
+      <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
+      <!-- Core theme CSS (includes Bootstrap)-->
+      <link href="css/styles.css" rel="stylesheet" />
+</head>
+<body class="frm-candidato">
+
+    <nav class="navbar-frm-candidato navbar-light bg-light static-top">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <a class="navbar-brand" href="#!">
+                    <h2>Registro de Empleador</h2>
+                </a>
+            </div>
+            <div class="ml-auto">
+                <a class="btn btn-dark" href="form_empleadores">Empleadores</a>
+                <a class="btn btn-dark" href="form_candidatos">Candidatos</a>
+                <a class="btn btn-primary" href="#signup">Inicia Sesion</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container-wrapper-frm-candidato"> 
+    <div class="form-container-frm-candidato">
+        <div class="form-group-frm-candidato">
+       <h2><center><label>Datos de la Empresa</label></center></h2> 
+        </div>
+        <form id="registro-candidato">
+            <div class="form-group-frm-candidato">
+                <label for="usuario">Nombre de Empresa</label>
+                <input class="dato" type="text" id="nombre" name="nombre" required>
+            </div>
+            <div class="form-group-frm-candidato">
+                <label for="direccion">Direccion</label>
+                <input class="dato" type="text" id="direccion" name="direccion" required>
+            </div>
+            <div class="form-group-frm-candidato">
+                <label for="telefono">Teléfono</label>
+                <input class="dato" type="tel" id="telefono" name="telefono" required>
+            </div>  
+            <div class="form-group-frm-candidato">
+                <label for="correo">Correo Electrónico</label>
+                <input class="dato" type="email" id="correo" name="correo" required>
+            </div>
+            <div class="form-group-frm-candidato">
+                <label for="logo">Logo de la empresa (PNG)</label>
+                <input type="file" id="fileInputempl" name="logo" accept="image/*" required>
+            </div>               
+        </form>
+    </div>
+
+    <div class="second-container-frm-candidato">
+        <form id="registro-candidato">
+            <div class="form-group-frm-candidato">
+                <h2><center><label>Datos de Cuenta</label></center></h2> 
+                 </div>
+            <div class="form-group-frm-candidato">
+                <label for="rep">Nombre de Representante</label>
+                <input class="dato" type="text" id="rep" name="rep" required>
+            </div>   
+             
+            <div class="form-group-frm-candidato">
+                <label for="usuario">Usuario</label>
+                <input class="dato" type="text" id="usuario" name="usuario" required>
+                
+            </div>
+            <div class="form-group-frm-candidato">
+                <label for="clave">Contraseña</label>
+                <input class="dato" type="password" id="clave" name="clave" required>
+                
+            </div>             
+            <div >
+                <button type="button" class="btn btn-dark" onclick="guardarempleadores()">Registrarse</button>
+            </div>
+        </form>
+    </div>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/CRUD.js"></script>
+    <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+</body>
+</html>

@@ -343,7 +343,11 @@ namespace JobmeServiceSyscome
                     {
                         filePath = Path.Combine(rootDirectory, "index.html");
                     }
-
+                    if (url == " form_candidatos")
+                    {
+                        filePath = Path.Combine(rootDirectory, "form_candidatos.html");
+                    }
+                        
 
 
                     if (url == "verimg")

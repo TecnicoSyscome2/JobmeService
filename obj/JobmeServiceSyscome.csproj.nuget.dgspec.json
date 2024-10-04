@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\tecni\\source\\repos\\JobmeServiceSyscome\\JobmeServiceSyscome.csproj": {}
+    "C:\\Users\\tecni\\OneDrive\\Escritorio\\Proyectos T2\\jobmeService\\JobmeService\\JobmeServiceSyscome.csproj": {}
   },
   "projects": {
-    "C:\\Users\\tecni\\source\\repos\\JobmeServiceSyscome\\JobmeServiceSyscome.csproj": {
+    "C:\\Users\\tecni\\OneDrive\\Escritorio\\Proyectos T2\\jobmeService\\JobmeService\\JobmeServiceSyscome.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\tecni\\source\\repos\\JobmeServiceSyscome\\JobmeServiceSyscome.csproj",
+        "projectUniqueName": "C:\\Users\\tecni\\OneDrive\\Escritorio\\Proyectos T2\\jobmeService\\JobmeService\\JobmeServiceSyscome.csproj",
         "projectName": "JobmeServiceSyscome",
-        "projectPath": "C:\\Users\\tecni\\source\\repos\\JobmeServiceSyscome\\JobmeServiceSyscome.csproj",
+        "projectPath": "C:\\Users\\tecni\\OneDrive\\Escritorio\\Proyectos T2\\jobmeService\\JobmeService\\JobmeServiceSyscome.csproj",
         "packagesPath": "C:\\Users\\tecni\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\tecni\\source\\repos\\JobmeServiceSyscome\\obj\\",
+        "outputPath": "C:\\Users\\tecni\\OneDrive\\Escritorio\\Proyectos T2\\jobmeService\\JobmeService\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "fallbackFolders": [
@@ -41,6 +41,10 @@
       "frameworks": {
         "net462": {
           "dependencies": {
+            "DotNetEnv": {
+              "target": "Package",
+              "version": "[3.1.1, )"
+            },
             "MySqlConnector": {
               "target": "Package",
               "version": "[2.3.7, )"

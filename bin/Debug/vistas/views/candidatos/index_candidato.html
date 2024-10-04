@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolsa de Empleo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .job-list {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .job-list h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .job-item {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .job-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .job-item:nth-child(odd) {
+            background-color: #f0f0f0;
+        }
+
+        .job-title {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+            color: #007BFF;
+        }
+
+        .job-details {
+            font-size: 1em;
+            color: #666;
+        }
+
+        .job-apply {
+            text-align: right;
+        }
+
+        .job-apply a {
+            text-decoration: none;
+            color: #fff;
+            background-color: #28a745;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .job-apply a:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="job-list">
+        <h1>Ofertas de Empleo</h1>
+
+        <div class="job-item">
+            <div class="job-title">Desarrollador Frontend</div>
+            <div class="job-details">Empresa: Tech Solutions | Ubicación: Remoto | Salario: $50,000 - $60,000</div>
+            <div class="job-apply"><a href="#">Aplicar</a></div>
+        </div>
+
+        <div class="job-item">
+            <div class="job-title">Analista de Datos</div>
+            <div class="job-details">Empresa: DataCorp | Ubicación: Ciudad de México | Salario: $40,000 - $50,000</div>
+            <div class="job-apply"><a href="#">Aplicar</a></div>
+        </div>
+
+        <div class="job-item">
+            <div class="job-title">Diseñador UX/UI</div>
+            <div class="job-details">Empresa: Creative Minds | Ubicación: Guadalajara | Salario: $30,000 - $40,000</div>
+            <div class="job-apply"><a href="#">Aplicar</a></div>
+        </div>
+
+        <!-- Agrega más ofertas de empleo aquí -->
+    </div>
+</body>
+</html>

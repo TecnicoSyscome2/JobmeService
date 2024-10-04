@@ -51,17 +51,18 @@
   </head>
   <body class="az-body">
 
-    <div class="az-signin-wrapper">
+    <div class="az-signin-wrapper" >
       <div class="az-card-signin">
-        <h2 class="az-signin-header" style="text-align: center;">SYSCOME</h1>
-          <div class="image-container" style="width: 100%;" >
-            <div id="imgempl" alt="Imagen" ><center> <img src="../Logo/logo.jpg"></center></div>
-          </div>
+
         <div class="az-signin-header">
          
-          <h4> <center> Ingresar al sistema </center> </h4>
+          <h2 style="color: black;"> <center> Ingresar al sistema </center> </h2>
 
-          <form >
+
+        </div><!-- az-signin-header -->
+        
+       <div class="az-signin-body" >
+          <form  style="align-items: center;">
             <div class="form-group">
            
               <input type="text" id="usuario" class="form-control" placeholder="Ingrese su Correo" value="">
@@ -72,182 +73,12 @@
             </div><!-- form-group -->
             <button id="loginButton" onclick="login()" class="btn btn-dark btn-block">Ingresar</button>
           </form>
-        </div><!-- az-signin-header -->
-        
+
+        </div>
+ 
       </div><!-- az-card-signin -->
     </div><!-- az-signin-wrapper -->
-
-    <script src="../lib/jquery/jquery.min.js"></script>
-    <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="../lib/ionicons/ionicons.js"></script>
-
-    <script src="../js/planpre.js" type="text/javascript"></script>
-    <script src="../js/azia.js"></script>
-    <script>
-      $(function(){
-        'use strict'
-
-      });
-    //   function login(){
-    //    var _user = $('#usuario').val();
-    //    var _contra = $('#contraseña').val();
-    //    var _url = "http://localhost:9010/";
-      
-    
-    //     $.get( _url + "?username=" + _user + "&password=" + _contra , function( data, status ) {
-        
-    //        alert(data)
-    //        window.location.href = '/';
-    //  });
-       
-    
-    //  }
-
-     function login() {
-    var _user = $('#usuario').val();
-    var _contra = $('#contraseña').val();
-    var _url = "http://localhost:9010/";
-        //var _url = "http://161.97.77.167:9000/";
-        //_url = "http://192.168.1.12:5008/";
-    // Realizamos la solicitud GET al servidor con los datos de usuario y contraseña
-    $.get(_url + "?username=" + _user + "&password=" + _contra, function(data, status) {
-        // Mostramos la respuesta en una alerta
-        alert(data);
-        
-        // Si el login es exitoso, redireccionamos a la página principal
-        if (status === "success" && data !== "Upss, la sesión ha expirado.") {
-            window.location.href = '/';
-        } else {
-            // En caso de sesión expirada o cualquier otro mensaje de error, solo mostramos la alerta
-            console.log('Error en el login: ' + data);
-        }
-    }).fail(function() {
-        alert('Error en la solicitud al servidor.');
-    });
-}
-
-
-//     function login() {
-//     // Obtener los valores de los campos de nombre de usuario y contraseña
-//     const username = document.getElementById('usuario').value;
-//     const password = document.getElementById('contraseña').value;
-
-//     // Validar que los campos no estén vacíos
-//     if (!username || !password) {
-//         alert('Por favor, ingrese el nombre de usuario y la contraseña.');
-//         return;
-//     }
-
-//     // Crear los datos del login en formato de URL-encoded
-//     const loginData = `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
-
-//     // Realizar la solicitud POST al servidor
-//     fetch('/login', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/x-www-form-urlencoded'
-//         },
-//         body: loginData
-//     })
-//     .then(response => {
-//         if (response.ok) {
-//             return response.text(); 
-//              // O `response.json()` si la respuesta es JSON
-//         } else {
-//             throw new Error('Login fallido. Verifique su nombre de usuario y contraseña.');
-//         }
-//     })
-//     .then(data => {
-//         // Manejar la respuesta del servidor
-//         alert(data); // Puedes mostrar el mensaje o redirigir a otra página
-//         window.location.href = '/home'; // Redirigir a una página después del login
-//     })
-//     .catch(error => {
-//         // Manejar errores
-//         alert(error.message);
-//     });
-// }
-
-
-// function login() {
-//     // Obtener los valores de los campos de usuario y contraseña
-//     const username = document.getElementById('usuario').value;
-//     const password = document.getElementById('contraseña').value;
-
-//     // Crear un objeto con los datos del login
-//     var data = {
-//         username: username,
-//         password: password
-//     };
-
-//     Realizar la solicitud POST al servidor
-//     fetch('http://localhost:9010/', {
-//         method: 'POST',
-//         headers: {
-//             //'Content-Type': 'application/x-www-form-urlencoded',
-//             'username': username,
-//             'password': password
-//         },
-//         body: new URLSearchParams(data)
-//     })
-
-//     .then(response => {
-//         if (response.ok) {
-//             // Si el login es exitoso
-//             return response.text(); // Leer el texto de la respuesta
-//         } else {
-//             // Si el login falla
-//             throw new Error('Invalid username or password');
-//         }
-//     })
-//     .then(text => {
-//         alert(text); // Mostrar un mensaje de éxito
-//         // Aquí podrías redirigir al usuario o realizar alguna otra acción
-//     })
-//     .catch(error => {
-//         alert(error.message); // Mostrar un mensaje de error
-//     });
-// }
-// function login() {
-//     // Obtener los valores de los campos de usuario y contraseña
-//     const username = document.getElementById('usuario').value;
-//     const password = document.getElementById('contraseña').value;
-
-//     // Crear la URL con los query params para username y password
-//     const url = `http://localhost:9010/?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
-
-//     // Realizar la solicitud POST al servidor
-//     fetch(url, {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/x-www-form-urlencoded'
-//         },
-//         // Aquí puedes agregar un cuerpo si es necesario, pero en este caso lo dejamos vacío
-//         body: null 
-//     })
-//     .then(response => {
-//         if (response.ok) {
-//             // Si el login es exitoso
-//             window.location.href = '/';
-//             return response.text(); // Leer el texto de la respuesta
-//         } else {
-//             // Si el login falla
-//             throw new Error('Invalid username or password');
-//         }
-//     })
-//     .then(text => {
-//         alert(text); // Mostrar un mensaje de éxito
-//         // Aquí podrías redirigir al usuario o realizar alguna otra acción
-//     })
-//     .catch(error => {
-//         alert(error.message); // Mostrar un mensaje de error
-//     });
-// }
-
-// // Asignar la función al botón de login
-// document.getElementById("loginButton").onclick = login;
-// // Asignar la función al evento click del botón de login
-// document.getElementById('loginButton').addEventListener('click', login);
-    </script>
+   
+    <script src="js/login.js"></script>
   </body>
 </html>
