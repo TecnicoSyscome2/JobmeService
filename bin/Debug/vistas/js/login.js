@@ -24,4 +24,23 @@ function login() {
         alert('Error en la solicitud al servidor.');
       });
   }
+
+  function logout() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', _url + '?logout', true);
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          alert('Has cerrado sesion exitosamente!');
+          window.location.href = '/'; // Redirigir a la página de login
+        } else {
+          alert('Error al cerrar sesion. Por favor intentelo de nuevo.');
+        }
+      }
+    };
+
+    // Enviar la solicitud de logout
+    xhr.send();
+  }
   

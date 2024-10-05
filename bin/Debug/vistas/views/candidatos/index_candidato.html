@@ -9,18 +9,41 @@
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
 
+        /* Estilo del Navbar */
+        .navbar {
+            background-color: #007BFF;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        /* Contenedor principal */
+        .container {
+            padding-top: 80px; /* Para evitar que el contenido se solape con el navbar */
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Lista de ofertas de empleo */
         .job-list {
             width: 100%;
             max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .job-list h1 {
-            text-align: center;
-            color: #333;
+            height: 500px; /* Limita la altura y permite scroll */
+            overflow-y: auto; /* Scroll vertical si hay muchas ofertas */
+            padding: 0 20px;
         }
 
         .job-item {
@@ -68,31 +91,88 @@
         .job-apply a:hover {
             background-color: #218838;
         }
+
+        /* Scroll personalizado */
+        .job-list::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .job-list::-webkit-scrollbar-thumb {
+            background-color: #007BFF;
+            border-radius: 10px;
+        }
+
+        .job-list::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
+        }
     </style>
 </head>
 <body>
-    <div class="job-list">
-        <h1>Ofertas de Empleo</h1>
 
-        <div class="job-item">
-            <div class="job-title">Desarrollador Frontend</div>
-            <div class="job-details">Empresa: Tech Solutions | Ubicación: Remoto | Salario: $50,000 - $60,000</div>
-            <div class="job-apply"><a href="#">Aplicar</a></div>
-        </div>
-
-        <div class="job-item">
-            <div class="job-title">Analista de Datos</div>
-            <div class="job-details">Empresa: DataCorp | Ubicación: Ciudad de México | Salario: $40,000 - $50,000</div>
-            <div class="job-apply"><a href="#">Aplicar</a></div>
-        </div>
-
-        <div class="job-item">
-            <div class="job-title">Diseñador UX/UI</div>
-            <div class="job-details">Empresa: Creative Minds | Ubicación: Guadalajara | Salario: $30,000 - $40,000</div>
-            <div class="job-apply"><a href="#">Aplicar</a></div>
-        </div>
-
-        <!-- Agrega más ofertas de empleo aquí -->
+    <!-- Navbar fijo -->
+    <div class="navbar">
+        <h1>Bolsa de Empleo</h1>
     </div>
+
+    <!-- Contenedor principal con espacio para la lista -->
+    <div class="container-jolits">
+        <div class="job-list">
+            <div class="job-item">
+                <div class="job-title">Desarrollador Frontend</div>
+                <div class="job-details">Empresa: Tech Solutions | Ubicación: Remoto | Salario: $50,000 - $60,000</div>
+                <div class="job-apply"><a href="#">Aplicar</a></div>
+            </div>
+
+            <div class="job-item">
+                <div class="job-title">Analista de Datos</div>
+                <div class="job-details">Empresa: DataCorp | Ubicación: Ciudad de México | Salario: $40,000 - $50,000</div>
+                <div class="job-apply"><a href="#">Aplicar</a></div>
+            </div>
+
+            <div class="job-item">
+                <div class="job-title">Diseñador UX/UI</div>
+                <div class="job-details">Empresa: Creative Minds | Ubicación: Guadalajara | Salario: $30,000 - $40,000</div>
+                <div class="job-apply"><a href="#">Aplicar</a></div>
+            </div>
+
+            <div class="job-item">
+                <div class="job-title">Diseñador UX/UI</div>
+                <div class="job-details">Empresa: Creative Minds | Ubicación: Guadalajara | Salario: $30,000 - $40,000</div>
+                <div class="job-apply"><a href="#">Aplicar</a></div>
+            </div>
+            <div class="job-item">
+                <div class="job-title">Diseñador UX/UI</div>
+                <div class="job-details">Empresa: Creative Minds | Ubicación: Guadalajara | Salario: $30,000 - $40,000</div>
+                <div class="job-apply"><a href="#">Aplicar</a></div>
+            </div>
+            <div class="job-item">
+                <div class="job-title">Diseñador UX/UI</div>
+                <div class="job-details">Empresa: Creative Minds | Ubicación: Guadalajara | Salario: $30,000 - $40,000</div>
+                <div class="job-apply"><a href="#">Aplicar</a></div>
+            </div>
+            <div class="job-item">
+                <div class="job-title">Diseñador UX/UI</div>
+                <div class="job-details">Empresa: Creative Minds | Ubicación: Guadalajara | Salario: $30,000 - $40,000</div>
+                <div class="job-apply"><a href="#">Aplicar</a></div>
+            </div>
+            <div class="job-item">
+                <div class="job-title">Diseñador UX/UI</div>
+                <div class="job-details">Empresa: Creative Minds | Ubicación: Guadalajara | Salario: $30,000 - $40,000</div>
+                <div class="job-apply"><a href="#">Aplicar</a></div>
+            </div>
+            <div class="job-item">
+                <div class="job-title">Diseñador UX/UI</div>
+                <div class="job-details">Empresa: Creative Minds | Ubicación: Guadalajara | Salario: $30,000 - $40,000</div>
+                <div class="job-apply"><a href="#">Aplicar</a></div>
+            </div>
+            <div class="job-item">
+                <div class="job-title">Diseñador UX/UI</div>
+                <div class="job-details">Empresa: Creative Minds | Ubicación: Guadalajara | Salario: $30,000 - $40,000</div>
+                <div class="job-apply"><a href="#">Aplicar</a></div>
+            </div>
+            <!-- Agrega más ofertas de empleo aquí -->
+        </div>
+    </div>
+
 </body>
 </html>

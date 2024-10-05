@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolsa de Empleo</title>
+    <style>
+.container-empresas {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+   
+}
+
+.empresa-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.empresa-item {
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.empresa-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.empresa-logo img {
+    width: 80px; /* Ancho del logo */
+    height: 80px; /* Alto del logo */
+    object-fit: contain; /* Ajusta la imagen sin recortarla */
+    border-radius: 50%; /* Hace que el logo tenga forma circular */
+    margin-right: 20px; /* Espacio a la derecha del logo */
+}
+
+.empresa-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.empresa-nombre {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.empresa-direccion,
+.empresa-telefono,
+.empresa-correo {
+    font-size: 1rem;
+    color: #666;
+}
+
+.empresa-direccion {
+    margin-top: 5px;
+}
+
+.empresa-telefono {
+    color: #28a745;
+}
+
+.empresa-correo {
+    color: #28a745;
+}
+
+@media (max-width: 768px) {
+    .empresa-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .empresa-logo img {
+        margin-bottom: 10px;
+       
+    }
+}
+
+    </style>
+</head>
+<body>
+
+    <!-- Navbar fijo -->
+    <div class="navbar">
+        <h1>Lista empresas</h1>
+    </div>
+
+    <!-- Contenedor principal con espacio para la lista -->
+    <div class="container-empresas">
+        <div class="empresa-list">
+            <div class="empresa-item">
+                <div class="empresa-logo">
+                    <img src="/image/logo/logo.jpg" alt="Logo Empresa" onerror="this.src='Sin Logo'">
+                </div>
+                <div class="empresa-info">
+                    <div class="empresa-nombre">Nombre: Tech Solutions</div>
+                    <div class="empresa-direccion">Dirección: Av. Principal 123, Ciudad</div>
+                    <div class="empresa-telefono">Teléfono: (55) 1234-5678</div>
+                    <div class="empresa-correo">Correo: contacto@techsolutions.com</div>
+                </div>
+            </div>
+    
+            <div class="empresa-item">
+                <div class="empresa-logo">
+                    <img src="/image/logo/logo.jpg" alt="Logo Empresa" onerror="this.src='Sin Logo'">
+                </div>
+                <div class="empresa-info">
+                    <div class="empresa-nombre">Nombre: DataCorp</div>
+                    <div class="empresa-direccion">Dirección: Calle Falsa 456, Ciudad</div>
+                    <div class="empresa-telefono">Teléfono: (55) 9876-5432</div>
+                    <div class="empresa-correo">Correo: contacto@datacorp.com</div>
+                </div>
+            </div>
+    
+            <!-- Agrega más empresas aquí -->
+        </div>
+    </div>
+    
+
+</body>
+</html>

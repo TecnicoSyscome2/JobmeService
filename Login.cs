@@ -42,11 +42,30 @@ namespace JobmeServiceSyscome
             return _comm;
         }
 
+        public static DataTable Query(String pQuery)
+        {
+
+            DataTable _t = new DataTable();
+            var _conn = Conexion();
+            var _comm = Comando(_conn);
+            _conn.Open();
+            _comm.CommandText = pQuery;
+            IDataReader _reader = _comm.ExecuteReader();
+            _t.Clear();
+            _t.Load(_reader);
+            _conn.Close();
+            _conn.Dispose();
+            return _t;
+        }
+
+
         //Funciones de loggin
         public string body = "";
         public void HandleLogin(HttpListenerContext context)
         {
-           
+
+
+
             string rootDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "vistas");
             string rootDirectorylogin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "vistaslogin");
             string filePath = Path.Combine(rootDirectory, "Login/login.html");
@@ -107,7 +126,7 @@ namespace JobmeServiceSyscome
                         byte[] buffer = Encoding.UTF8.GetBytes("Inicio de sesion exitoso, Sesion creada.");
                         context.Response.OutputStream.Write(buffer, 0, buffer.Length);
                     }
-                    else if (context.Request.Url.Query == "?logout")
+                    else if (context.Request.Url.Query == "logout")
                     {
                         HandleLogout(context);
                     }
@@ -376,44 +395,8 @@ namespace JobmeServiceSyscome
 
                     }
                 }
-                else if (_q == "GenerarExcelPlanillaUnica")
-                {
-                    String jsonlista = (string)json["jsonlista"];
-                    String anio = (string)json["pAnio"];
-                    String mes = (string)json["pMes"];
-                    String tipopla = (string)json["pTipoPlanif"];
-                    DataTable dt = JsonConvert.DeserializeObject<DataTable>(jsonlista);
-                    String nombrearchivo = "PlanillaUnica_" + tipopla + "_" + anio + " - " + mes + ".xls";
-                    String excelFilePath = Path.Combine(Environment.CurrentDirectory, "reportesexcel/" + nombrearchivo);
-                    String base64arch = "";
 
-                    try
-                    {
-                        File.WriteAllText(excelFilePath, TablaHTMLExcel(dt));
-                        byte[] bytesarch = File.ReadAllBytes(excelFilePath);
-                        base64arch = Convert.ToBase64String(bytesarch);
-
-
-                    }
-                    catch (Exception)
-                    {
-                    }
-
-
-                    var obJSON = new
-                    {
-                        nombrearch = nombrearchivo,
-                        archivo = base64arch
-                    };
-                    String jsonResp = JsonConvert.SerializeObject(obJSON);
-                    ServerFileConJSON(request.Response, jsonResp);
-
-
-                }
-
-
-                // }
-                // }
+         
             }
             catch (Exception ex)
             {
@@ -1018,8 +1001,23 @@ namespace JobmeServiceSyscome
             return _retval;
         }
 
+        public static String listatrabajos(DataTable pTabla)
+        {
+            String _retval = "";
+            int conta = pTabla.Rows.Count;
+            foreach (DataRow _r in pTabla.Rows)
+            {
+                _retval += "<div class='job-item'>";
+                for (Int32 ti = 0; ti < pTabla.Columns.Count; ti++)
+                {
+                    _retval += String.Format("<div class='job-title'>Desarrollador Frontend</div>", _r[ti].ToString(), ti);
+                    _retval += String.Format(" <div class='job-details'>Empresa: Tech Solutions | Ubicación: Remoto | Salario: $50,000 - $60,000</div>", _r[ti].ToString(), ti);
+                    _retval += String.Format("<div class='job-apply'><a href='3'> Aplicar<a> < div>", _r[ti].ToString(), ti);
+                }
 
-
-
+                _retval += "</div>" + System.Environment.NewLine;
+            }
+            return _retval;
+        }
     }
 }

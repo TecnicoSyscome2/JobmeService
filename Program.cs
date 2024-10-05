@@ -229,7 +229,8 @@ namespace JobmeServiceSyscome
             string username = query["username"];
             string password = query["password"];
 
-            if (query.Count > 2 && requestType.Equals("GET", StringComparison.OrdinalIgnoreCase))
+
+            if (query.Count >= 2 && requestType.Equals("GET", StringComparison.OrdinalIgnoreCase))
             {
                 try
                 {
@@ -318,6 +319,26 @@ namespace JobmeServiceSyscome
 
 
                             ServeHTML(request.Response, "<span class='badge badge-success'>Registro Eliminado Con Exito</span>");
+                        }
+
+                        else 
+                        if (_q == "listaofertasempleo")
+                        {
+
+                            String empresa = query["empresa"];
+                            String nombre = query["nombre"];
+                            //String ubicacion = query["ubicacion"];
+                            //String pagodesde = query["pagodesde"];
+                            //String pagohasta = query["pagohasta"];
+                           
+                            String cons = String.Format(@"SELECT * FROM ofertasempleo"
+                            );
+                            DataTable dt = new DataTable();
+                            dt = Query(cons);
+                            String Html = GenerarListaTrabajos(dt);
+
+                            ServeHTML(request.Response, Html);
+
                         }
 
 
@@ -599,5 +620,32 @@ namespace JobmeServiceSyscome
             pDato = pDato.Replace("(N)", "Ñ");
             return pDato;
         }
+
+
+
+        public static string GenerarListaTrabajos(DataTable pTabla)
+        {
+            string _retval = "";
+            foreach (DataRow _r in pTabla.Rows)
+            {
+                // Asumiendo que las columnas de la tabla son: título, empresa, ubicación, salario mínimo y salario máximo
+                string titulo = _r["titulo"].ToString();        // Título del trabajo
+                string empresa = _r["empresa"].ToString();      // Nombre de la empresa
+                string ubicacion = _r["ubicacion"].ToString();  // Ubicación del trabajo
+                string salarioMin = _r["pagomin"].ToString();// Salario mínimo
+                string salarioMax = _r["pagomax"].ToString();// Salario máximo
+
+                // Generar HTML para cada fila de trabajo
+                _retval += String.Format(@"
+            <div class='job-item'>
+                <div class='job-title'>{0}</div>
+                <div class='job-details'>Empresa: {1} | Ubicación: {2} | Salario: {3} - {4}</div>
+                <div class='job-apply'><a href='#'>Aplicar</a></div>
+            </div>
+            ", titulo, empresa, ubicacion, salarioMin, salarioMax) + Environment.NewLine;
+            }
+            return _retval;
+        }
+
     }
 }

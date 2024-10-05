@@ -36,7 +36,7 @@
                 
                 <!-- Sign Up Button -->
                 <a class="btn btn-primary" href="#signup">Inicia tu Aventura</a>
-                <a class="btn btn-primary" href="#signup">Inicia Sesion</a>
+                <a class="btn btn-warning" onclick="logout()">Cerrar Sesion</a>
             </div>
         </nav>
         
@@ -46,55 +46,51 @@
                 <div class="row justify-content-center">
                     <!-- Columna del Formulario -->
                     <div class="col-md-6" id="ofertas_empleo">
+  
+                        <div class="container-empresas">
+                            <div class="empresa-list">
+                                <div class="empresa-item">
+                                    <div class="empresa-logo">
+                                        <img src="/image/logo/logo.jpg" alt="Logo Empresa" onerror="this.src='Sin Logo'">
+                                    </div>
+                                    <div class="empresa-info">
+                                        <div class="empresa-nombre">Nombre: Tech Solutions</div>
+                                        <div class="empresa-direccion">Dirección: Av. Principal 123, Ciudad</div>
+                                        <div class="empresa-telefono">Teléfono: (55) 1234-5678</div>
+                                        <div class="empresa-correo">Correo: contacto@techsolutions.com</div>
+                                       
+                                    </div>
+                                    <div class="empresa-apply"><a href="#">Oportunidades</a></div>
+                                </div>
+                        
+                                <div class="empresa-item">
+                                    <div class="empresa-logo">
+                                        <img src="/image/logo/logo.jpg" alt="Logo Empresa" onerror="this.src='Sin Logo'">
+                                    </div>
+                                    <div class="empresa-info">
+                                        <div class="empresa-nombre">Nombre: DataCorp</div>
+                                        <div class="empresa-direccion">Dirección: Calle Falsa 456, Ciudad</div>
+                                        <div class="empresa-telefono">Teléfono: (55) 9876-5432</div>
+                                        <div class="empresa-correo">Correo: contacto@datacorp.com</div>
+                                       
+                                    </div>
+                                    <div class="empresa-apply"><a href="#">Oportunidades(100)</a></div>
+                                </div>
+                        
+                                <!-- Agrega más empresas aquí -->
+                            </div>
+                        </div>
+                        
                         
                     </div>
                     
                     <!-- Columna del Carrusel -->
                     <div class="col-md-6">
-                        <h1 class="mb-5"><center>Eres Candidato?</center></h1>
-                        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-indicators">
-                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        <div class="container-job-list" >
+                            <div class="job-list" id="joblist" >
+                               
+                                <!-- Agrega más ofertas de empleo aquí -->
                             </div>
-                            <div class="carousel-inner">
-                                <!-- Slide 1 -->
-                                <div class="carousel-item active">
-                                    <img src="image/carrousel/img1.jpg" class="d-block w-100" alt="Imagen 1">
-                                    <div class="carousel-caption d-none d-md-block">
-                                        <h5>Aplica a Las Ofertas Disponibles</h5>
-                                        <p>Nota: Debes crear una cuenta en la bolsa de empleo para poder aplicar.</p>
-                                        <a class="btn btn-primary" href="#signup">Inicia tu Aventura</a>
-                                    </div>
-                                </div>
-                                <!-- Slide 2 -->
-                                <div class="carousel-item">
-                                    <img src="image/carrousel/img2.jpg" class="d-block w-100" alt="Imagen 2">
-                                    <div class="carousel-caption d-none d-md-block">
-                                        <h5>Ya tienes cuenta?</h5>
-                                        <p>Accede al panel de inicio de sesion</p>
-                                        <a class="btn btn-primary" href="#signup">Inicia Sesion</a>
-                                    </div>
-                                </div>
-                                <!-- Slide 3 -->
-                                <div class="carousel-item">
-                                    <img src="image/carrousel/img1.jpg" class="d-block w-100" alt="Imagen 3">
-                                    <div class="carousel-caption d-none d-md-block">
-                                        <h5>Título de la Imagen 3</h5>
-                                        <p>Descripción corta de la tercera imagen.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Controles anterior y siguiente -->
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Anterior</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Siguiente</span>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -148,10 +144,13 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
-        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
-        <!-- * *                               SB Forms JS                               * *-->
-        <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
-        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <script src="js/mostrar.js">
+            window.onload = function() {
+            llenarofertas();
+        };
+        </script>
+
+      
         <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
     </body>
 </html>
