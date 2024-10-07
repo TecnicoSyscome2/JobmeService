@@ -26,7 +26,7 @@ namespace JobmeServiceSyscome
         {
             if (File.Exists("conn.ini") == false)
             {
-                File.WriteAllText("conn.ini", "Server=localhost;Database=myplan_jobpost;Uid=root;Pwd=230680");
+                File.WriteAllText("conn.ini", "Server=localhost;Database=myplan_jobpost;Uid=root;Pwd=230680;ConvertZeroDateTime=True;");
             }
             String _connstring = File.ReadAllText("conn.ini");
             MySqlConnection _conn = new MySqlConnection();
@@ -321,7 +321,6 @@ namespace JobmeServiceSyscome
                             ServeHTML(request.Response, "<span class='badge badge-success'>Registro Eliminado Con Exito</span>");
                         }
 
-                        else 
                         if (_q == "listaofertasempleo")
                         {
 
@@ -331,6 +330,7 @@ namespace JobmeServiceSyscome
                             //String pagodesde = query["pagodesde"];
                             //String pagohasta = query["pagohasta"];
                            
+                            
                             String cons = String.Format(@"SELECT * FROM ofertasempleo"
                             );
                             DataTable dt = new DataTable();
@@ -340,7 +340,68 @@ namespace JobmeServiceSyscome
                             ServeHTML(request.Response, Html);
 
                         }
+                        if (_q == "listaempresas")
+                        {
+                            String empresa = query["empresa"];
+                            String nombre = query["nombre"];
+                            //String ubicacion = query["ubicacion"];
+                            //String pagodesde = query["pagodesde"];
+                            //String pagohasta = query["pagohasta"];
 
+                            String cons = String.Format(@"SELECT * FROM empleador"
+                            );
+                            DataTable dt = new DataTable();
+                            dt = Query(cons);
+                            String Html = GenerarListaEmpleadores(dt);
+
+                            ServeHTML(request.Response, Html);
+                        }
+
+
+
+                        if (_q == "agregar_oferta")
+                        {
+                            DataTable t = JsonConvert.DeserializeObject<DataTable>(query["oferta"]);
+
+                            try
+                            {
+                                DataTable _t = t;
+
+                                String _tabla = "ofertasempleo";
+                                String _insert = "replace into " + _tabla + " set ";
+                                Int32 _llevo = 0;
+                                foreach (DataRow _r in _t.Rows)
+                                {
+                                    _llevo++;
+                                    if (_llevo > 1)
+                                        _insert += ", ";
+                                    _insert += String.Format("{0} = '{1}'", _r[0], _r[1]);
+                                }
+                                var _conn = Conexion();
+                                var _comm = Comando(_conn);
+                                _conn.Open();
+                                _comm.CommandText = _insert;
+                                try
+                                {
+                                    _comm.ExecuteNonQuery();
+                                }
+                                catch (Exception ex)
+                                {
+                                    ServeHTMLError(request.Response, ex.Message);
+                                }
+                                finally
+                                {
+                                    _conn.Close();
+                                    _conn.Dispose();
+                                    ServeHTML(request.Response, "Registro Guardado Con éxito");
+                                }
+
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Error al guardar datos: " + ex.Message);
+                            }
+                        }
 
                     }
                 }
@@ -368,7 +429,11 @@ namespace JobmeServiceSyscome
                     {
                         filePath = Path.Combine(rootDirectory, "form_candidatos.html");
                     }
-                        
+                    
+                    if (url == "form_empleadoresinterno")
+                    {
+                        filePath = Path.Combine(rootDirectory, "views/empleador/form_empleadores.html");
+                    }
 
 
                     if (url == "verimg")
@@ -412,6 +477,9 @@ namespace JobmeServiceSyscome
 
             }
         }
+
+
+
 
         public static String QueryJson(String pQuery)
         {
@@ -628,9 +696,23 @@ namespace JobmeServiceSyscome
             string _retval = "";
             foreach (DataRow _r in pTabla.Rows)
             {
+
+               
                 // Asumiendo que las columnas de la tabla son: título, empresa, ubicación, salario mínimo y salario máximo
                 string titulo = _r["titulo"].ToString();        // Título del trabajo
-                string empresa = _r["empresa"].ToString();      // Nombre de la empresa
+                string empresa = _r["idempress"].ToString();      // Nombre de la empresa
+               
+                var _conn = Conexion();
+                var _comm = Comando(_conn);
+
+                _conn.Open();
+                _comm.CommandText = String.Format("Select nombre from empleador where id = {0}", empresa);
+                var empres = _comm.ExecuteReader();
+                empres.Read();
+                String _empress = "";
+                _empress = empres.GetString(0);
+                _conn.Close();
+                _conn.Dispose();
                 string ubicacion = _r["ubicacion"].ToString();  // Ubicación del trabajo
                 string salarioMin = _r["pagomin"].ToString();// Salario mínimo
                 string salarioMax = _r["pagomax"].ToString();// Salario máximo
@@ -642,7 +724,39 @@ namespace JobmeServiceSyscome
                 <div class='job-details'>Empresa: {1} | Ubicación: {2} | Salario: {3} - {4}</div>
                 <div class='job-apply'><a href='#'>Aplicar</a></div>
             </div>
-            ", titulo, empresa, ubicacion, salarioMin, salarioMax) + Environment.NewLine;
+            ", titulo, _empress, ubicacion, salarioMin, salarioMax) + Environment.NewLine;
+            }
+            return _retval;
+        }
+
+        public static string GenerarListaEmpleadores(DataTable pTabla)
+        {
+            string _retval = "";
+            foreach (DataRow _r in pTabla.Rows)
+            {
+                // Asumiendo que las columnas de la tabla son: título, empresa, ubicación, salario mínimo y salario máximo
+                string titulo = _r["nombre"].ToString();        // Título del trabajo
+                string direccion = _r["direccion"].ToString();      // Nombre de la empresa
+                string telefono = _r["telefono"].ToString();  // Ubicación del trabajo
+                string correo = _r["correo"].ToString();// Salario mínimo
+                string logo = _r["logoruta"].ToString();// Salario máximo
+
+                // Generar HTML para cada fila de trabajo
+                _retval += String.Format(@"
+             <div class='empresa-item'>  
+             <div class='empresa-logo'>
+             <img src='/image/logo/logo.jpg' alt='Logo Empresa' onerror ='this.src='Sin Logo''></div>
+             
+             <div class='empresa-info'>
+               <div class='empresa-nombre'>Nombre: {0}</div>
+               <div class='empresa-direccion'>Dirección: {1}</div>
+               <div class='empresa-correo'>Correo: {3}</div>
+               <div class='empresa-correo'>Telefono: {2}</div>
+              
+             </div>
+              <div class='job-apply-empress'><button class='btn btn-dark' href ='#'> Oportunidades </button></div>
+             </div>
+            ", titulo, direccion, telefono, correo, logo) + Environment.NewLine;
             }
             return _retval;
         }

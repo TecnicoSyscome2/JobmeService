@@ -252,12 +252,30 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  max-height: 500px; /* Limita la altura máxima del contenedor */
+  overflow-y: auto;  /* Agrega la scrollbar vertical */
+}
+
+/* Personaliza la scrollbar */
+.empresa-list::-webkit-scrollbar {
+  width: 10px; /* Ancho de la scrollbar */
+  display: none;
+}
+
+.empresa-list::-webkit-scrollbar-thumb {
+  background-color: #007bff; /* Color del thumb de la scrollbar */
+  border-radius: 5px; /* Bordes redondeados */
+}
+
+.empresa-list::-webkit-scrollbar-thumb:hover {
+  background-color: #0056b3; /* Color al pasar el mouse por encima */
 }
 
 .empresa-item {
   display: flex;
-  align-items: center;
-  background-color: #f8f9fa;
+  position: relative; /* Posición relativa para permitir la alineación absoluta del botón */
+  align-items: flex-start;
+  background-color: #fff;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -270,23 +288,25 @@ body {
 }
 
 .empresa-logo img {
-  width: 80px; /* Ancho del logo */
-  height: 80px; /* Alto del logo */
-  object-fit: contain; /* Ajusta la imagen sin recortarla */
-  border-radius: 50%; /* Hace que el logo tenga forma circular */
-  margin-right: 20px; /* Espacio a la derecha del logo */
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 50%;
+  margin-right: 20px;
 }
 
 .empresa-info {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  width: 100%;
+  position: relative;
 }
 
 .empresa-nombre {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #007bff;
+  color: #333;
 }
 
 .empresa-direccion,
@@ -301,44 +321,116 @@ body {
 }
 
 .empresa-telefono {
-  color: #28a745;
+  color: #007bff;
 }
 
 .empresa-correo {
   color: #28a745;
 }
 
-.empresa-apply {
-  margin-left: auto; /* Alinea el botón a la derecha */
- 
+.job-apply-empress {
+  position: absolute;
+  bottom: 0;
+  right: 0; /* Alinea el botón en la esquina inferior derecha de .empresa-info */
 }
 
-.empresa-apply a {
-  display: inline-block; /* Permite estilos adicionales */
-  padding: 10px 15px; /* Espaciado interno del botón */
-  background-color: #003366; /* Color de fondo */
-  color: #fff; /* Color del texto */
-  text-decoration: none; /* Sin subrayado */
-  border-radius: 5px; /* Bordes redondeados */
-  transition: background-color 0.3s; /* Transición para el hover */
-}
-
-.empresa-apply a:hover {
-  background-color: #666; /* Color al pasar el mouse */
+.job-apply-empress a {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #007bff;
   color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
+.job-apply a:hover {
+  background-color: #0056b3;
+}
+
+/* Media queries para pantallas pequeñas */
 @media (max-width: 768px) {
   .empresa-item {
       flex-direction: column;
-      align-items: flex-start;
   }
 
   .empresa-logo img {
-      margin-bottom: 10px;
-     
+    width: 80px; /* Ancho del logo */
+    height: 80px; /* Alto del logo */
+    object-fit: contain; /* Ajusta la imagen sin recortarla */
+    border-radius: 50%; /* Hace que el logo tenga forma circular */
+    margin-right: 20px; /* Espacio a la derecha del logo */
+  }
+
+  .job-apply {
+      position: relative;
+      margin-top: 10px;
+      right: auto;
+      bottom: auto;
   }
 }
+
+
+
+
+
+.form-oferta {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  margin: auto;
+}
+
+.form-oferta .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+}
+
+.form-oferta .form-grid > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-oferta input, 
+.form-oferta select, 
+.form-oferta textarea {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.form-oferta textarea {
+  resize: none;
+}
+
+.form-oferta label {
+  font-weight: bold;
+}
+
+.form-oferta .full-width {
+  grid-column: span 2;
+}
+
+.form-oferta button {
+  background-color: #5cb85c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.form-oferta button:hover {
+  background-color: #4cae4c;
+}
+
 
 hr {
   margin: 1rem 0;

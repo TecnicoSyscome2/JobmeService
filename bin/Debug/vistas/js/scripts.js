@@ -6,28 +6,32 @@
 // This file is intentionally blank
 // Use this file to add JavaScript to your project
 
-var _url = "http://localhost:9010/"
+
 
 function ActualizarPagina(url) {
+  var pagina = "http://localhost:9010/" + url;
+  //var pagina = _url + "obtenerpreguntassolicitud&codigo=0000001";
+  //var pagina = _url + "obtenerpreguntassolicitud";
 
-
-    var _pagina = _url + url;
-    //var _pagina = _url + "obtenerpreguntassolicitud&codigo=0000001"
-    //var _pagina = _url + "obtenerpreguntassolicitud";
- 
-    fetch(_pagina)
-    .then(response => response.text())
+  fetch(pagina)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Error en la solicitud: ' + response.status);
+      }
+      return response.text();
+    })
     .then(data => {
-      document.getElementById("pageview").innerHTML = data;
+      document.getElementById("contenido").innerHTML = data;
       OcultarSubMenu();
     })
-    .catch(error => console.error('Error:', error));
-  
-  }
+    .catch(error => {
+      console.error('Error al actualizar la página:', error);
+    });
+}
 
   function logout() {
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', _url + '?logout', true);
+    xhr.open('POST', 'http://localhost:9010/' + '?q=logout', true);
 
     xhr.onreadystatechange = function () {
       if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -43,44 +47,6 @@ function ActualizarPagina(url) {
     // Enviar la solicitud de logout
     xhr.send();
   }
-
-  llenarpais()
-  function llenarpais() {
-
-    var _pagina = _url + "/?q=llenadopais";
-
-    fetch(_pagina)
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById("pais").innerHTML = data;
-    })
-    .catch(error => console.error('Error:', error));
-  }
-  llenardep()
-  function llenardep() {
-
-    var _pagina = _url + "/?q=llenadodep";
-
-    fetch(_pagina)
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById("departamento").innerHTML = data;
-    })
-    .catch(error => console.error('Error:', error));
-  }
-  llenardis()
-  function llenardis() {
-
-    var _pagina = _url + "/?q=llenadodis";
-
-    fetch(_pagina)
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById("municipio").innerHTML = data;
-    })
-    .catch(error => console.error('Error:', error));
-  }
-
   function setCurrentDate() {
     const dateInput = document.getElementById("fech_nacim");
     const today = new Date();
@@ -94,3 +60,12 @@ function ActualizarPagina(url) {
 
 // Llamar a la función cuando la página se haya cargado
 window.onload = setCurrentDate;
+
+function validarFormulario() {
+    var salario = document.getElementById('salario').value;
+    if (salario <= 0) {
+        alert("El salario debe ser un número positivo.");
+        return false;
+    }
+    return true;
+}

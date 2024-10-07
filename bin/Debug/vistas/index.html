@@ -32,6 +32,7 @@
                         <h2>Feria de Empleo 2024</h2>
                         
                     </a>
+                    <a class="btn btn-dark" onclick="ActualizarPagina('form_empleadoresinterno')"> </a>
                 </div>
                 
                 <!-- Sign Up Button -->
@@ -41,41 +42,16 @@
         </nav>
         
         <!-- Masthead-->
-        <header class="masthead">
+         <div>
+ <header class="masthead">
             <div class="container position-relative" style="margin-top: -10%;margin-bottom: -10%;">
                 <div class="row justify-content-center">
                     <!-- Columna del Formulario -->
                     <div class="col-md-6" id="ofertas_empleo">
   
                         <div class="container-empresas">
-                            <div class="empresa-list">
-                                <div class="empresa-item">
-                                    <div class="empresa-logo">
-                                        <img src="/image/logo/logo.jpg" alt="Logo Empresa" onerror="this.src='Sin Logo'">
-                                    </div>
-                                    <div class="empresa-info">
-                                        <div class="empresa-nombre">Nombre: Tech Solutions</div>
-                                        <div class="empresa-direccion">Dirección: Av. Principal 123, Ciudad</div>
-                                        <div class="empresa-telefono">Teléfono: (55) 1234-5678</div>
-                                        <div class="empresa-correo">Correo: contacto@techsolutions.com</div>
-                                       
-                                    </div>
-                                    <div class="empresa-apply"><a href="#">Oportunidades</a></div>
-                                </div>
-                        
-                                <div class="empresa-item">
-                                    <div class="empresa-logo">
-                                        <img src="/image/logo/logo.jpg" alt="Logo Empresa" onerror="this.src='Sin Logo'">
-                                    </div>
-                                    <div class="empresa-info">
-                                        <div class="empresa-nombre">Nombre: DataCorp</div>
-                                        <div class="empresa-direccion">Dirección: Calle Falsa 456, Ciudad</div>
-                                        <div class="empresa-telefono">Teléfono: (55) 9876-5432</div>
-                                        <div class="empresa-correo">Correo: contacto@datacorp.com</div>
-                                       
-                                    </div>
-                                    <div class="empresa-apply"><a href="#">Oportunidades(100)</a></div>
-                                </div>
+                            <div class="empresa-list" id="empleadoritem">
+                               
                         
                                 <!-- Agrega más empresas aquí -->
                             </div>
@@ -96,6 +72,9 @@
                 </div>
             </div>
         </header>
+         </div>
+         <section id="contenido"></section>
+       
         <!-- Icons Grid-->
 
         <!-- Testimonials-->
@@ -145,11 +124,9 @@
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
         <script src="js/mostrar.js">
-            window.onload = function() {
-            llenarofertas();
-        };
+         
         </script>
-
+ <script src="js/CRUD_EMPLEADOR.js"></script>
       
         <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
     </body>

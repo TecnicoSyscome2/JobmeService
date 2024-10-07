@@ -15,6 +15,24 @@ var _url = "http://localhost:9010/?verif=scm64&q=";
 
         // Llama a la función para cargar las ofertas de empleo cuando la página se carga
         
-        window.onload = function() {
+  
             llenarofertas();
-        };
+ 
+
+        function llenarempresas() {
+
+          var _pagina = _url + "listaempresas";
+      
+          fetch(_pagina)
+          .then(response => response.text())
+          .then(data => {
+            document.getElementById("empleadoritem").innerHTML = data;
+          })
+          .catch(error => console.error('Error:', error));
+        }
+
+      // Llama a la función para cargar las ofertas de empleo cuando la página se carga
+      
+     
+        llenarempresas();
+  

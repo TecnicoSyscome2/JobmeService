@@ -9,21 +9,25 @@
 var _url = "http://localhost:9010/"
 
 function ActualizarPagina(url) {
+  var pagina = _url + url;
+  //var pagina = _url + "obtenerpreguntassolicitud&codigo=0000001";
+  //var pagina = _url + "obtenerpreguntassolicitud";
 
-
-    var _pagina = _url + url;
-    //var _pagina = _url + "obtenerpreguntassolicitud&codigo=0000001"
-    //var _pagina = _url + "obtenerpreguntassolicitud";
- 
-    fetch(_pagina)
-    .then(response => response.text())
+  fetch(pagina)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Error en la solicitud: ' + response.status);
+      }
+      return response.text();
+    })
     .then(data => {
-      document.getElementById("pageview").innerHTML = data;
+      document.getElementById("contenido").innerHTML = data;
       OcultarSubMenu();
     })
-    .catch(error => console.error('Error:', error));
-  
-  }
+    .catch(error => {
+      console.error('Error al actualizar la página:', error);
+    });
+}
 
   llenarpais()
   function llenarpais() {
