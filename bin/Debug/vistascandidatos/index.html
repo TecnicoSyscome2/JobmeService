@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Empleosya.com</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css" />
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+        <style>
+             body {
+        font-family: 'Poppins', sans-serif;
+    }
+        </style>
+    </head>
+    <body>
+        <!-- Navigation-->
+        <nav class="navbar navbar-light bg-light static-top" style="margin-bottom: 1%;margin-top: 1%;">
+            <div class="container d-flex justify-content-between align-items-center">
+                <!-- Logo and Brand Name -->
+                <div class="d-flex align-items-center">
+                    <a class="navbar-brand" href="/">
+                        <h2>Empleosya.com</h2>
+                        
+                    </a>
+                    
+                </div>
+                
+                <div class="ml-auto">
+                   
+                <a class="btn btn-warning" onclick="logout()">Cerrar Sesion</a>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Masthead-->
+         <div>
+ <header class="masthead" >
+            <div class="container position-relative" style="margin-top: -10%;margin-bottom: -10%;">
+                <div class="row justify-content-center" id="contenido">
+             
+                    <div class="col-md-6" id="ofertas_empleo">
+
+                        <div class="container-empresas">
+                            <div class="empresa-list" id="empleadoritem">                  
+                         
+                            </div>
+                        </div>                
+                    </div >                  
+                               <div class="col-md-6">
+                        <div class="container-job-list" >
+                            <div class="job-list" id="joblist" >                             
+                   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+         </div>
+
+         <div id="jobModal" class="modal">
+            <div class="modal-content">
+                <!-- Botón para cerrar el modal -->
+                <span class="close">&times;</span>
+                <div id="vistaoferta" >
+                    <div class="container-modal" id="containesvistaoferta">
+                        <!-- Sección Principal - Título y Detalles del Empleo -->
+                        <section class="job-title">
+                            <h2  id="titulo" ></h2>
+                        </section>
+                        <section class="job-details">
+                            <h3>Detalles del Empleo</h3>
+                            <p><strong>Ubicación:</strong> Ciudad de México</p>
+                            <p><strong>Salario:</strong> $30,000 - $45,000 MXN</p>
+                            <p><strong>Duración:</strong> Del 01/10/2024 al 01/10/2025</p>
+                            <p><strong>Tipo de Contrato:</strong> Tiempo completo</p>
+                            <p><strong>Plazas Disponibles:</strong> 3</p>
+                        </section>
+                        <!-- Ofrecimientos del Puesto -->
+                        <section class="job-offers">
+                            <h3>Lo que ofrecemos</h3>
+                            <ul class="offers-list">
+                                <li>Capacitación continua</li>
+                                <li>Seguro de gastos médicos</li>
+                                <li>Oportunidades de crecimiento</li>
+                            </ul>
+                        </section>
+                        <!-- Requisitos del Puesto -->
+                        <section class="job-requirements">
+                            <h3>Requisitos para el puesto</h3>
+                            <ul class="requirements-list">
+                                <li>Experiencia mínima de 3 años en desarrollo Full-Stack</li>
+                                <li>Conocimiento en tecnologías como React, Node.js y SQL</li>
+                                <li>Capacidad de trabajar en equipo y bajo presión</li>
+                            </ul>
+                        </section>
+                        <!-- Botón para Aplicar -->
+                        <a href="#" class="apply-button">Aplicar Ahora</a>
+                        <!-- Sidebar - Resumen del Puesto -->
+                        <div class="summary">
+                            <h4>Resumen del Puesto</h4>
+                            <p><strong>Título:</strong> Desarrollador Full-Stack Senior</p>
+                            <p><strong>Ubicación:</strong> Ciudad de México</p>
+                            <p><strong>Salario:</strong> $30,000 - $45,000 MXN</p>
+                            <p><strong>Fechas:</strong> 01/10/2024 - 01/10/2025</p>
+                            <p><strong>Plazas:</strong> 3</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer bg-light">
+            <div class="container" style="margin-top: -5%;margin-bottom: -5%;margin-left: -1px;">
+                <div class="row">
+                    <div class="col-lg-7 h-100 text-center text-lg-start my-auto">                    
+                        <ul class="list-inline mb-2" style="margin-top: 7%;">                          
+                            <li class="list-inline-item"><a href="#!">Acerca de</a></li>
+                            <li class="list-inline-item">⋅</li>
+                            <li class="list-inline-item"><a href="#!">Contacto</a></li>
+                            <li class="list-inline-item">⋅</li>
+                            <li class="list-inline-item"><a href="#!">Términos de Servicio</a></li>
+                            <li class="list-inline-item">⋅</li>
+                            <li class="list-inline-item"><a href="#!">Política de Privacidad</a></li>
+                        </ul>
+                        
+                    </div>
+                    <div class="col-lg-6 h-100 text-center text-lg-start my-auto">
+                        <p>&copy; 2024 Syscome. Todos los derechos reservados.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+        <script src="js/scripts.js"></script> 
+        <script src="js/cssscripts.js"></script> 
+    </body>
+</html>

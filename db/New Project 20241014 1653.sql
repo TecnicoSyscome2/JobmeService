@@ -22,6 +22,31 @@ CREATE DATABASE IF NOT EXISTS myplan_jobpost;
 USE myplan_jobpost;
 
 --
+-- Definition of table `aplicarofertas`
+--
+
+DROP TABLE IF EXISTS `aplicarofertas`;
+CREATE TABLE `aplicarofertas` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `idcandidato` varchar(30) NOT NULL,
+  `idoferta` int(10) unsigned NOT NULL,
+  `fecha` date NOT NULL,
+  `idcv` varchar(500) NOT NULL,
+  `activa` int(10) unsigned NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `aplicarofertas`
+--
+
+/*!40000 ALTER TABLE `aplicarofertas` DISABLE KEYS */;
+INSERT INTO `aplicarofertas` (`id`,`idcandidato`,`idoferta`,`fecha`,`idcv`,`activa`) VALUES 
+ (1,'usuario01',1,'2024-10-14','1',1);
+/*!40000 ALTER TABLE `aplicarofertas` ENABLE KEYS */;
+
+
+--
 -- Definition of table `candidato`
 --
 
@@ -38,6 +63,7 @@ CREATE TABLE `candidato` (
   `telefono` varchar(50) NOT NULL,
   `correo` varchar(50) NOT NULL,
   `linkedin` mediumtext,
+  `usuariotipo` int(10) unsigned NOT NULL default '2',
   PRIMARY KEY  (`usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -46,12 +72,12 @@ CREATE TABLE `candidato` (
 --
 
 /*!40000 ALTER TABLE `candidato` DISABLE KEYS */;
-INSERT INTO `candidato` (`usuario`,`clave`,`apellido`,`nombre`,`pais`,`departamento`,`municipio`,`fech_nacim`,`telefono`,`correo`,`linkedin`) VALUES 
- ('usuario01','123','Pérez','Juan',1,10,101,'1990-05-12','555-123-4567','juan.perez@email.com','https://www.linkedin.com/in/juanperez'),
- ('usuario02','claveSegura456','García','Ana',1,12,102,'1988-08-24','555-987-6543','ana.garcia@email.com','https://www.linkedin.com/in/anagarcia'),
- ('usuario03','claveSegura789','López','Carlos',2,11,103,'1992-12-02','555-654-3210','carlos.lopez@email.com','https://www.linkedin.com/in/carloslopez'),
- ('usuario04','claveSegura012','Rodríguez','María',3,12,104,'1995-03-15','555-321-0987','maria.rodriguez@email.com','https://www.linkedin.com/in/mariarodriguez'),
- ('usuario05','claveSegura345','Hernández','Lara',1,15,105,'1993-07-22','555-543-2109','javier.hernandez@email.com','https://www.linkedin.com/in/javierhernandez');
+INSERT INTO `candidato` (`usuario`,`clave`,`apellido`,`nombre`,`pais`,`departamento`,`municipio`,`fech_nacim`,`telefono`,`correo`,`linkedin`,`usuariotipo`) VALUES 
+ ('usuario01','123','Pérez','Juan',1,10,101,'1990-05-12','555-123-4567','juan.perez@email.com','https://www.linkedin.com/in/juanperez',2),
+ ('usuario02','claveSegura456','García','Ana',1,12,102,'1988-08-24','555-987-6543','ana.garcia@email.com','https://www.linkedin.com/in/anagarcia',2),
+ ('usuario03','claveSegura789','López','Carlos',2,11,103,'1992-12-02','555-654-3210','carlos.lopez@email.com','https://www.linkedin.com/in/carloslopez',2),
+ ('usuario04','claveSegura012','Rodríguez','María',3,12,104,'1995-03-15','555-321-0987','maria.rodriguez@email.com','https://www.linkedin.com/in/mariarodriguez',2),
+ ('usuario05','claveSegura345','Hernández','Lara',1,15,105,'1993-07-22','555-543-2109','javier.hernandez@email.com','https://www.linkedin.com/in/javierhernandez',2);
 /*!40000 ALTER TABLE `candidato` ENABLE KEYS */;
 
 
@@ -98,8 +124,13 @@ CREATE TABLE `cv_candidatos` (
 
 /*!40000 ALTER TABLE `cv_candidatos` DISABLE KEYS */;
 INSERT INTO `cv_candidatos` (`id`,`usuario`,`nombre`,`rutacv`) VALUES 
- (1,'ADMIN3','juan-perez','ADMIN3_N-juan-perez.pdf'),
- (2,'ADMIN4','juan-perez','ADMIN4_N-juan-perez.pdf');
+ (1,'usuario01','juan-perez','ADMIN3_N-juan-perez.pdf'),
+ (2,'ADMIN4','juan-perez','ADMIN4_N-juan-perez.pdf'),
+ (3,'gerarld','geraldine-suarez','gerarld_N-geraldine-suarez.pdf'),
+ (4,'Juanelpro','juan-hernandez','Juanelpro_N-juan-hernandez.pdf'),
+ (5,'prueba','juan-hernandez','prueba_N-juan-hernandez.pdf'),
+ (6,'usuario32','Juan-Vazques','usuario32_N-Juan-Vazques.pdf'),
+ (7,'usuariodeprueba1','usuario-prueba','usuariodeprueba1_N-usuario-prueba.pdf');
 /*!40000 ALTER TABLE `cv_candidatos` ENABLE KEYS */;
 
 
@@ -278,6 +309,7 @@ CREATE TABLE `empleador` (
   `clave` varchar(50) NOT NULL,
   `rep` varchar(45) NOT NULL,
   `logoruta` varchar(200) default 'Sin Logo ',
+  `usuariotipo` int(10) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -286,12 +318,9 @@ CREATE TABLE `empleador` (
 --
 
 /*!40000 ALTER TABLE `empleador` DISABLE KEYS */;
-INSERT INTO `empleador` (`id`,`nombre`,`direccion`,`telefono`,`correo`,`usuario`,`clave`,`rep`,`logoruta`) VALUES 
- (1,'SYSCOME S.A. DE C.V.','Calle 123, Ciudad de México','+5032229-7973','ernesto.padilla@outlook.com','epadilla','c509fbdb9addc2367fd9f103036c3ffab4f0a148','Ernesto Padilla','logo_alpha.png'),
- (2,'Empresa Beta','Avenida Principal 456, Monterrey','818-987-6543','info@beta.com','admin_beta','betaPass2024','María Pérez','logo_beta.png'),
- (3,'Empresa Gamma','Calle Falsa 789, Guadalajara','333-567-8901','gerencia@gamma.com','admin_gamma','gammaKey987','Luis García','logo_gamma.png'),
- (4,'Empresa Delta','Boulevard Central 321, Tijuana','664-123-0987','soporte@delta.com','admin_delta','deltaSecure555','Ana Martínez','logo_delta.png'),
- (5,'Empresa Epsilon','Calle Norte 654, Querétaro','442-876-5432','ventas@epsilon.com','admin_epsilon','epsilonCode789','Javier Ruiz','logo_epsilon.png');
+INSERT INTO `empleador` (`id`,`nombre`,`direccion`,`telefono`,`correo`,`usuario`,`clave`,`rep`,`logoruta`,`usuariotipo`) VALUES 
+ (1,'SYSCOME S.A. DE C.V.','Calle 123, Ciudad de México','+5032229-7973','ernesto.padilla@outlook.com','epadilla','123asd','Ernesto Padilla','logo_alpha.png',1),
+ (11,'Avancemos','Santa Tecla #23','2393-2722','syscomeatencionalcliente2.0@gmail.com','juan.perez@avancemos.com','123','Juan Perez','_E-Avancemos.png',1);
 /*!40000 ALTER TABLE `empleador` ENABLE KEYS */;
 
 
@@ -361,6 +390,36 @@ INSERT INTO `municipio` (`id_municipio`,`nombre_municipio`,`id_departamento`) VA
 
 
 --
+-- Definition of table `niveleducativo`
+--
+
+DROP TABLE IF EXISTS `niveleducativo`;
+CREATE TABLE `niveleducativo` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `nivel` varchar(150) NOT NULL,
+  `descripcion` mediumtext NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `niveleducativo`
+--
+
+/*!40000 ALTER TABLE `niveleducativo` DISABLE KEYS */;
+INSERT INTO `niveleducativo` (`id`,`nivel`,`descripcion`) VALUES 
+ (1,'Sin Estudios','No se requiere ningún nivel educativo formal.'),
+ (2,'Educación Primaria','Completa la educación primaria o equivalente.'),
+ (3,'Educación Secundaria','Completa la educación secundaria o equivalente.'),
+ (4,'Bachillerato','Completa el bachillerato o educación media superior.'),
+ (5,'Técnico Superior','Título de técnico superior o equivalente.'),
+ (6,'Licenciatura','Título universitario a nivel de licenciatura.'),
+ (7,'Maestría','Título de posgrado a nivel de maestría.'),
+ (8,'Doctorado','Título de posgrado a nivel de doctorado.'),
+ (9,'Cursos/Certificaciones','Certificaciones o cursos especializados.');
+/*!40000 ALTER TABLE `niveleducativo` ENABLE KEYS */;
+
+
+--
 -- Definition of table `ofertaofrecimiento`
 --
 
@@ -395,11 +454,15 @@ CREATE TABLE `ofertasempleo` (
   `ubicacion` mediumtext NOT NULL,
   `pagomin` decimal(12,2) NOT NULL,
   `pagomax` decimal(12,2) NOT NULL,
-  `idempress` int(10) unsigned NOT NULL,
+  `idempress` int(10) unsigned default '0',
   `epiccalling` mediumtext NOT NULL,
   `desde` date NOT NULL,
   `hasta` date NOT NULL,
   `plazas` int(10) unsigned NOT NULL,
+  `contrato` int(10) unsigned NOT NULL,
+  `edadmin` int(10) unsigned default '0',
+  `edadmax` int(10) unsigned default '0',
+  `niveleduc` int(10) unsigned default '1',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -408,12 +471,13 @@ CREATE TABLE `ofertasempleo` (
 --
 
 /*!40000 ALTER TABLE `ofertasempleo` DISABLE KEYS */;
-INSERT INTO `ofertasempleo` (`id`,`titulo`,`ubicacion`,`pagomin`,`pagomax`,`idempress`,`epiccalling`,`desde`,`hasta`,`plazas`) VALUES 
- (1,'Desarrollador c#','San Salvador','400.00','1000.00',1,'Quiere crear la tecnología del mañana para las nuevas empresas que empezarán en El Salvador?','2024-10-01','2024-10-30',2),
- (2,'Desarrollador Backend','Monterrey','30000.00','50000.00',2,'','0000-00-00','0000-00-00',0),
- (3,'Analista de Datos','Guadalajara','35000.00','45000.00',3,'','0000-00-00','0000-00-00',0),
- (4,'Diseñador UI/UX','Ciudad de México','25000.00','35000.00',1,'','0000-00-00','0000-00-00',0),
- (5,'Ingeniero DevOps','Tijuana','45000.00','65000.00',2,'','0000-00-00','0000-00-00',0);
+INSERT INTO `ofertasempleo` (`id`,`titulo`,`ubicacion`,`pagomin`,`pagomax`,`idempress`,`epiccalling`,`desde`,`hasta`,`plazas`,`contrato`,`edadmin`,`edadmax`,`niveleduc`) VALUES 
+ (1,'Desarrollador c#','San Salvador','400.00','1000.00',1,'Quiere crear la tecnología del mañana para las nuevas empresas que empezarán en El Salvador?','2024-10-01','2024-10-30',2,1,20,30,5),
+ (2,'Desarrollador Backend','San Salvador','300.00','500.00',1,'','2024-10-01','2024-10-30',1,0,0,0,0),
+ (3,'Analista de Datos','San Salvador','350.00','450.00',1,'','2024-10-01','2024-10-30',1,0,0,0,0),
+ (4,'Diseñador UI/UX','San Salvador','400.00','600.00',1,'','2024-10-01','2024-10-30',3,0,0,0,0),
+ (5,'Ingeniero DevOps','Santa Tecla','450.00','650.00',11,'Crea  la nueva tecnolog(i)a para mejorar el ma(n)ana','2024-10-01','2024-10-30',1,0,0,0,0),
+ (39,'Programador Jr','Santa Tecla ','400.00','1200.00',11,'Crea  la nueva tecnolog(i)a para mejorar el ma(n)ana','2024-10-10','2024-10-30',1,3,0,0,0);
 /*!40000 ALTER TABLE `ofertasempleo` ENABLE KEYS */;
 
 
@@ -510,6 +574,29 @@ INSERT INTO `retroalimentaciones` (`idretro`,`retroalimentacion`) VALUES
  (4,'Las Referencias que colocó en su CV no se pudieron contactar'),
  (5,'');
 /*!40000 ALTER TABLE `retroalimentaciones` ENABLE KEYS */;
+
+
+--
+-- Definition of table `tipocontrato`
+--
+
+DROP TABLE IF EXISTS `tipocontrato`;
+CREATE TABLE `tipocontrato` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `nombre` varchar(100) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tipocontrato`
+--
+
+/*!40000 ALTER TABLE `tipocontrato` DISABLE KEYS */;
+INSERT INTO `tipocontrato` (`id`,`nombre`) VALUES 
+ (1,'Contrato Permanente'),
+ (2,'Temporal'),
+ (3,'Prácticas');
+/*!40000 ALTER TABLE `tipocontrato` ENABLE KEYS */;
 
 
 

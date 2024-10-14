@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oferta de Empleo</title>
+    <style>
+
+
+/* Estilos del modal */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Ancho del modal */
+    max-width: 900px; /* Máximo ancho */
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    overflow-y: auto;
+    max-height: 90%; /* Limita la altura al 90% del viewport */
+}
+
+/* Botón cerrar (X) */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Botón para abrir el modal */
+#openModalBtn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#openModalBtn:hover {
+    background-color: #0056b3;
+}
+
+/* Adaptar el contenedor al modal */
+#vistaoferta .container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 15px;
+    background-color: #fff;
+}
+
+/* Adaptar los estilos del contenido */
+#vistaoferta .job-title {
+    font-size: 28px;
+    color: #333;
+}
+
+#vistaoferta .job-details, #vistaoferta .job-offers, #vistaoferta .job-requirements {
+    margin-top: 20px;
+}
+
+#vistaoferta .job-details h3, #vistaoferta .job-offers h3, #vistaoferta .job-requirements h3 {
+    color: #444;
+    margin-bottom: 10px;
+}
+
+#vistaoferta .job-details p {
+    margin: 5px 0;
+}
+
+#vistaoferta .offers-list, #vistaoferta .requirements-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#vistaoferta .offers-list li, #vistaoferta .requirements-list li {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+#vistaoferta .apply-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+#vistaoferta .apply-button:hover {
+    background-color: #218838;
+}
+
+#vistaoferta .summary {
+    background-color: #e9ecef;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+#vistaoferta .summary h4 {
+    margin-bottom: 10px;
+}
+
+#vistaoferta .summary p {
+    margin: 5px 0;
+}
+
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Oferta de Empleo - Epic Calling</h1>
+</header>
+
+<!-- Botón para abrir el modal -->
+<button id="openModalBtn">Ver Oferta</button>
+
+<!-- Modal -->
+<div id="jobModal" class="modal">
+    <div class="modal-content">
+        <!-- Botón para cerrar el modal -->
+        <span class="close">&times;</span>
+        <div id="vistaoferta">
+            <div class="container">
+                <!-- Sección Principal - Título y Detalles del Empleo -->
+                <section class="job-title">
+                    <h2>Desarrollador Full-Stack Senior</h2>
+                </section>
+                <section class="job-details">
+                    <h3>Detalles del Empleo</h3>
+                    <p><strong>Ubicación:</strong> Ciudad de México</p>
+                    <p><strong>Salario:</strong> $30,000 - $45,000 MXN</p>
+                    <p><strong>Duración:</strong> Del 01/10/2024 al 01/10/2025</p>
+                    <p><strong>Tipo de Contrato:</strong> Tiempo completo</p>
+                    <p><strong>Plazas Disponibles:</strong> 3</p>
+                </section>
+                <!-- Ofrecimientos del Puesto -->
+                <section class="job-offers">
+                    <h3>Lo que ofrecemos</h3>
+                    <ul class="offers-list">
+                        <li>Capacitación continua</li>
+                        <li>Seguro de gastos médicos</li>
+                        <li>Oportunidades de crecimiento</li>
+                    </ul>
+                </section>
+                <!-- Requisitos del Puesto -->
+                <section class="job-requirements">
+                    <h3>Requisitos para el puesto</h3>
+                    <ul class="requirements-list">
+                        <li>Experiencia mínima de 3 años en desarrollo Full-Stack</li>
+                        <li>Conocimiento en tecnologías como React, Node.js y SQL</li>
+                        <li>Capacidad de trabajar en equipo y bajo presión</li>
+                    </ul>
+                </section>
+                <!-- Botón para Aplicar -->
+                <a href="#" class="apply-button">Aplicar Ahora</a>
+                <!-- Sidebar - Resumen del Puesto -->
+                <div class="summary">
+                    <h4>Resumen del Puesto</h4>
+                    <p><strong>Título:</strong> Desarrollador Full-Stack Senior</p>
+                    <p><strong>Ubicación:</strong> Ciudad de México</p>
+                    <p><strong>Salario:</strong> $30,000 - $45,000 MXN</p>
+                    <p><strong>Fechas:</strong> 01/10/2024 - 01/10/2025</p>
+                    <p><strong>Plazas:</strong> 3</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>© 2024 Epic Calling. Todos los derechos reservados.</p>
+</footer>
+<script> 
+    // Obtener elementos del DOM
+var modal = document.getElementById("jobModal");
+var btn = document.getElementById("openModalBtn");
+var span = document.getElementsByClassName("close")[0];
+
+// Cuando se hace clic en el botón, se abre el modal
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+
+// Cuando se hace clic en la X, se cierra el modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// Cuando se hace clic fuera del contenido del modal, se cierra el modal
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+</script>
+</body>
+</html>

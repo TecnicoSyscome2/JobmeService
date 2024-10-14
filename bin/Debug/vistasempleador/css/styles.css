@@ -162,75 +162,376 @@ body {
     box-sizing: border-box;
 }
 
-/* Form Container */
-#login {
+.container-job-list {
+ /* Para evitar que el contenido se solape con el navbar */
+ width: 100%;
+ max-width: 1200px;
+ margin: 0 auto;
+ padding: 20px;
+}
+
+/* Lista de ofertas de empleo */
+.job-list {
+  width: 100%;
+  max-width: 1300px;
+  height: 455px; /* Limita la altura y permite scroll */
+  overflow-y: auto; /* Scroll vertical si hay muchas ofertas */
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.job-item {
+  background-color: #f8f9fa;
+  padding: 15px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 8px;
+}
+
+.job-item:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.job-item:nth-child(odd) {
+  background-color: #f8f9fa;
+}
+
+.job-title {
+  font-size: 1.5em;
+  margin-bottom: 5px;
+  color: #007BFF;
+}
+
+.job-details {
+  font-size: 1em;
+  color: #666;
+}
+
+.job-apply {
+  text-align: right;
+}
+
+.job-apply a {
+  text-decoration: none;
+  color: #fff;
+  background-color: #003366;
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.job-apply a:hover {
+  background-color: #424649;
+  color: #fff;
+}
+
+/* Scroll personalizado */
+.job-list::-webkit-scrollbar {
+  width: 10px;
+  display: none;
+}
+
+.job-list::-webkit-scrollbar-thumb {
+  background-color: #003366;
+  
+  border-radius: 10px;
+}
+
+.job-list::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+.container-empresas {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+ 
+}
+
+.empresa-list {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 2%;
-  margin-bottom: 2%;
+  gap: 20px;
+  max-height: 603px; /* Limita la altura máxima del contenedor */
+  overflow-y: auto;  /* Agrega la scrollbar vertical */
 }
 
-#login form {
-  background-color: white;
+/* Personaliza la scrollbar */
+.empresa-list::-webkit-scrollbar {
+  width: 10px; /* Ancho de la scrollbar */
+  display: none;
+}
+
+.empresa-list::-webkit-scrollbar-thumb {
+  background-color: #007bff; /* Color del thumb de la scrollbar */
+  border-radius: 5px; /* Bordes redondeados */
+}
+
+.empresa-list::-webkit-scrollbar-thumb:hover {
+  background-color: #0056b3; /* Color al pasar el mouse por encima */
+}
+
+.empresa-item {
+  display: flex;
+  position: relative; /* Posición relativa para permitir la alineación absoluta del botón */
+  align-items: flex-start;
+  background-color: #fff;
+
   padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 300px;
-  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Image Styling */
-#login .image-container {
-  margin-bottom: 20px;
+.empresa-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
 }
 
-#login .image-container img {
-  max-width: 150px;
-  height: auto;
+.empresa-logo img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 50%;
+  margin-right: 20px;
 }
 
-/* Header */
-#login h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-/* Input Fields */
-#login input[type="text"],
-#login input[type="password"] {
+.empresa-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
   width: 100%;
-  padding: 10px;
-  margin: 10px 0;
+  position: relative;
+}
+
+.empresa-nombre {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.empresa-direccion,
+.empresa-telefono,
+.empresa-correo {
+  font-size: 1rem;
+  color: #666;
+}
+
+.empresa-direccion {
+  margin-top: 5px;
+}
+
+.empresa-telefono {
+  color: #007bff;
+}
+
+.empresa-correo {
+  color: #28a745;
+}
+
+.job-apply-empress {
+  position: absolute;
+  margin-bottom: 1%;
+  margin-right: 1%;
+  bottom: 0;
+  right: 0; /* Alinea el botón en la esquina inferior derecha de .empresa-info */
+}
+
+.job-apply-empress a {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.job-apply a:hover {
+  background-color: #0056b3;
+}
+
+/* Media queries para pantallas pequeñas */
+@media (max-width: 768px) {
+  .empresa-item {
+      flex-direction: column;
+  }
+
+  .empresa-logo img {
+    width: 80px; /* Ancho del logo */
+    height: 80px; /* Alto del logo */
+    object-fit: contain; /* Ajusta la imagen sin recortarla */
+    border-radius: 50%; /* Hace que el logo tenga forma circular */
+    margin-right: 20px; /* Espacio a la derecha del logo */
+  }
+
+  .job-apply {
+      position: relative;
+      margin-top: 10px;
+      right: auto;
+      bottom: auto;
+  }
+}
+
+
+
+
+
+.form-oferta {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  margin: auto;
+}
+
+.form-oferta .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+}
+
+.form-oferta .form-grid > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-oferta input, 
+.form-oferta select, 
+.form-oferta textarea {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
   border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.form-oferta textarea {
+  resize: none;
+}
+
+.form-oferta label {
+  font-weight: bold;
+}
+
+.form-oferta .full-width {
+  grid-column: span 2;
+}
+
+.form-oferta button {
+  background-color: #5cb85c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
   border-radius: 5px;
   font-size: 16px;
 }
 
-/* Button Styling */
-#login button {
-  background-color: #003366;
-  color: white;
-  padding: 10px;
+.form-oferta button:hover {
+  background-color: #4cae4c;
+}
+
+
+
+/* Estilos generales para la tabla */
+table {
   width: 100%;
-  border: none;
-  border-radius: 5px;
-  font-size: 18px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  border-collapse: collapse;
+  margin: 0px 0;
+  font-size: 16px;
+  font-family: 'Arial', sans-serif;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-#login button:hover {
-  background-color: #666;
+/* Estilos para el encabezado */
+table thead {
+  background-color: #003366; /* Color principal de la bolsa de empleo */
+  color: white;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  #login form {
-      width: 100%;
+table thead th {
+  padding: 0px;
+  text-align: left;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Estilos para las filas del cuerpo de la tabla */
+table tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+table tbody td {
+  padding: 10px;
+  color: #333;
+}
+
+/* Resaltar la fila al pasar el ratón */
+table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Estilo para la primera columna (botones o íconos) */
+table tbody td:first-child {
+  text-align: center;
+  width: 50px;
+}
+
+/* Estilo para las descripciones */
+table tbody td:nth-child(2) {
+  font-weight: 500;
+}
+
+/* Estilo para el contenedor de la tabla */
+.table-container {
+  margin: 0 auto;
+  max-width: 800px;
+  overflow-x: auto;
+}
+
+/* Para pantallas pequeñas (móviles) */
+@media (max-width: 600px) {
+  table thead {
+      display: none; /* Oculta el encabezado */
+  }
+
+  table tbody tr {
+      display: block;
+      margin-bottom: 20px;
+      border-bottom: none;
+  }
+
+  table tbody td {
+      display: block;
+      text-align: right;
+      padding-left: 50%;
+      position: relative;
+  }
+
+  table tbody td:before {
+      content: attr(data-label);
+      position: absolute;
+      left: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+  }
+
+  table tbody td:first-child {
+      text-align: left;
   }
 }
+
 
 hr {
   margin: 1rem 0;
@@ -3089,6 +3390,7 @@ textarea.form-control-lg {
   --bs-btn-disabled-bg: #f8f9fa;
   --bs-btn-disabled-border-color: #f8f9fa;
 }
+
 
 .btn-dark {
   --bs-btn-color: #fff;
@@ -11042,6 +11344,6 @@ header.masthead h1, header.masthead .h1 {
 }
 
 footer.footer {
-  padding-top: 4rem;
-  padding-bottom: 4rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }

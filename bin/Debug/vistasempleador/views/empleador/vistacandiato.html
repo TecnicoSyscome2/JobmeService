@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Candidato</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .card-header {
+            font-size: 20px;
+            font-weight: bold;
+            border-bottom: 2px solid #ccc;
+            margin-bottom: 10px;
+        }
+        .card-body {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .card-body div {
+            flex: 1;
+            min-width: 250px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Datos del Candidato -->
+        <div class="card">
+            <div class="card-header">Datos del Candidato</div>
+            <div class="card-body">
+                <div>
+                    <label for="usuario">Usuario</label>
+                    <input type="text" id="usuario" disabled>
+                </div>
+                <div>
+                    <label for="clave">Clave</label>
+                    <input type="password" id="clave" disabled>
+                </div>
+                <div>
+                    <label for="apellido">Apellido</label>
+                    <input type="text" id="apellido" disabled>
+                </div>
+                <div>
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" disabled>
+                </div>
+                <div>
+                    <label for="pais">País</label>
+                    <input type="text" id="pais" disabled>
+                </div>
+                <div>
+                    <label for="departamento">Departamento</label>
+                    <input type="text" id="departamento" disabled>
+                </div>
+                <div>
+                    <label for="municipio">Municipio</label>
+                    <input type="text" id="municipio" disabled>
+                </div>
+                <div>
+                    <label for="fech_nacim">Fecha de Nacimiento</label>
+                    <input type="date" id="fech_nacim" disabled>
+                </div>
+                <div>
+                    <label for="telefono">Teléfono</label>
+                    <input type="text" id="telefono" disabled>
+                </div>
+                <div>
+                    <label for="correo">Correo Electrónico</label>
+                    <input type="email" id="correo" disabled>
+                </div>
+                <div>
+                    <label for="linkedin">Perfil de LinkedIn</label>
+                    <input type="text" id="linkedin" disabled>
+                </div>
+                <div>
+                    <label for="usuariotipo">Tipo de Usuario</label>
+                    <input type="text" id="usuariotipo" disabled>
+                </div>
+            </div>
+        </div>
+
+        <!-- Datos de la Solicitud -->
+        <div class="card">
+            <div class="card-header">Datos de la Solicitud</div>
+            <div class="card-body">
+                <div>
+                    <label for="id_solicitud">ID Solicitud</label>
+                    <input type="text" id="id_solicitud" disabled>
+                </div>
+                <div>
+                    <label for="idcandidato">ID Candidato</label>
+                    <input type="text" id="idcandidato" disabled>
+                </div>
+                <div>
+                    <label for="idoferta">ID Oferta</label>
+                    <input type="text" id="idoferta" disabled>
+                </div>
+                <div>
+                    <label for="fecha_solicitud">Fecha de Aplicación</label>
+                    <input type="date" id="fecha_solicitud" disabled>
+                </div>
+                <div>
+                    <label for="idcv">ID del CV</label>
+                    <input type="text" id="idcv" disabled>
+                </div>
+                <div>
+                    <label for="activa">Solicitud Activa</label>
+                    <input type="text" id="activa" disabled>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ofertas de Empleo y Aplicaciones</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .left-section, .right-section {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 50%;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+        h2 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .job-card, .application-card {
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: background-color 0.3s ease;
+        }
+        .job-card:hover, .application-card:hover {
+            background-color: #eaeaea;
+        }
+        .job-card h3, .application-card h3 {
+            font-size: 18px;
+            margin: 0;
+            color: #333;
+        }
+        .job-details, .application-details {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+        .job-details span, .application-details span {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .btn {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sección Izquierda: Ofertas de Empleo -->
+        <div class="left-section">
+            <h2>Ofertas de Empleo</h2>
+
+            <!-- Tarjeta de una oferta de empleo -->
+            <div class="job-card">
+                <h3>Desarrollador Full Stack</h3>
+                <div class="job-details">
+                    <span>Ubicación: Ciudad de México</span>
+                    <span>Salario: $40,000 - $50,000 MXN</span>
+                    <span>Plazas Disponibles: 3</span>
+                    <span>Fecha de Publicación: 2024-09-01</span>
+                </div>
+                <a href="#" class="btn">Ver Detalles</a>
+            </div>
+
+            <!-- Otra oferta de empleo -->
+            <div class="job-card">
+                <h3>Ingeniero de DevOps</h3>
+                <div class="job-details">
+                    <span>Ubicación: Monterrey</span>
+                    <span>Salario: $45,000 - $55,000 MXN</span>
+                    <span>Plazas Disponibles: 2</span>
+                    <span>Fecha de Publicación: 2024-09-15</span>
+                </div>
+                <a href="#" class="btn">Ver Detalles</a>
+            </div>
+
+            <!-- Más ofertas se pueden añadir aquí -->
+        </div>
+
+        <!-- Sección Derecha: Aplicaciones de los Candidatos -->
+        <div class="right-section">
+            <h2>Aplicaciones de Candidatos</h2>
+
+            <!-- Tarjeta de una aplicación -->
+            <div class="application-card">
+                <h3>John Doe</h3>
+                <div class="application-details">
+                    <span>ID Candidato: 1001</span>
+                    <span>Aplicó a: Desarrollador Full Stack</span>
+                    <span>Fecha de Aplicación: 2024-09-05</span>
+                    <span>CV: <a href="#">Ver CV</a></span>
+                    <span>Estado: Activo</span>
+                </div>
+                <a href="#" class="btn">Ver Perfil</a>
+            </div>
+
+            <!-- Otra aplicación -->
+            <div class="application-card">
+                <h3>Jane Smith</h3>
+                <div class="application-details">
+                    <span>ID Candidato: 1002</span>
+                    <span>Aplicó a: Ingeniero de DevOps</span>
+                    <span>Fecha de Aplicación: 2024-09-10</span>
+                    <span>CV: <a href="#">Ver CV</a></span>
+                    <span>Estado: En proceso</span>
+                </div>
+                <a href="#" class="btn">Ver Perfil</a>
+            </div>
+
+            <!-- Más aplicaciones se pueden añadir aquí -->
+        </div>
+    </div>
+    <script>
+        // Ejemplo de datos de ofertas de empleo y aplicaciones recibidos desde el servidor
+const ofertas = [
+    { titulo: "Desarrollador Full Stack", ubicacion: "Ciudad de México", salario: "40,000 - 50,000 MXN", plazas: 3, fecha: "2024-09-01" },
+    { titulo: "Ingeniero de DevOps", ubicacion: "Monterrey", salario: "45,000 - 55,000 MXN", plazas: 2, fecha: "2024-09-15" }
+];
+
+const aplicaciones = [
+    { nombre: "John Doe", idCandidato: 1001, oferta: "Desarrollador Full Stack", fecha: "2024-09-05", cv: "#", estado: "Activo" },
+    { nombre: "Jane Smith", idCandidato: 1002, oferta: "Ingeniero de DevOps", fecha: "2024-09-10", cv: "#", estado: "En proceso" }
+];
+
+// Llenar las ofertas de empleo
+const ofertasContainer = document.querySelector('.left-section');
+ofertas.forEach(oferta => {
+    const ofertaCard = document.createElement('div');
+    ofertaCard.classList.add('job-card');
+    ofertaCard.innerHTML = `
+        <h3>${oferta.titulo}</h3>
+        <div class="job-details">
+            <span>Ubicación: ${oferta.ubicacion}</span>
+            <span>Salario: ${oferta.salario}</span>
+            <span>Plazas Disponibles: ${oferta.plazas}</span>
+            <span>Fecha de Publicación: ${oferta.fecha}</span>
+        </div>
+        <a href="#" class="btn">Ver Detalles</a>
+    `;
+    ofertasContainer.appendChild(ofertaCard);
+});
+
+// Llenar las aplicaciones de candidatos
+const aplicacionesContainer = document.querySelector('.right-section');
+aplicaciones.forEach(aplicacion => {
+    const aplicacionCard = document.createElement('div');
+    aplicacionCard.classList.add('application-card');
+    aplicacionCard.innerHTML = `
+        <h3>${aplicacion.nombre}</h3>
+        <div class="application-details">
+            <span>ID Candidato: ${aplicacion.idCandidato}</span>
+            <span>Aplicó a: ${aplicacion.oferta}</span>
+            <span>Fecha de Aplicación: ${aplicacion.fecha}</span>
+            <span>CV: <a href="${aplicacion.cv}">Ver CV</a></span>
+            <span>Estado: ${aplicacion.estado}</span>
+        </div>
+        <a href="#" class="btn">Ver Perfil</a>
+    `;
+    aplicacionesContainer.appendChild(aplicacionCard);
+});
+
+    </script>
+</body>
+</html>

@@ -28,7 +28,8 @@ function guardarcandidatos() {
         .then(data => {
            alert(data) 
            uploadImage()// Actualizar el contenido del elemento con id "resultado"
-        })
+           window.location.href = 'logincandidatos';
+          })
         .catch(error => console.error('Error:', error));
 
     return datosString;
@@ -57,11 +58,13 @@ function guardarempleadores() {
     var _url = _url2; // Reemplaza esto con tu URL
     var url = `${_url}?q=agregar_sin_empleador&datos=${encodeURIComponent(datosString)}`;
 
+
     fetch(url)
         .then(response => response.text())
         .then(data => {
            alert(data) 
            uploadImageempl()// Actualizar el contenido del elemento con id "resultado"
+           window.location.href = 'logincandidatos';
         })
         .catch(error => console.error('Error:', error));
 

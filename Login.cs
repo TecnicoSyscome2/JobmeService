@@ -58,6 +58,52 @@ namespace JobmeServiceSyscome
             return _t;
         }
 
+        public static string EjecutarConsulta(string pConsulta)
+        {
+            string resultado = string.Empty;
+
+            using (MySqlConnection _conn = Conexion())
+            {
+                using (MySqlCommand _comm = new MySqlCommand(pConsulta, _conn))
+                {
+                    _conn.Open();
+
+                    using (var reader = _comm.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            resultado = reader.GetString(0); // Obtener el primer valor de la primera fila
+                        }
+                    }
+                }
+            }
+
+            return resultado;
+        }
+
+        public static uint? EjecutarValidacion(string pConsulta)
+        {
+            uint? resultado = null; // Usa nullable para permitir valores nulos
+
+            using (MySqlConnection _conn = Conexion())
+            {
+                using (MySqlCommand _comm = new MySqlCommand(pConsulta, _conn))
+                {
+                    _conn.Open();
+
+                    using (var reader = _comm.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            resultado = reader.GetUInt32(0); // Obtener el primer valor de la primera fila
+                        }
+                    }
+                }
+            }
+
+            return resultado;
+        }
+
 
         //Funciones de loggin
         public string body = "";
@@ -65,7 +111,7 @@ namespace JobmeServiceSyscome
         {
 
 
-
+           
             string rootDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "vistas");
             string rootDirectorylogin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "vistaslogin");
             string filePath = Path.Combine(rootDirectory, "Login/login.html");
@@ -84,18 +130,24 @@ namespace JobmeServiceSyscome
                     string url5 = context.Request.Url.Query;
                     string url2 = context.Request.Url.PathAndQuery;
                     // if (ValidateUser(username, password))
-                    if (ValidateUser(username, password))
+                    if (Validateempleador(username, password))
                     {
+                        uint? empresa = null;
+                       empresa = EjecutarValidacion(String.Format("SELECT id from empleador where usuario = '{0}' and clave = '{1}'", username, password));
+
+                        uint? tipousuario = null;
+                        tipousuario = EjecutarValidacion(String.Format("SELECT usuariotipo from empleador where usuario = '{0}' and clave = '{1}'", username, password));
 
                         // Crear una nueva sesión
-                        string sessionId = SessionManager.CreateSession(username);
+                        string sessionId = SessionManager.CreateSession(username, Convert.ToString(empresa), Convert.ToString(tipousuario), "scm64");
 
                         // Configurar la cookie de sesión
                         Cookie sessionCookie = new Cookie("sessionId", sessionId)
                         {
                             Expires = DateTime.Now.AddHours(8),
                             HttpOnly = true, // Hace que la cookie sea inaccesible desde el lado del cliente (JavaScript)
-                            Path = "/"
+                            Path = "/",
+                            
                         };
                         context.Response.Cookies.Add(sessionCookie);
 
@@ -105,18 +157,24 @@ namespace JobmeServiceSyscome
                         byte[] buffer = Encoding.UTF8.GetBytes("Inicio de sesion exitoso, Sesion creada.");
                         context.Response.OutputStream.Write(buffer, 0, buffer.Length);
                     }
-                    else if(Validateempleador(username,password))
-                        {
+                    else if (ValidateUser(username, password))
+                    {
+                        uint? empresa = null;
+                        empresa = EjecutarValidacion(String.Format("SELECT id from empleador where usuario = '{0}' and clave = '{1}'", username, password));
+
+                        uint? tipousuario = null;
+                        tipousuario = EjecutarValidacion(String.Format("SELECT usuariotipo from candidato where usuario = '{0}' and clave = '{1}'", username, password));
 
                         // Crear una nueva sesión
-                        string sessionId = SessionManager.CreateSession(username);
+                        string sessionId = SessionManager.CreateSession(username, Convert.ToString(empresa), Convert.ToString(tipousuario), "scm64");
 
                         // Configurar la cookie de sesión
                         Cookie sessionCookie = new Cookie("sessionId", sessionId)
                         {
                             Expires = DateTime.Now.AddHours(8),
                             HttpOnly = true, // Hace que la cookie sea inaccesible desde el lado del cliente (JavaScript)
-                            Path = "/"
+                            Path = "/",
+
                         };
                         context.Response.Cookies.Add(sessionCookie);
 
@@ -126,7 +184,7 @@ namespace JobmeServiceSyscome
                         byte[] buffer = Encoding.UTF8.GetBytes("Inicio de sesion exitoso, Sesion creada.");
                         context.Response.OutputStream.Write(buffer, 0, buffer.Length);
                     }
-                    else if (context.Request.Url.Query == "logout")
+                    else if (context.Request.Url.Query == "?q=logout")
                     {
                         HandleLogout(context);
                     }
@@ -145,6 +203,7 @@ namespace JobmeServiceSyscome
                     else
                     {
                         // Login fallido
+                        
                         SendResponseLogin(context, rootDirectorylogin);
                         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                         context.Response.ContentType = "text/html";
@@ -203,8 +262,24 @@ namespace JobmeServiceSyscome
         {
             // Obtener la cookie de sesión
             string sessionId = context.Request.Cookies["sessionId"]?.Value;
-            string rootDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "vistas");
+            string rootDirectory = "";
             string rootDirectorylogin = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "vistaslogin");
+
+            var sessionInfo = SessionManager.GetSession(context.Request.Cookies["sessionID"].Value);
+            if (sessionInfo.IsValid)
+            {
+                // Usar la tupla directamente
+                var (Username, Empresa, Expiration, Tipouser, Verif) = (sessionInfo.Username, sessionInfo.Empresa, sessionInfo.Expiration, sessionInfo.Tipouser, sessionInfo.Verif);
+                // Muestra los datos recibidos
+                if (Tipouser == "1") {
+                     rootDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "vistasempleador");
+                }else if (Tipouser == "2")
+                {
+                    rootDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "vistascandidatos");
+                }
+
+
+            }
             if (sessionId != null && SessionManager.ValidateSession(sessionId))
             {
                 // Sesión válida
@@ -213,11 +288,14 @@ namespace JobmeServiceSyscome
                 Program p = new Program();
                 if (context.Request.HttpMethod == "POST")
                 {
+
                     SendResponsePost(context, rootDirectory);
                 }
                 else
                 {
-                    p.SendResponse(context, rootDirectory);
+
+                    p.SendResponse(context, rootDirectory, sessionInfo.Verif);
+                   
                 }
                 byte[] buffer = Encoding.UTF8.GetBytes("La sesion es valida, Bienvenido");
                 context.Response.OutputStream.Write(buffer, 0, buffer.Length);
@@ -301,111 +379,237 @@ namespace JobmeServiceSyscome
 
             return isValid;
         }
-
         public void SendResponsePost(HttpListenerContext request, string rootdirectory)
         {
+            string url = request.Request.Url.AbsolutePath.Trim('/');
+            string url2 = request.Request.Url.PathAndQuery;
+            string url3 = request.Request.Url.Query;
+            string url4 = "/index";
+            // HandleLogin(request, rootDirectory);
 
-            try
+            var query = request.Request.QueryString;
+            string filePath = Path.Combine(rootdirectory, url);
+            var requestType = request.Request.HttpMethod;
+            // HandleLogin(request, rootDirectory);
+            var queryParams = request.Request.QueryString;
+            string username = query["username"];
+            string password = query["password"];
+
+            var sessionInfo = SessionManager.GetSession(request.Request.Cookies["sessionID"].Value);
+            if (sessionInfo.IsValid)
+            {
+                // Usar la tupla directamente
+                var (Username, Empresa, Expiration, Tipouser) = (sessionInfo.Username, sessionInfo.Empresa, sessionInfo.Expiration, sessionInfo.Tipouser);
+                // Muestra los datos recibidos
+                Console.WriteLine($"Usuario: {Username}");
+                Console.WriteLine($"Empresa: {Empresa}");
+                Console.WriteLine($"Expiración: {Expiration}");
+            }
+            if (requestType.Equals("POST", StringComparison.OrdinalIgnoreCase) && sessionInfo.Tipouser == "1")
             {
 
-                Program _c = new Program();
-
-
-
-
-                JObject json = JObject.Parse(body);
-                String _insert = "";
-                string _q = (string)json["q"];
-                if (_q == "guardarImagenes")
+                if (_q == "formulariooferta")
                 {
-
-                    bool b = false;
-                    String msj = "Error";
-                    String imgdataexist = (string)json["img"];
-                    string _nombre = (string)json["nombre"];
-                    string _apellido = (string)json["apellido"];
-                    String _codempl = (string)json["codempl"]; ;
-                    String imagen = (string)json["img"];
-                    String dui = (string)json["dui"]; ;
-                    if (!string.IsNullOrEmpty(imgdataexist))
+                    try
                     {
 
-                        _nombre = _nombre + "-" + _apellido;
-
-                        string directorioBase = Path.Combine(Environment.CurrentDirectory, "images");
-                        //La direccion de abajo es la ruta de pruebas local (Josue Lopez)
-                        //String directorioBase = Path.Combine("C:\\", "Users", "PC", "Documents", "Github", "BancoopreEstandar", "BancoopreWeb00", "Imagenes", "MaeascoDui");
-                        if (!Directory.Exists(directorioBase))
+                        List<OfertaEmpleo> _lista = new List<OfertaEmpleo>();
+                        List<ofrecimientosempleo> _listaofrecimiento = new List<ofrecimientosempleo>();
+                        List<requisitos> _listarequisitos = new List<requisitos>();
+                        String _idoferta = (string)json["idoferta"];
+                        var _conn = Conexion();
+                        var _comm = Comando(_conn);
+                        DataTable _t = Query(String.Format("select * from ofertasempleo where id = {0}", _idoferta));
+                        foreach (DataRow _r in _t.Rows)
                         {
-                            Directory.CreateDirectory(directorioBase);
-                        }
-
-                        byte[] imageBytes = Convert.FromBase64String(imagen);
-                        string fileType = _c.TipoArch(imageBytes);
-                        String ext = fileType == "PDF" ? ".pdf" : ".png";
-                        //File.WriteAllBytes(directorioBase, imageBytes);
-                        String ruta = _codempl + "_N-" + _nombre + "_D-" + dui + ext;
-                        File.WriteAllBytes(Path.Combine(directorioBase + "\\" + _codempl + "_N-" + _nombre + "_D-" + dui + ext), imageBytes);
-                        _insert = String.Format("insert into emplimg(codempl , nombre, ruta) values('{0}', '{1}', '{2}')",
-                             _codempl, _nombre, ruta);
-                        var _conn = _c.Conexion3();
-                        var _comm = _c.Comando3(_conn);
-                        _conn.Open();
-                        _comm.CommandText = String.Format("delete from emplimg where codempl = {0}", _codempl);
-
-                        _comm.ExecuteNonQuery();
-                        _conn.Close();
-                        _conn.Dispose();
-
-
-
-                        _conn.Open();
-                        _comm.CommandText = _insert;
-                        try
-                        {
-                            _comm.ExecuteNonQuery();
-                        }
-                        catch (Exception ex)
-                        {
-                            //ServeHTMLError(request.Response, ex.Message);
-                            Console.WriteLine("Error al guardar la imagen: " + ex.Message);
-                            b = false;
-                        }
-                        finally
-                        {
-                            b = true;
-                            _conn.Close();
-                            _conn.Dispose();
-                        }
-                    }
-
-                    if (b)
-                    {
-
-                        if (b == false)
-                        {
-                            var _conn = _c.Conexion3();
-                            var _comm = _c.Comando3(_conn);
+                            OfertaEmpleo _d = new OfertaEmpleo();
+                            _d.Id = Convert.ToInt32(_r[0].ToString());
+                            _d.Titulo = _r[1].ToString();
+                            _d.Ubicacion = _r[2].ToString();
+                            _d.PagoMin = Convert.ToDecimal(_r[3].ToString());
+                            _d.PagoMax = Convert.ToDecimal(_r[4].ToString());
+                            _d.IdEmpresa = Convert.ToInt32(_r[5].ToString());
                             _conn.Open();
-                            _comm.CommandText = String.Format("delete from emplimg where codempl = {0}", _codempl);
-                            _comm.ExecuteNonQuery();
+                            _comm.CommandText = ($"SELECT nombre FROM empleador where id = {_d.IdEmpresa}");
+                            var nombreempre = _comm.ExecuteReader();
+                            nombreempre.Read();
+                            _d.nombreempress = nombreempre.GetString(0);
                             _conn.Close();
-                            _conn.Dispose();
-                        }
 
+                            _d.EpicCalling = _r[6].ToString();
+                            _d.Desde = Convert.ToDateTime(_r[7].ToString());
+                            _d.Hasta = Convert.ToDateTime(_r[8].ToString());
+                            _d.Plazas = Convert.ToInt32(_r[9].ToString());
+                            _d.Contrato = Convert.ToInt32(_r[10].ToString());
+                            if (_d.Contrato > 0)
+                            {
+                                _conn.Open();
+                                _comm.CommandText = ($"SELECT nombre FROM tipocontrato where id = {_d.Contrato}");
+                                var nombrecontra = _comm.ExecuteReader();
+                                nombrecontra.Read();
+                                _d.nombrecontrato = nombrecontra.GetString(0);
+                                _conn.Close();
+                            }
+                            else
+                            {
+                                _d.nombrecontrato = "Datos no proporcionados por el empleador";
+                            }
+
+
+                            _d.edadmin = Convert.ToInt32(_r[11].ToString());
+                            _d.edadmax = Convert.ToInt32(_r[12].ToString());
+                            _d.niveleduc = Convert.ToInt32(_r[13].ToString());
+                            if (_d.niveleduc > 0)
+                            {
+                                _conn.Open();
+                                _comm.CommandText = ($"SELECT nivel FROM niveleducativo where id = {_d.niveleduc}");
+                                var nombreeduc = _comm.ExecuteReader();
+                                nombreeduc.Read();
+                                _d.nombreeduc = nombreeduc.GetString(0);
+                                _conn.Close();
+                            }
+                            else
+                            {
+                                _d.nombreeduc = "Datos no proporcionados por el empleador";
+                            }
+                            DataTable _t2 = Query(String.Format($"Select * from ofertaofrecimiento where idoferta = {_d.Id}"));
+                            foreach (DataRow _r2 in _t2.Rows)
+                            {
+                                ofrecimientosempleo _e2 = new ofrecimientosempleo();
+
+
+                                _e2.descripcion = _r2[2].ToString();
+                                _d.Ofrecimientos.Add(_e2);
+                            }
+                            DataTable _t3 = Query(String.Format($"Select descripcion from requisitos where idoferta = {_d.Id}"));
+                            foreach (DataRow _r3 in _t3.Rows)
+                            {
+                                requisitos _e3 = new requisitos();
+                                _e3.descripcion = _r3[0].ToString();
+                                _d.Requisitos.Add(_e3);
+                            }
+                            _lista.Add(_d);
+                        }
+                        ServerFileConJSON(request.Response, JsonConvert.SerializeObject(_lista));
+                        Console.WriteLine("Exito");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error" + ex.Message);
                     }
                 }
-
-         
             }
-            catch (Exception ex)
+                if (requestType.Equals("POST", StringComparison.OrdinalIgnoreCase) && sessionInfo.Tipouser == "2")
             {
-                // ServeHTMLError(request.Response, "Error");
-                Console.WriteLine("Error al guardar foto: " + ex.Message);
+
+                JObject json = JObject.Parse(body);
+
+                string _q = (string)json["q"];
+
+                if (_q != null)
+                {
+                    try
+                    {
+                        Program _c = new Program();                                                                                 
+                        if (_q == "formulariooferta")
+                        {
+                            try
+                            {
+                                
+                                List<OfertaEmpleo> _lista = new List<OfertaEmpleo>();
+                                List<ofrecimientosempleo> _listaofrecimiento = new List<ofrecimientosempleo>();
+                                List<requisitos> _listarequisitos = new List<requisitos>();
+                                String _idoferta = (string)json["idoferta"];
+                                var _conn = Conexion();
+                                var _comm = Comando(_conn);
+                                DataTable _t = Query(String.Format("select * from ofertasempleo where id = {0}", _idoferta));
+                                foreach (DataRow _r in _t.Rows)
+                                {
+                                    OfertaEmpleo _d = new OfertaEmpleo();
+                                    _d.Id = Convert.ToInt32(_r[0].ToString());
+                                    _d.Titulo = _r[1].ToString();
+                                    _d.Ubicacion = _r[2].ToString();
+                                    _d.PagoMin = Convert.ToDecimal(_r[3].ToString());
+                                    _d.PagoMax = Convert.ToDecimal(_r[4].ToString());
+                                    _d.IdEmpresa = Convert.ToInt32(_r[5].ToString());
+                                    _conn.Open();
+                                    _comm.CommandText = ($"SELECT nombre FROM empleador where id = {_d.IdEmpresa}");
+                                    var nombreempre = _comm.ExecuteReader();
+                                    nombreempre.Read();
+                                    _d.nombreempress = nombreempre.GetString(0);
+                                    _conn.Close();
+                               
+                                    _d.EpicCalling = _r[6].ToString();
+                                    _d.Desde = Convert.ToDateTime(_r[7].ToString());
+                                    _d.Hasta = Convert.ToDateTime(_r[8].ToString());
+                                    _d.Plazas = Convert.ToInt32(_r[9].ToString());
+                                    _d.Contrato = Convert.ToInt32(_r[10].ToString());
+                                    if (_d.Contrato > 0)
+                                    {
+                                        _conn.Open();
+                                        _comm.CommandText = ($"SELECT nombre FROM tipocontrato where id = {_d.Contrato}");
+                                        var nombrecontra = _comm.ExecuteReader();
+                                        nombrecontra.Read();
+                                        _d.nombrecontrato = nombrecontra.GetString(0);
+                                        _conn.Close();
+                                    }
+                                    else {
+                                        _d.nombrecontrato = "Datos no proporcionados por el empleador";
+                                    }
+
+                                
+                                    _d.edadmin = Convert.ToInt32(_r[11].ToString());
+                                    _d.edadmax = Convert.ToInt32(_r[12].ToString());
+                                    _d.niveleduc = Convert.ToInt32(_r[13].ToString());
+                                    if (_d.niveleduc > 0)
+                                    {
+                                        _conn.Open();
+                                        _comm.CommandText = ($"SELECT nivel FROM niveleducativo where id = {_d.niveleduc}");
+                                        var nombreeduc = _comm.ExecuteReader();
+                                        nombreeduc.Read();
+                                        _d.nombreeduc = nombreeduc.GetString(0);
+                                        _conn.Close();
+                                    }
+                                    else {
+                                        _d.nombreeduc = "Datos no proporcionados por el empleador";
+                                    }
+                                    DataTable _t2 = Query(String.Format($"Select * from ofertaofrecimiento where idoferta = {_d.Id}"));
+                                    foreach (DataRow _r2 in _t2.Rows)
+                                    {
+                                        ofrecimientosempleo _e2 = new ofrecimientosempleo();
+                                   
+                                     
+                                        _e2.descripcion = _r2[2].ToString();
+                                        _d.Ofrecimientos.Add(_e2);
+                                    }
+                                    DataTable _t3 = Query(String.Format($"Select descripcion from requisitos where idoferta = {_d.Id}"));
+                                    foreach (DataRow _r3 in _t3.Rows)
+                                    {
+                                        requisitos _e3 = new requisitos();
+                                        _e3.descripcion = _r3[0].ToString();
+                                        _d.Requisitos.Add(_e3);
+                                    }
+                                    _lista.Add(_d);
+                                }
+                                ServerFileConJSON(request.Response, JsonConvert.SerializeObject(_lista));
+                                Console.WriteLine("Exito");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Error" + ex.Message);
+                            }
+                        }
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        // ServeHTMLError(request.Response, "Error");
+                        Console.WriteLine("Error al guardar foto: " + ex.Message);
+                    }
+                }
             }
         }
-
-
         public void SendResponseLogin(HttpListenerContext request, string rootDirectory)
         {
            
@@ -436,6 +640,7 @@ namespace JobmeServiceSyscome
                 try
                 {
                     JObject json = JObject.Parse(body);
+
                     string _q = (string)json["q"];
 
                     if (_q != null)
@@ -555,7 +760,7 @@ namespace JobmeServiceSyscome
                                 //File.WriteAllBytes(directorioBase, imageBytes);
                                 String ruta = "_E-" + _nombre + ext;
                                 File.WriteAllBytes(Path.Combine(directorioBase + "\\" + "_E-" + _nombre + ext), imageBytes);
-                                _insert = String.Format("update empleador set logoruta = '{0}' where nombre = {1}",
+                                _insert = String.Format("update empleador set logoruta = '{0}' where nombre = '{1}'",
                                       ruta,_nombre);
                                 var _conn = _c.Conexion3();
                                 var _comm = _c.Comando3(_conn);            
@@ -580,45 +785,7 @@ namespace JobmeServiceSyscome
                             }
                         }
                     }
-                    else {
-                        try
-                        {
-                            if (url4 == "/index")
-                            {
-                                filePath = Path.Combine(rootDirectory, "index.html");
-                            }
-                            if (url == "/loginempleador")
-                            {
-                                filePath = Path.Combine(rootDirectory, "loginempleador.html");
-                            }
-                            if (url == "/logincandidato")
-                            {
-                                filePath = Path.Combine(rootDirectory, "logincandidato.html");
-                            }
-                            if (url == "form_candidatos")
-                            {
-                                filePath = Path.Combine(rootDirectory, "form_candidatos.html");
-                            }
 
-                            if (File.Exists(filePath))
-                            {
-                                ServeFile(request.Response, filePath);
-                            }
-                            else
-                            {
-                                Serve404(request.Response);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-
-                            Console.WriteLine("Error al enviar las vistas");
-                        }
-
-
-
-
-                    }
 
                 } catch (Exception ex)
                 {
@@ -802,7 +969,7 @@ namespace JobmeServiceSyscome
                             }
                             if (url == "logincandidatos")
                             {
-                                filePath = Path.Combine(rootDirectory, "logincandidatos.html");
+                                filePath = Path.Combine(rootDirectory, "views/Login/logincandidatos.html");
                             }
                             if (url == "form_candidatos")
                             {
@@ -817,8 +984,6 @@ namespace JobmeServiceSyscome
                             {
                                 ServeFile(request.Response, filePath);
                             }
-
-
                             else
                             {
                                 Serve404(request.Response);
@@ -830,8 +995,6 @@ namespace JobmeServiceSyscome
                             Console.WriteLine("Error al enviar las vistas");
                         }
                     }
-
-
                 }
                 catch (Exception ex)
                 {
@@ -866,7 +1029,6 @@ namespace JobmeServiceSyscome
 
         private static void ServerFileConJSON(HttpListenerResponse response, string json)
         {
-
             try
             {
                 byte[] buffer = Encoding.UTF8.GetBytes(json);
@@ -884,8 +1046,6 @@ namespace JobmeServiceSyscome
                 response.OutputStream.Close();
             }
         }
-
-
         private static string GetContentType(string filePath)
         {
             // Determina el tipo de contenido en función de la extensión del archivo

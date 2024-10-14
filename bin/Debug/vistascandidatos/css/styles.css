@@ -164,15 +164,17 @@ body {
 
 .container-job-list {
  /* Para evitar que el contenido se solape con el navbar */
-  display: flex;
-  justify-content: center;
+ width: 100%;
+ max-width: 1200px;
+ margin: 0 auto;
+ padding: 20px;
 }
 
 /* Lista de ofertas de empleo */
 .job-list {
   width: 100%;
   max-width: 1300px;
-  height: 470px; /* Limita la altura y permite scroll */
+  height: 455px; /* Limita la altura y permite scroll */
   overflow-y: auto; /* Scroll vertical si hay muchas ofertas */
   padding-left: 10px;
   padding-right: 10px;
@@ -228,6 +230,7 @@ body {
 /* Scroll personalizado */
 .job-list::-webkit-scrollbar {
   width: 10px;
+  display: none;
 }
 
 .job-list::-webkit-scrollbar-thumb {
@@ -252,7 +255,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  max-height: 500px; /* Limita la altura máxima del contenedor */
+  max-height: 603px; /* Limita la altura máxima del contenedor */
   overflow-y: auto;  /* Agrega la scrollbar vertical */
 }
 
@@ -276,7 +279,8 @@ body {
   position: relative; /* Posición relativa para permitir la alineación absoluta del botón */
   align-items: flex-start;
   background-color: #fff;
-  padding: 15px;
+
+  padding: 30px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -330,6 +334,8 @@ body {
 
 .job-apply-empress {
   position: absolute;
+  margin-bottom: 1%;
+  margin-right: 1%;
   bottom: 0;
   right: 0; /* Alinea el botón en la esquina inferior derecha de .empresa-info */
 }
@@ -368,6 +374,169 @@ body {
       right: auto;
       bottom: auto;
   }
+}
+
+/* Estilos generales del modal */
+.modal {
+  display: none; /* Oculto por defecto */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.container-modal {
+  display: flex;
+  flex-direction: column; /* Alinea el contenido verticalmente */
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 700px;
+  max-height: 100%;
+  overflow-y: auto; /* Habilita el scroll vertical */
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+/* Estilos de la scrollbar */
+.modal-content::-webkit-scrollbar {
+  width: 8px; /* Ancho de la scrollbar */
+  display: none;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1); /* Fondo del track */
+  border-radius: 10px; /* Bordes redondeados */
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color del thumb (el control que se mueve) */
+  border-radius: 10px; /* Bordes redondeados */
+  border: 2px solid transparent; /* Espaciado alrededor del thumb */
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Color más oscuro al pasar el mouse */
+}
+
+/* Alineación vertical para el contenido */
+#vistaoferta .container {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  padding: 15px;
+}
+
+/* Título y contenido del empleo */
+#vistaoferta .job-title {
+  text-align: left; /* Título alineado a la derecha */
+  font-size: 1.8em;
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 24px;
+  color: #333;
+  
+}
+
+#vistaoferta .job-details,
+#vistaoferta .job-offers,
+#vistaoferta .job-requirements {
+  margin-top: 20px;
+  width: 100%; /* Asegura que ocupe todo el ancho disponible */
+  
+}
+
+.job-epic-calling {
+  text-align: left; /* Alinear la sección a la derecha */
+  width: 100%;
+  padding: 20px;
+  margin: 0 auto;
+}
+
+.job-epic-calling h3 {
+  text-align: left; /* Título alineado a la derecha */
+  font-size: 1.8em;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.job-epic-calling p {
+  text-align: justify; /* Justificar el texto */
+  margin: 10px 0;
+  font-size: 1.2em; /* Tamaño de fuente del párrafo */
+}
+
+#epicCalling {
+  font-style: italic; /* Agregar un estilo itálico para el texto del Epic Calling */
+  color: #555; /* Color del texto en gris */
+}
+/* Estilos adaptados para listas y secciones */
+#vistaoferta .offers-list,
+#vistaoferta .requirements-list {
+  list-style-type: none;
+  padding-left: 0;
+  
+}
+
+#vistaoferta .offers-list li,
+#vistaoferta .requirements-list li {
+  background-color: #f9f9f9;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+#vistaoferta .apply-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-top: 20px;
+  width: 100%; /* Botón ocupa todo el ancho */
+  text-align: center; /* Centra el texto dentro del botón */
+}
+
+#vistaoferta .apply-button:hover {
+  background-color: #218838;
+}
+
+/* Estilos para el resumen */
+#vistaoferta .summary {
+  background-color: #e9ecef;
+  padding: 15px;
+  margin: 20px 0;
+  width: 100%; /* Asegura que ocupe todo el ancho disponible */
+}
+
+#vistaoferta .summary h4 {
+  margin-bottom: 10px;
+  text-align: center; /* Centrar el título del resumen */
+}
+
+#vistaoferta .summary p {
+  margin: 5px 0;
+}
+
+/* Botón cerrar (X) */
+.close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
 }
 
 
@@ -429,6 +598,101 @@ body {
 
 .form-oferta button:hover {
   background-color: #4cae4c;
+}
+
+
+
+/* Estilos generales para la tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0px 0;
+  font-size: 16px;
+  font-family: 'Arial', sans-serif;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para el encabezado */
+table thead {
+  background-color: #003366; /* Color principal de la bolsa de empleo */
+  color: white;
+}
+
+table thead th {
+  padding: 0px;
+  text-align: left;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Estilos para las filas del cuerpo de la tabla */
+table tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+table tbody td {
+  padding: 10px;
+  color: #333;
+}
+
+/* Resaltar la fila al pasar el ratón */
+table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Estilo para la primera columna (botones o íconos) */
+table tbody td:first-child {
+  text-align: center;
+  width: 50px;
+}
+
+/* Estilo para las descripciones */
+table tbody td:nth-child(2) {
+  font-weight: 500;
+}
+
+/* Estilo para el contenedor de la tabla */
+.table-container {
+  margin: 0 auto;
+  max-width: 800px;
+  overflow-x: auto;
+}
+
+/* Para pantallas pequeñas (móviles) */
+@media (max-width: 600px) {
+  table thead {
+      display: none; /* Oculta el encabezado */
+  }
+
+  table tbody tr {
+      display: block;
+      margin-bottom: 20px;
+      border-bottom: none;
+  }
+
+  table tbody td {
+      display: block;
+      text-align: right;
+      padding-left: 50%;
+      position: relative;
+  }
+
+  table tbody td:before {
+      content: attr(data-label);
+      position: absolute;
+      left: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+  }
+
+  table tbody td:first-child {
+      text-align: left;
+  }
 }
 
 
@@ -11190,8 +11454,8 @@ header.masthead h1, header.masthead .h1 {
 }
 @media (min-width: 768px) {
   header.masthead {
-    padding-top: 12rem;
-    padding-bottom: 12rem;
+    padding-top: 9rem;
+    padding-bottom: 9rem;
   }
   header.masthead h1, header.masthead .h1 {
     font-size: 3rem;
