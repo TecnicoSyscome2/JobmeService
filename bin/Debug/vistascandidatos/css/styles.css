@@ -508,11 +508,24 @@ body {
   width: 100%; /* Botón ocupa todo el ancho */
   text-align: center; /* Centra el texto dentro del botón */
 }
+#vistaoferta .apply-button-cancelar {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: var(--bs-yellow);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-top: 20px;
+  width: 100%; /* Botón ocupa todo el ancho */
+  text-align: center; /* Centra el texto dentro del botón */
+}
 
 #vistaoferta .apply-button:hover {
   background-color: #218838;
 }
-
+#vistaoferta .apply-button-cancelar:hover {
+  background-color: #f3cc55;
+}
 /* Estilos para el resumen */
 #vistaoferta .summary {
   background-color: #e9ecef;

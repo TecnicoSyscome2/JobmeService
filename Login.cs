@@ -408,100 +408,6 @@ namespace JobmeServiceSyscome
             if (requestType.Equals("POST", StringComparison.OrdinalIgnoreCase) && sessionInfo.Tipouser == "1")
             {
 
-                if (_q == "formulariooferta")
-                {
-                    try
-                    {
-
-                        List<OfertaEmpleo> _lista = new List<OfertaEmpleo>();
-                        List<ofrecimientosempleo> _listaofrecimiento = new List<ofrecimientosempleo>();
-                        List<requisitos> _listarequisitos = new List<requisitos>();
-                        String _idoferta = (string)json["idoferta"];
-                        var _conn = Conexion();
-                        var _comm = Comando(_conn);
-                        DataTable _t = Query(String.Format("select * from ofertasempleo where id = {0}", _idoferta));
-                        foreach (DataRow _r in _t.Rows)
-                        {
-                            OfertaEmpleo _d = new OfertaEmpleo();
-                            _d.Id = Convert.ToInt32(_r[0].ToString());
-                            _d.Titulo = _r[1].ToString();
-                            _d.Ubicacion = _r[2].ToString();
-                            _d.PagoMin = Convert.ToDecimal(_r[3].ToString());
-                            _d.PagoMax = Convert.ToDecimal(_r[4].ToString());
-                            _d.IdEmpresa = Convert.ToInt32(_r[5].ToString());
-                            _conn.Open();
-                            _comm.CommandText = ($"SELECT nombre FROM empleador where id = {_d.IdEmpresa}");
-                            var nombreempre = _comm.ExecuteReader();
-                            nombreempre.Read();
-                            _d.nombreempress = nombreempre.GetString(0);
-                            _conn.Close();
-
-                            _d.EpicCalling = _r[6].ToString();
-                            _d.Desde = Convert.ToDateTime(_r[7].ToString());
-                            _d.Hasta = Convert.ToDateTime(_r[8].ToString());
-                            _d.Plazas = Convert.ToInt32(_r[9].ToString());
-                            _d.Contrato = Convert.ToInt32(_r[10].ToString());
-                            if (_d.Contrato > 0)
-                            {
-                                _conn.Open();
-                                _comm.CommandText = ($"SELECT nombre FROM tipocontrato where id = {_d.Contrato}");
-                                var nombrecontra = _comm.ExecuteReader();
-                                nombrecontra.Read();
-                                _d.nombrecontrato = nombrecontra.GetString(0);
-                                _conn.Close();
-                            }
-                            else
-                            {
-                                _d.nombrecontrato = "Datos no proporcionados por el empleador";
-                            }
-
-
-                            _d.edadmin = Convert.ToInt32(_r[11].ToString());
-                            _d.edadmax = Convert.ToInt32(_r[12].ToString());
-                            _d.niveleduc = Convert.ToInt32(_r[13].ToString());
-                            if (_d.niveleduc > 0)
-                            {
-                                _conn.Open();
-                                _comm.CommandText = ($"SELECT nivel FROM niveleducativo where id = {_d.niveleduc}");
-                                var nombreeduc = _comm.ExecuteReader();
-                                nombreeduc.Read();
-                                _d.nombreeduc = nombreeduc.GetString(0);
-                                _conn.Close();
-                            }
-                            else
-                            {
-                                _d.nombreeduc = "Datos no proporcionados por el empleador";
-                            }
-                            DataTable _t2 = Query(String.Format($"Select * from ofertaofrecimiento where idoferta = {_d.Id}"));
-                            foreach (DataRow _r2 in _t2.Rows)
-                            {
-                                ofrecimientosempleo _e2 = new ofrecimientosempleo();
-
-
-                                _e2.descripcion = _r2[2].ToString();
-                                _d.Ofrecimientos.Add(_e2);
-                            }
-                            DataTable _t3 = Query(String.Format($"Select descripcion from requisitos where idoferta = {_d.Id}"));
-                            foreach (DataRow _r3 in _t3.Rows)
-                            {
-                                requisitos _e3 = new requisitos();
-                                _e3.descripcion = _r3[0].ToString();
-                                _d.Requisitos.Add(_e3);
-                            }
-                            _lista.Add(_d);
-                        }
-                        ServerFileConJSON(request.Response, JsonConvert.SerializeObject(_lista));
-                        Console.WriteLine("Exito");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Error" + ex.Message);
-                    }
-                }
-            }
-                if (requestType.Equals("POST", StringComparison.OrdinalIgnoreCase) && sessionInfo.Tipouser == "2")
-            {
-
                 JObject json = JObject.Parse(body);
 
                 string _q = (string)json["q"];
@@ -510,12 +416,10 @@ namespace JobmeServiceSyscome
                 {
                     try
                     {
-                        Program _c = new Program();                                                                                 
-                        if (_q == "formulariooferta")
+                        if (_q == "formularioofertaempleador")
                         {
                             try
                             {
-                                
                                 List<OfertaEmpleo> _lista = new List<OfertaEmpleo>();
                                 List<ofrecimientosempleo> _listaofrecimiento = new List<ofrecimientosempleo>();
                                 List<requisitos> _listarequisitos = new List<requisitos>();
@@ -538,7 +442,6 @@ namespace JobmeServiceSyscome
                                     nombreempre.Read();
                                     _d.nombreempress = nombreempre.GetString(0);
                                     _conn.Close();
-                               
                                     _d.EpicCalling = _r[6].ToString();
                                     _d.Desde = Convert.ToDateTime(_r[7].ToString());
                                     _d.Hasta = Convert.ToDateTime(_r[8].ToString());
@@ -553,11 +456,10 @@ namespace JobmeServiceSyscome
                                         _d.nombrecontrato = nombrecontra.GetString(0);
                                         _conn.Close();
                                     }
-                                    else {
+                                    else
+                                    {
                                         _d.nombrecontrato = "Datos no proporcionados por el empleador";
                                     }
-
-                                
                                     _d.edadmin = Convert.ToInt32(_r[11].ToString());
                                     _d.edadmax = Convert.ToInt32(_r[12].ToString());
                                     _d.niveleduc = Convert.ToInt32(_r[13].ToString());
@@ -570,15 +472,14 @@ namespace JobmeServiceSyscome
                                         _d.nombreeduc = nombreeduc.GetString(0);
                                         _conn.Close();
                                     }
-                                    else {
+                                    else
+                                    {
                                         _d.nombreeduc = "Datos no proporcionados por el empleador";
                                     }
                                     DataTable _t2 = Query(String.Format($"Select * from ofertaofrecimiento where idoferta = {_d.Id}"));
                                     foreach (DataRow _r2 in _t2.Rows)
                                     {
                                         ofrecimientosempleo _e2 = new ofrecimientosempleo();
-                                   
-                                     
                                         _e2.descripcion = _r2[2].ToString();
                                         _d.Ofrecimientos.Add(_e2);
                                     }
@@ -599,8 +500,137 @@ namespace JobmeServiceSyscome
                                 Console.WriteLine("Error" + ex.Message);
                             }
                         }
-
-
+                        if (_q == "formularioaplicacioncandidato")
+                        {
+                            try
+                            {
+                                List <Candidato> _lista = new List<Candidato>();                            
+                                String _idcandidato = (string)json["idcandidato"];
+                                var _conn = Conexion();
+                                var _comm = Comando(_conn);
+                                DataTable _t = Query(String.Format("select * from candidato where usuario = '{0}'", _idcandidato));
+                                foreach (DataRow _r in _t.Rows)
+                                {
+                                    Candidato _d = new Candidato();
+                                    _d.Usuario = _r[0].ToString();
+                                    _d.Nombre = _r[2].ToString();
+                                    _d.Apellido = _r[3].ToString();
+                                    _d.Pais = _r[4].ToString();
+                                    _d.Departamento = _r[5].ToString();
+                                    _d.Municipio = _r[6].ToString();
+                                    _d.FechaNacimiento  = Convert.ToDateTime(_r[7].ToString());
+                                    _d.Telefono = _r[8].ToString();
+                                    _d.Correo = _r[9].ToString();
+                                    _d.LinkedIn = _r[10].ToString();                             
+                                    _lista.Add(_d);
+                                }
+                                ServerFileConJSON(request.Response, JsonConvert.SerializeObject(_lista));
+                                Console.WriteLine("Exito");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Error" + ex.Message);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // ServeHTMLError(request.Response, "Error");
+                        Console.WriteLine("Error en alguna q: " + ex.Message);
+                    }
+                }
+            }
+                if (requestType.Equals("POST", StringComparison.OrdinalIgnoreCase) && sessionInfo.Tipouser == "2")
+            {
+                JObject json = JObject.Parse(body);
+                string _q = (string)json["q"];
+                if (_q != null)
+                {
+                    try
+                    {
+                        Program _c = new Program();                                                                                 
+                        if (_q == "formulariooferta")
+                        {
+                            try
+                            {                              
+                                List<OfertaEmpleo> _lista = new List<OfertaEmpleo>();
+                                List<ofrecimientosempleo> _listaofrecimiento = new List<ofrecimientosempleo>();
+                                List<requisitos> _listarequisitos = new List<requisitos>();
+                                String _idoferta = (string)json["idoferta"];
+                                var _conn = Conexion();
+                                var _comm = Comando(_conn);
+                                DataTable _t = Query(String.Format("select * from ofertasempleo where id = {0}", _idoferta));
+                                foreach (DataRow _r in _t.Rows)
+                                {
+                                    OfertaEmpleo _d = new OfertaEmpleo();
+                                    _d.Id = Convert.ToInt32(_r[0].ToString());
+                                    _d.Titulo = _r[1].ToString();
+                                    _d.Ubicacion = _r[2].ToString();
+                                    _d.PagoMin = Convert.ToDecimal(_r[3].ToString());
+                                    _d.PagoMax = Convert.ToDecimal(_r[4].ToString());
+                                    _d.IdEmpresa = Convert.ToInt32(_r[5].ToString());
+                                    _conn.Open();
+                                    _comm.CommandText = ($"SELECT nombre FROM empleador where id = {_d.IdEmpresa}");
+                                    var nombreempre = _comm.ExecuteReader();
+                                    nombreempre.Read();
+                                    _d.nombreempress = nombreempre.GetString(0);
+                                    _conn.Close();                              
+                                    _d.EpicCalling = _r[6].ToString();
+                                    _d.Desde = Convert.ToDateTime(_r[7].ToString());
+                                    _d.Hasta = Convert.ToDateTime(_r[8].ToString());
+                                    _d.Plazas = Convert.ToInt32(_r[9].ToString());
+                                    _d.Contrato = Convert.ToInt32(_r[10].ToString());
+                                    if (_d.Contrato > 0)
+                                    {
+                                        _conn.Open();
+                                        _comm.CommandText = ($"SELECT nombre FROM tipocontrato where id = {_d.Contrato}");
+                                        var nombrecontra = _comm.ExecuteReader();
+                                        nombrecontra.Read();
+                                        _d.nombrecontrato = nombrecontra.GetString(0);
+                                        _conn.Close();
+                                    }
+                                    else {
+                                       
+                                    }                               
+                                    _d.edadmin = Convert.ToInt32(_r[11].ToString());
+                                    _d.edadmax = Convert.ToInt32(_r[12].ToString());
+                                    _d.niveleduc = Convert.ToInt32(_r[13].ToString());
+                                    if (_d.niveleduc > 0)
+                                    {
+                                        _conn.Open();
+                                        _comm.CommandText = ($"SELECT nivel FROM niveleducativo where id = {_d.niveleduc}");
+                                        var nombreeduc = _comm.ExecuteReader();
+                                        nombreeduc.Read();
+                                        _d.nombreeduc = nombreeduc.GetString(0);
+                                        _conn.Close();
+                                    }
+                                    else {
+                                        
+                                    }
+                                    DataTable _t2 = Query(String.Format($"Select * from ofertaofrecimiento where idoferta = {_d.Id}"));
+                                    foreach (DataRow _r2 in _t2.Rows)
+                                    {
+                                        ofrecimientosempleo _e2 = new ofrecimientosempleo();                                   
+                                        _e2.descripcion = _r2[2].ToString();
+                                        _d.Ofrecimientos.Add(_e2);
+                                    }
+                                    DataTable _t3 = Query(String.Format($"Select descripcion from requisitos where idoferta = {_d.Id}"));
+                                    foreach (DataRow _r3 in _t3.Rows)
+                                    {
+                                        requisitos _e3 = new requisitos();
+                                        _e3.descripcion = _r3[0].ToString();
+                                        _d.Requisitos.Add(_e3);
+                                    }
+                                    _lista.Add(_d);
+                                }
+                                ServerFileConJSON(request.Response, JsonConvert.SerializeObject(_lista));
+                                Console.WriteLine("Exito");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Error" + ex.Message);
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {

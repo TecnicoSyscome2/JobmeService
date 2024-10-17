@@ -11,108 +11,181 @@
             margin: 0;
             padding: 20px;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .card-header {
-            font-size: 20px;
-            font-weight: bold;
-            border-bottom: 2px solid #ccc;
-            margin-bottom: 10px;
-        }
-        .card-body {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .card-body div {
-            flex: 1;
-            min-width: 250px;
-        }
-        label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: #f9f9f9;
-        }
+        .container-candidato {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.card-candidato {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.card-header-candidato {
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.card-body-candidato {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.foto-candidato {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-basis: 30%;
+}
+
+.foto-candidato-placeholder {
+    width: 150px;
+    height: 200px; /* Reducir altura para ajustarla a la de los campos */
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid #ccc;
+}
+
+.foto-candidato-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.info-candidato {
+    flex-basis: 65%;
+    display: flex;
+    gap: 25px; /* Espacio entre columnas */
+}
+
+.columna-datos {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.otros-datos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.otros-datos div {
+    flex: 1;
+    min-width: 250px;
+}
+
+.card-candidato label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.card-candidato input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+
+
+
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container-candidato">
         <!-- Datos del Candidato -->
-        <div class="card">
-            <div class="card-header">Datos del Candidato</div>
-            <div class="card-body">
-                <div>
-                    <label for="usuario">Usuario</label>
-                    <input type="text" id="usuario" disabled>
+        <div class="card-candidato">
+            <div class="card-header-candidato">Datos del Candidato</div>
+            <div class="card-body-candidato">
+                <!-- Espacio para la foto del candidato -->
+                <div class="foto-candidato">
+                    <div class="foto-candidato-placeholder">
+                        <img src="path/to/foto.jpg" alt="Foto del Candidato">
+                    </div>
                 </div>
-                <div>
-                    <label for="clave">Clave</label>
-                    <input type="password" id="clave" disabled>
+    
+                <!-- Espacio para los datos personales -->
+                <div class="info-candidato">
+                    <!-- Primera columna (Nombre, Apellido, Correo) -->
+                    <div class="columna-datos">
+                        <div>
+                            <label for="nombre">Nombre</label>
+                            <input type="text" id="nombre" disabled>
+                        </div>
+                        <div>
+                            <label for="apellido">Apellido</label>
+                            <input type="text" id="apellido" disabled>
+                        </div>
+                        <div>
+                            <label for="fech_nacim">Fecha de Nacimiento</label>
+                            <input type="date" id="fech_nacim" disabled>
+                        </div>
+
+                    </div>
+                    
+                    <!-- Segunda columna (Teléfono, LinkedIn) -->
+                    <div class="columna-datos">
+                        <div>
+                            <label for="telefono">Teléfono</label>
+                            <input type="text" id="telefono" disabled>
+                        </div>
+                        <div>
+                            <label for="correo">Correo Electrónico</label>
+                            <input type="email" id="correo" disabled>
+                        </div>
+                        <div>
+                            <label for="linkedin">LinkedIn</label>
+                            <input type="text" id="linkedin" disabled>
+                        </div>
+                    </div>
+                    <div class="columna-datos">
+                        <div>
+                            <label for="pais">País</label>
+                            <input type="text" id="pais" disabled>
+                        </div>
+                        <div>
+                            <label for="departamento">Departamento</label>
+                            <input type="text" id="departamento" disabled>
+                        </div>
+                        <div>
+                            <label for="municipio">Municipio</label>
+                            <input type="text" id="municipio" disabled>
+                        </div> 
+                    </div>
                 </div>
+            </div>
+    
+            <!-- Espacio para otros datos debajo de la foto y datos personales -->
+            <div class="otros-datos">
+
+
                 <div>
-                    <label for="apellido">Apellido</label>
-                    <input type="text" id="apellido" disabled>
-                </div>
-                <div>
-                    <label for="nombre">Nombre</label>
-                    <input type="text" id="nombre" disabled>
-                </div>
-                <div>
-                    <label for="pais">País</label>
-                    <input type="text" id="pais" disabled>
-                </div>
-                <div>
-                    <label for="departamento">Departamento</label>
-                    <input type="text" id="departamento" disabled>
-                </div>
-                <div>
-                    <label for="municipio">Municipio</label>
-                    <input type="text" id="municipio" disabled>
-                </div>
-                <div>
-                    <label for="fech_nacim">Fecha de Nacimiento</label>
-                    <input type="date" id="fech_nacim" disabled>
-                </div>
-                <div>
-                    <label for="telefono">Teléfono</label>
-                    <input type="text" id="telefono" disabled>
-                </div>
-                <div>
-                    <label for="correo">Correo Electrónico</label>
-                    <input type="email" id="correo" disabled>
-                </div>
-                <div>
-                    <label for="linkedin">Perfil de LinkedIn</label>
-                    <input type="text" id="linkedin" disabled>
-                </div>
-                <div>
-                    <label for="usuariotipo">Tipo de Usuario</label>
-                    <input type="text" id="usuariotipo" disabled>
+                    <label for="cv">CV</label>
+                    <input type="text" id="cv" disabled>
                 </div>
             </div>
         </div>
-
+    </div>
+    
+    
+    
+    
         <!-- Datos de la Solicitud -->
-        <div class="card">
-            <div class="card-header">Datos de la Solicitud</div>
-            <div class="card-body">
+        <!-- <div class="card-candidato">
+            <div class="card-header-candidato">Datos de la Solicitud</div>
+            <div class="card-body-candidato">
                 <div>
                     <label for="id_solicitud">ID Solicitud</label>
                     <input type="text" id="id_solicitud" disabled>
@@ -138,7 +211,8 @@
                     <input type="text" id="activa" disabled>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
+    
 </body>
 </html>

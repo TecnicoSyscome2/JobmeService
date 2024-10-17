@@ -1,4 +1,6 @@
-var _url = "http://localhost:9010/"
+//var _url = "http://localhost:9010/"
+var _url = "http://192.168.1.35:9010/"
+
 function ActualizarPagina(url2) {
     var _pagina = _url + url2;
     fetch(_pagina)
@@ -176,8 +178,7 @@ function login() {
   fetch(_url + "?username=" + encodeURIComponent(user) + "&password=" + encodeURIComponent(contra))
     .then(response => response.text())
     .then(data => {
-      // Mostramos la respuesta en una alerta
-      alert(data);
+    
       
       // Si el login es exitoso, redireccionamos a la página principal
       if (data !== "Upss, la sesión ha expirado.") {

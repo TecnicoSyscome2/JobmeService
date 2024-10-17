@@ -142,6 +142,26 @@ namespace JobmeServiceSyscome
             }
             return resultado;
         }
+        public static string EjecutarConsultastring(string pConsulta)
+        {
+            string resultado = "";
+            using (MySqlConnection _conn = Conexion())
+            {
+                using (MySqlCommand _comm = new MySqlCommand(pConsulta, _conn))
+                {
+                    _conn.Open();
+
+                    using (var reader = _comm.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            resultado = reader.GetString(0); // Obtener el primer valor de la primera fila
+                        }
+                    }
+                }
+            }
+            return resultado;
+        }
         public static DataTable Query2(String pQuery)
         {
             DataTable _t = new DataTable();
@@ -317,6 +337,28 @@ namespace JobmeServiceSyscome
                             _conn.Dispose();
                             ServeHTML(request.Response, _retval);
                         }
+
+                        if (_q == "listaofertasempleo")
+                        {
+                            String empresa = sessionInfo.Empresa;
+                            String nombre = query["nombre"];
+                            String cons = String.Format(@"SELECT * FROM ofertasempleo where idempress = {0}", empresa);
+                            DataTable dt = new DataTable();
+                            dt = Query(cons);
+                            String Html = GenerarListaTrabajosempleador(dt);
+                            ServeHTML(request.Response, Html);
+                        }
+                        if (_q == "listadecandidatosparaoferta")
+                        {
+                            String ofert = query["idoferta"];                          
+                            String cons = String.Format(@"SELECT * FROM aplicarofertas where idempresa = {0} and idoferta = '{1}'"
+                            , sessionInfo.Empresa, ofert);
+                            DataTable dt = new DataTable();
+                            dt = Query(cons);
+                            
+                            String Html = GenerarListaCandidatos(dt, Convert.ToInt32(sessionInfo.Empresa));
+                            ServeHTML(request.Response, Html);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -398,17 +440,67 @@ namespace JobmeServiceSyscome
                             string _cv = cv.ToString();
 
                             _conn.Close();
-                         
+                            _conn.Open();
+                            _comm.CommandText = String.Format("Select idempress from ofertasempleo where id = '{0}'", idoferta);
+                            var idempres = _comm.ExecuteScalar();
+                            string _idempres = cv.ToString();
+
+                            _conn.Close();
 
                             _conn.Open();
                             _comm.CommandText = String.Format(@"insert into aplicarofertas set idcandidato = '{0}', idoferta = '{1}', 
-                            fecha = '{2}', idcv = '{3}', activa = '1'", idcandidato, idoferta, fecha, _cv);
+                            fecha = '{2}', idcv = '{3}', activa = '1', idempresa = '{4}'", idcandidato, idoferta, fecha, _cv, idempres);
                             _comm.ExecuteNonQuery();
                             _conn.Close();
                             _conn.Dispose();
                             ServeHTML(request.Response, "exito");
                         }
-                        
+                        if (_q == "cancelaroferta")
+                        {
+                            try {
+                                string idoferta = query["idoferta"];
+                                string idcandidato = sessionInfo.Username;
+                                string fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                                var _conn = Conexion();
+                                var _comm = Comando(_conn);
+                                _conn.Open();
+                                _comm.CommandText = String.Format("Select id from aplicarofertas where idcandidato = '{0}' and idoferta = '{1}'", idcandidato, idoferta);
+                                var aplicacion = _comm.ExecuteScalar();
+                                string _aplicacion = aplicacion.ToString();
+                                _conn.Close();
+                                _conn.Open();
+                                _comm.CommandText = String.Format(@"UPDATE aplicarofertas SET activa = '0' WHERE id = '{0}';", aplicacion);
+                                _comm.ExecuteNonQuery();
+                                _conn.Close();
+                                _conn.Dispose();
+                                ServeHTML(request.Response, "Cancelacion de solicitud de oferta exitoso");
+                            } catch 
+                            {
+                                ServeHTML(request.Response, "Upss, Ocurrio un problema por favor intentelo de nuevo");
+                            }
+                           
+                        }
+                        if (_q == "reactivaroferta")
+                        {
+                            string idoferta = query["idoferta"];
+                            string idcandidato = sessionInfo.Username;
+                            string fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                            var _conn = Conexion();
+                            var _comm = Comando(_conn);
+                            _conn.Open();
+                            _comm.CommandText = String.Format("Select id from aplicarofertas where usuario = '{0}' and idoferta = '{1}'", idcandidato, idoferta);
+                            var aplicacion = _comm.ExecuteScalar();
+                            string _aplicacion = aplicacion.ToString();
+
+                            _conn.Close();
+                            _conn.Open();
+                            _comm.CommandText = String.Format(@"UPDATE aplicarofertas SET activa = '1' WHERE id = '{0}';", aplicacion);
+                            _comm.ExecuteNonQuery();
+                            _conn.Close();
+                            _conn.Dispose();
+                            ServeHTML(request.Response, "exito");
+                        }
+
                         if (_q == "listaofertasempleo")
                         {
                             String empresa = query["empresa"];
@@ -744,12 +836,49 @@ namespace JobmeServiceSyscome
             <div class='job-item'>
                 <div class='job-title'>{0}</div>
                 <div class='job-details'>Empresa: {1} | Ubicación: {2} | Salario: {3} - {4}</div>
-                <div class='job-apply'><a class='btn btn-dark' onClick='modalshow({5})' >Aplicar</a></div>
+                <div class='job-apply'><a class='btn btn-dark' onClick='modalshow({5})' >Aplicar Ahora</a></div>
             </div>
             ", titulo, _empress, ubicacion, salarioMin, salarioMax, id) + Environment.NewLine;
             }
             return _retval;
         }
+
+        public static string GenerarListaTrabajosempleador(DataTable pTabla)
+        {
+            string _retval = "";
+            foreach (DataRow _r in pTabla.Rows)
+            {
+                // Asumiendo que las columnas de la tabla son: título, empresa, ubicación, salario mínimo y salario máximo
+                string id = _r["id"].ToString();
+                string titulo = _r["titulo"].ToString();        // Título del trabajo
+                string empresa = _r["idempress"].ToString();      // Nombre de la empresa
+                var _conn = Conexion();
+                var _comm = Comando(_conn);
+                int contador = EjecutarConsulta(String.Format("select count(id) from aplicarofertas where idoferta = {0} and activa = '1'", id));
+                string ubicacion = _r["ubicacion"].ToString();  // Ubicación del trabajo
+                string salarioMin = _r["pagomin"].ToString();// Salario mínimo
+                string salarioMax = _r["pagomax"].ToString();// Salario máximo
+                DateTime desde = Convert.ToDateTime(_r["desde"].ToString());
+                string plazas = _r["plazas"].ToString();
+                // Generar HTML para cada fila de trabajo
+                _retval += String.Format(@"          
+              <div class='job-card-empleador' onClick='llenarcandidatos({7})'>
+                    <h3>{0}</h3> <span># Aplicantes: {6}</span>
+                <div class='job-details-empleador'>
+                    <span>{1}</span>
+                    <span>Salario: ${2} - ${3} </span>
+                    <span>Plazas Disponibles: {4}</span>
+                    <span>Fecha de Publicación: {5}</span>
+                    
+                </div>
+                    <a class='btn btn-dark' onClick='modalshow({7})' >Ver Detalles</a>
+              </div>
+            ", titulo, ubicacion, salarioMin, salarioMax, plazas, desde.ToString("dd/MM/yyyy"), contador, id) + Environment.NewLine;
+            }
+            return _retval;
+        }
+
+
 
         public static string GenerarListaEmpleadores(DataTable pTabla)
         {
@@ -780,6 +909,65 @@ namespace JobmeServiceSyscome
               <div class='job-apply-empress'><button class='btn btn-dark' onClick='llenarofertas({5})'> Oportunidades({6}) </button></div>
              </div>
             ", titulo, direccion, telefono, correo, logo, id, contador) + Environment.NewLine;
+            }
+            return _retval;
+        }
+        public static string GenerarListaCandidatos(DataTable pTabla, int empresa)
+        {
+            string _retval = "";
+            foreach (DataRow _r in pTabla.Rows)
+            {
+                // Asumiendo que las columnas de la tabla son: título, empresa, ubicación, salario mínimo y salario máximo
+                string idusuario = _r["idcandidato"].ToString();
+                string idoferta = _r["idoferta"].ToString();
+                DateTime fechaaplico = Convert.ToDateTime(_r["fecha"].ToString());        // Título del trabajo
+                string cv = _r["idcv"].ToString();      // Nombre de la empresa
+                string activo = _r["activa"].ToString();  // Ubicación del trabajo
+                int idempresa = empresa;
+                string apellido = "";
+                string nombre = "";
+                string usuario = "";
+                string titulo = "";
+                string rutacv = "";
+                String cons = String.Format(@"SELECT * FROM candidato where usuario = '{0}'", idusuario);
+                DataTable dt = new DataTable();
+                dt = Query(cons);
+                foreach (DataRow _r2 in dt.Rows)
+                {
+                     apellido = _r2["apellido"].ToString();
+                     nombre = _r2["nombre"].ToString();
+                     usuario = _r2["usuario"].ToString();
+
+                }
+                String cons2 = String.Format(@"SELECT titulo FROM ofertasempleo where idempress = '{0}' and id = '{1}'", empresa, idoferta);
+                DataTable dt2 = new DataTable();
+                dt2 = Query(cons2);
+                foreach (DataRow _r3 in dt2.Rows)
+                {
+                    titulo = _r3["titulo"].ToString();
+                }
+
+                String cons3 = String.Format(@"SELECT rutacv FROM cv_candidatos where usuario = '{0}'", idusuario);
+                DataTable dt3 = new DataTable();
+                dt3 = Query(cons3);
+                foreach (DataRow _r3 in dt3.Rows)
+                {
+                    rutacv = _r3["rutacv"].ToString();
+                }
+
+                // Generar HTML para cada fila de trabajo
+                _retval += String.Format(@"
+        <div class='application-card-empleador'>
+             <h3>{0} {1}</h3>  
+           <div class='application-details-empleador'>
+             <span>ID Candidato: {2}</span>           
+             <span>Aplicó a: {3}</span>
+             <span>Fecha de Aplicación: {4}</span>
+             <span>CV: <a href='#'>Ver CV</a></span>
+             <span>Estado: Activo</span>
+           </div>
+             <a href='#' class='btn btn-dark'>Ver Perfil</a>  
+        </div>", nombre, apellido, usuario,  titulo, fechaaplico.ToString("dd/MM/yyyy"), rutacv, idusuario ) + Environment.NewLine;
             }
             return _retval;
         }

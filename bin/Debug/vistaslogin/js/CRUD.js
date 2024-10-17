@@ -1,5 +1,6 @@
 
-var _url2 = "http://localhost:9010/"
+//var _url2 = "http://localhost:9010/"
+var _url = "http://192.168.1.35:9010/"
 function guardarcandidatos() {
    
 

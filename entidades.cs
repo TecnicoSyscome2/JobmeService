@@ -34,15 +34,29 @@ namespace JobmeServiceSyscome
         }
     }
 
+    public class Candidato
+    {
+        public string Usuario { get; set; }           // Nombre de usuario del candidato
+        public string Clave { get; set; }             // Clave o contraseña
+        public string Apellido { get; set; }          // Apellido del candidato
+        public string Nombre { get; set; }            // Nombre del candidato
+        public string Pais { get; set; }              // País de residencia
+        public string Departamento { get; set; }      // Departamento o estado
+        public string Municipio { get; set; }         // Municipio o ciudad
+        public DateTime FechaNacimiento { get; set; } // Fecha de nacimiento
+        public string Telefono { get; set; }          // Número de teléfono
+        public string Correo { get; set; }            // Correo electrónico
+        public string LinkedIn { get; set; }          // Perfil de LinkedIn
+        public string UsuarioTipo { get; set; }       // Tipo de usuario (Ej. Empleador, Candidato)
+    }
+
     public class ofrecimientosempleo
     {
         public int id { get; set; }
         public int idoferta { get; set; }
         public string descripcion { get; set; }
         public ofrecimientosempleo() 
-        { 
-
-        }
+        { }
     }
     public class requisitos
     {
@@ -50,8 +64,6 @@ namespace JobmeServiceSyscome
         public int idempress { get; set; }
         public string descripcion { get; set; }
         public requisitos() 
-        { 
-        
-        }
+        { }
     }
 }

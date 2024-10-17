@@ -1,7 +1,8 @@
 
 
 
-var _url = "http://localhost:9010/?";
+//var _url = "http://localhost:9010/?";
+var _url = "http://192.168.1.35:9010/?"
 function ActualizarPagina(url2) {
   var _pagina = _url + url2;
   fetch(_pagina)
@@ -24,10 +25,10 @@ function ActualizarPagina(url2) {
     xhr.onreadystatechange = function () {
       if (xhr.readyState === XMLHttpRequest.DONE) {
         if (xhr.status === 200) {
-          alert('Has cerrado sesion exitosamente!');
+         // alert('Has cerrado sesion exitosamente!');
           window.location.href = '/'; // Redirigir a la página de login
         } else {
-          alert('Error al cerrar sesion. Por favor intentelo de nuevo.');
+          //alert('Error al cerrar sesion. Por favor intentelo de nuevo.');
         }
       }
     };
@@ -245,6 +246,7 @@ function limpiar(pFrase) {
 function cargarFormularioofertasempleo() {
   // Código HTML del formulario
   const formularioHTML = `
+   <div class="row justify-content-center" id="contenido">
 <div class="row">
   <div class="col-md-8" id="ofertas_empleo">
     <input type="hidden" id="tabla" value="ofertasempleo" />
@@ -275,12 +277,12 @@ function cargarFormularioofertasempleo() {
           <label for="plazas"># Plazas</label>
           <input type="number" class="oferta dato" id="plazas" name="plazas" placeholder="Ej. 1" required>
         </div>
-        <div>
-          <label for="desde">Periodo de Disponibilidad Desde</label>
+        <div hidden>
+          <label for="desde">Oportunidad Valida Desde</label>
           <input type="date" class="oferta dato" id="desde" name="desde" required>
         </div>
         <div>
-          <label for="hasta">Periodo de Disponibilidad Hasta</label>
+          <label for="hasta">Oportunidad valida Hasta</label>
           <input type="date" class="oferta dato" id="hasta" name="hasta" required>
         </div>
         <div class="full-width">
@@ -357,6 +359,7 @@ function cargarFormularioofertasempleo() {
       </div>
     </div>
   </div>
+</div> 
 </div>`;   
   // Insertar el formulario en el div con id 'contenido'
   document.getElementById("contenido").innerHTML = formularioHTML;
@@ -366,7 +369,7 @@ function cargarFormularioofertasempleo() {
   setCurrentDate();
   setCurrentDate2();
 }
-cargarFormularioofertasempleo()
+
 function llenartipocontrato() {
   var _pagina = _url + "q=listacontratos";
   fetch(_pagina)
@@ -385,3 +388,248 @@ function llenartipocontrato() {
     })
     .catch(error => console.error('Error:', error));
   }
+  llenarofertas()
+  function llenarofertas() {
+
+    var _pagina = _url + "q=listaofertasempleo";
+    
+    fetch(_pagina)
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("ofertasitem").innerHTML = data;
+    })
+    .catch(error => console.error('Error:', error));
+    }
+   
+    function llenarcandidatos(oferta) {
+      document.getElementById("candidatositem").innerHTML = "";
+      var _pagina = _url + "q=listadecandidatosparaoferta&idoferta=" + oferta;
+      
+      fetch(_pagina)
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("candidatositem").innerHTML = data;
+      })
+      .catch(error => console.error('Error:', error));
+      }
+
+      function cargarvistaoferta(empresa) {
+        // Código HTML del formulario
+        const formularioHTML = `
+         <input type="number"  id="idoferta" name="idoferta" value="" hidden>
+              <!-- Sección Título -->
+              <section class="job-title">
+                  <h2 id="titulo">Título de la Oferta</h2>
+                  
+              </section>
+            
+            
+        <section class="job-details">
+           <h3>Detalles del Empleo</h3>
+<p style="display: none;"><strong>Nombre de la Empresa: </strong> <span id="nombreempresa"></span></p>
+<p style="display: none;"><strong>Ubicación: </strong> <span id="ubicacion"></span></p>
+<p style="display: none;"><strong>Salario: </strong> De <span id="pagomin"></span> a <span id="pagomax"></span></p>
+<p style="display: none;"><strong>Oportunidad Disponible: </strong> Desde <span id="desde"></span> Hasta <span id="hasta"></span></p>
+<p style="display: none;"><strong>Tipo de Contrato:</strong> <span id="nombrecontrato"></span></p>
+<p style="display: none;"><strong>Disponibles: </strong> <span id="plazas"></span></p>
+<p style="display: none;"><strong>Edad Mínima: </strong> <span id="edadmin"></span></p>
+<p style="display: none;"><strong>Edad Máxima: </strong> <span id="edadmax"></span></p>
+<p style="display: none;"><strong>Nivel Educativo: </strong> <span id="nombreeduc"></span></p>
+        </section>
+        
+        <!-- Descripción de Epic Calling -->
+        <section class="job-epic-calling">
+          
+            <p id="epicCalling">Descripción del Epic Calling</p>
+        </section>
+
+<section class="job-offers" >
+
+</section>
+        <a  class="apply-button" onClick="aplicarofertas()">Aplicar Ahora</a>
+      <div class="summary" id="ofrecimientos">
+          <h4>Resumen del Puesto</h4>
+          <p><strong>Título:</strong> <span id="resumen-titulo">Desarrollador Full-Stack Senior</span></p>
+          <p><strong>Ubicación:</strong> <span id="resumen-ubicacion">Ciudad de México</span></p>
+          <p><strong>Salario:</strong> <span id="resumen-salario">$30,000 - $45,000 MXN</span></p>
+          <p><strong>Fechas:</strong> <span id="resumen-fechas">01/10/2024 - 01/10/2025</span></p>
+          <p><strong>Plazas:</strong> <span id="resumen-plazas">3</span></p>
+      </div>
+      
+      `;   
+        // Insertar el formulario en el div con id 'contenido'
+        document.getElementById("containesvistaoferta").innerHTML = formularioHTML;
+        // Llama a la función después de que el formulario haya sido cargado
+        obtenerOfertaEmpleo(empresa);
+      
+      }
+      
+      function modalshow(empresa) {
+        
+        const elemento = document.getElementById('jobModal');
+        if (elemento.style.display === 'none') {
+            elemento.style.display = 'block'; // Muestra el elemento
+            cargarvistaoferta(empresa);
+        } else {
+            elemento.style.display = 'none'; // Oculta el elemento
+        }
+      
+      }
+      
+      // Función para obtener datos del servidor y llenar el formulario
+      function obtenerOfertaEmpleo(idOferta) {
+        // Realiza una solicitud al backend usando POST
+        fetch(_url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            // Enviar el id de la oferta en el cuerpo de la solicitud
+            body: JSON.stringify({ 
+              q: 'formularioofertaempleador',
+              idoferta: idOferta })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener los datos');
+            }
+            return response.json();
+        })
+        .then(data => {
+         
+            if (data && data.length > 0) {
+                let oferta = data[0]; // Obtener el primer objeto de la lista
+                
+                function mostrarSiExiste(elementId, valor, mensajeVacio) {
+                  let element = document.getElementById(elementId);
+                  let parent = element.parentElement;
+                  if (!valor || valor === 0 || valor === "") {
+                      parent.style.display = 'none';
+                  } else {
+                      element.textContent = valor;
+                      parent.style.display = 'block';
+                  }
+                }
+                
+                // Asignar valores a los campos o mostrar mensaje de "Datos no proporcionados"
+                document.getElementById('idoferta').value = oferta.Id;
+                mostrarSiExiste('titulo', oferta.Titulo);
+                mostrarSiExiste('ubicacion', oferta.Ubicacion);
+                mostrarSiExiste('pagomin', oferta.PagoMin ? `$${oferta.PagoMin}` : null);
+                mostrarSiExiste('pagomax', oferta.PagoMax ? `$${oferta.PagoMax}` : null);
+                mostrarSiExiste('nombreempresa', desLimpiar(oferta.nombreempress));
+                mostrarSiExiste('epicCalling', desLimpiar(oferta.EpicCalling));
+                mostrarSiExiste('desde', new Date(oferta.Desde).toLocaleDateString());
+                mostrarSiExiste('hasta', new Date(oferta.Hasta).toLocaleDateString());
+                mostrarSiExiste('plazas', oferta.Plazas);
+                mostrarSiExiste('nombrecontrato', oferta.nombrecontrato);
+                mostrarSiExiste('edadmin', oferta.edadmin !== 0 ? oferta.edadmin : "");
+                mostrarSiExiste('edadmax', oferta.edadmax !== 0 ? oferta.edadmax : "");
+                mostrarSiExiste('nombreeduc', oferta.nombreeduc);
+                
+                          
+                          // Ofrecimientos
+                          let jobOffersSection = document.querySelector('.job-offers');
+                
+                          // Limpiar la sección antes de agregar nuevos elementos
+                   
+                          
+                          // Verificar si hay ofrecimientos
+                          if (oferta.Ofrecimientos.length > 0) {
+                              // Crear el título "Lo que ofrecemos"
+                              let titulo = document.createElement('h3');
+                              titulo.textContent = 'Lo que ofrecemos';
+                          
+                              // Crear el ul con id "ofrecimientos"
+                              let listaOfrecimientos = document.createElement('ul');
+                              listaOfrecimientos.classList.add('offers-list');
+                              listaOfrecimientos.id = 'ofrecimientos';
+                          
+                              // Llenar la lista con los ofrecimientos
+                              oferta.Ofrecimientos.forEach(ofrecimiento => {
+                                  let item = document.createElement('li');
+                                  item.textContent = ofrecimiento.descripcion;
+                                  listaOfrecimientos.appendChild(item);
+                              });
+                          
+                              // Agregar el título y la lista a la sección
+                              jobOffersSection.appendChild(titulo);
+                              jobOffersSection.appendChild(listaOfrecimientos);
+                          } else {
+                              // Crear el título "Lo que ofrecemos"
+                              let titulo = document.createElement('h3');
+                              titulo.textContent = 'Lo que ofrecemos';
+                          
+                              // Crear el ul con id "ofrecimientos"
+                              let listaOfrecimientos = document.createElement('ul');
+                              listaOfrecimientos.classList.add('offers-list');
+                              listaOfrecimientos.id = 'ofrecimientos';
+                          
+                              // Si no hay ofrecimientos, mostrar mensaje "Datos no proporcionados por el empleador"
+                              // let item = document.createElement('li');
+                              // item.textContent = 'Datos no proporcionados por el empleador';
+                              // listaOfrecimientos.appendChild(item);
+                          
+                              // Agregar el título y la lista a la sección
+                              jobOffersSection.appendChild(titulo);
+                              jobOffersSection.appendChild(listaOfrecimientos);
+                          }
+                          
+                 
+                          let jobRequirementsSection = document.querySelector('.job-requirements');
+                
+                          // Limpiar la sección antes de agregar nuevos elementos
+                          jobRequirementsSection.innerHTML = '';
+                          
+                          // Verificar si hay requisitos
+                          if (oferta.Requisitos.length > 0) {
+                              // Crear el título "Requisitos para el puesto"
+                              let titulo = document.createElement('h3');
+                              titulo.textContent = 'Requisitos para el puesto';
+                          
+                              // Crear el ul con id "requisitos"
+                              let listaRequisitos = document.createElement('ul');
+                              listaRequisitos.classList.add('requirements-list');
+                              listaRequisitos.id = 'requisitos';
+                          
+                              // Llenar la lista con los requisitos
+                              oferta.Requisitos.forEach(requisito => {
+                                  let item = document.createElement('li');
+                                  item.textContent = requisito.descripcion;
+                                  listaRequisitos.appendChild(item);
+                              });
+                          
+                              // Agregar el título y la lista a la sección
+                              jobRequirementsSection.appendChild(titulo);
+                              jobRequirementsSection.appendChild(listaRequisitos);
+                          } else {
+                              // Crear el título "Requisitos para el puesto"
+                              let titulo = document.createElement('h3');
+                              titulo.textContent = 'Requisitos para el puesto';
+                          
+                              // Crear el ul con id "requisitos"
+                              let listaRequisitos = document.createElement('ul');
+                              listaRequisitos.classList.add('requirements-list');
+                              listaRequisitos.id = 'requisitos';
+                          
+                              // Si no hay requisitos, mostrar mensaje "Datos no proporcionados por el empleador"
+                              // let item = document.createElement('li');
+                              // item.textContent = 'Datos no proporcionados por el empleador';
+                              // listaRequisitos.appendChild(item);
+                          
+                              // Agregar el título y la lista a la sección
+                              jobRequirementsSection.appendChild(titulo);
+                              jobRequirementsSection.appendChild(listaRequisitos);
+                          }
+                          
+      
+         // Llenar los campos de resumen
+         document.getElementById('resumen-titulo').textContent = oferta.Titulo;
+         document.getElementById('resumen-ubicacion').textContent = oferta.Ubicacion;
+         document.getElementById('resumen-salario').textContent = `${oferta.PagoMin} $ || ${oferta.PagoMax} $`;
+         document.getElementById('resumen-fechas').textContent = `${new Date(oferta.Desde).toISOString().slice(0, 10)} || ${new Date(oferta.Hasta).toISOString().slice(0, 10)}`;
+         document.getElementById('resumen-plazas').textContent = oferta.Plazas;
+            }
+        })
+        .catch(error => console.error('Error al obtener los datos:', error));
+      }

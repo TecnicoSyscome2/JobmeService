@@ -1,7 +1,8 @@
 
 
 
-var _url = "http://localhost:9010/?";
+//var _url = "http://localhost:9010/?";
+var _url = "http://192.168.1.35:9010/?"
 function ActualizarPagina(url2) {
   var _pagina = _url + url2;
   fetch(_pagina)
@@ -24,10 +25,10 @@ function ActualizarPagina(url2) {
     xhr.onreadystatechange = function () {
       if (xhr.readyState === XMLHttpRequest.DONE) {
         if (xhr.status === 200) {
-          alert('Has cerrado sesion exitosamente!');
+          //alert('Has cerrado sesion exitosamente!');
           window.location.href = '/'; // Redirigir a la página de login
         } else {
-          alert('Error al cerrar sesion. Por favor intentelo de nuevo.');
+          //alert('Error al cerrar sesion. Por favor intentelo de nuevo.');
         }
       }
     };
@@ -146,40 +147,36 @@ function cargarvistaoferta(empresa) {
       
         <!-- Detalles de la Oferta -->
         <section class="job-details">
-            <h3>Detalles del Empleo</h3>
-            <p><strong>Nombre de la Empresa: </strong> <span id="nombreempresa">Ubicación</span></p>
-            <p><strong>Ubicación: </strong> <span id="ubicacion">Ubicación</span></p>
-            <p><strong>Salario: </strong> De <span id="pagomin">$0</span> a <span id="pagomax">$0</span></p>
-            <p><strong>Duración: </strong> Del <span id="desde">Fecha Inicio</span> al <span id="hasta">Fecha Fin</span></p>
-            <p><strong>Tipo de Contrato:</strong> <span id="nombrecontrato">Tipo de Contrato</span></p>
-            <p><strong>Plazas Disponibles: </strong> <span id="plazas">0</span></p>
-            <p><strong>Edad Mínima: </strong> <span id="edadmin">0</span></p>
-            <p><strong>Edad Máxima: </strong> <span id="edadmax">0</span></p>
-            <p><strong>Nivel Educativo: </strong> <span id="nombreeduc">Nivel Educativo</span></p>
+           <h3>Detalles del Empleo</h3>
+<p style="display: none;"><strong>Nombre de la Empresa: </strong> <span id="nombreempresa"></span></p>
+<p style="display: none;"><strong>Ubicación: </strong> <span id="ubicacion"></span></p>
+<p style="display: none;"><strong>Salario: </strong> De <span id="pagomin"></span> a <span id="pagomax"></span></p>
+<p style="display: none;"><strong>Oportunidad Disponible: </strong> Desde <span id="desde"></span> Hasta <span id="hasta"></span></p>
+<p style="display: none;"><strong>Tipo de Contrato:</strong> <span id="nombrecontrato"></span></p>
+<p style="display: none;"><strong>Disponibles: </strong> <span id="plazas"></span></p>
+<p style="display: none;"><strong>Edad Mínima: </strong> <span id="edadmin"></span></p>
+<p style="display: none;"><strong>Edad Máxima: </strong> <span id="edadmax"></span></p>
+<p style="display: none;"><strong>Nivel Educativo: </strong> <span id="nombreeduc"></span></p>
         </section>
         
         <!-- Descripción de Epic Calling -->
         <section class="job-epic-calling">
-            <h3>Epic Calling</h3>
+          
             <p id="epicCalling">Descripción del Epic Calling</p>
         </section>
 
-<section class="job-offers">
-    <h3>Lo que ofrecemos</h3>
-    <ul class="offers-list" id="ofrecimientos">
-    <li>Datos no proporcionados por el empleador</li>
-        <!-- Los ofrecimientos se llenarán aquí -->
-    </ul>
+<section class="job-offers" >
+
 </section>
 <!-- Requisitos del Puesto -->
 <section class="job-requirements">
-    <h3>Requisitos para el puesto</h3>
-    <ul class="requirements-list" id="requisitos">
-    <li>Datos no proporcionados por el empleador</li>
-        <!-- Los requisitos se llenarán aquí -->
-    </ul>
+
 </section>
-  <a  class="apply-button" onClick="aplicarofertas()">Aplicar Ahora</a>
+<div class='row'>
+ <a  class="apply-button " onClick="aplicarofertas()">Aplicar Ahora</a>
+ <a  class="apply-button-cancelar" onClick="cancelarofertas()">Cancelar Oferta</a>
+</div>
+ 
 <div class="summary">
     <h4>Resumen del Puesto</h4>
     <p><strong>Título:</strong> <span id="resumen-titulo">Desarrollador Full-Stack Senior</span></p>
@@ -233,51 +230,129 @@ function obtenerOfertaEmpleo(idOferta) {
       if (data && data.length > 0) {
           let oferta = data[0]; // Obtener el primer objeto de la lista
           
-          // Insertar los valores en las etiquetas de texto
-          document.getElementById('idoferta').value = oferta.Id;
-          document.getElementById('titulo').textContent = oferta.Titulo;
-          document.getElementById('ubicacion').textContent = oferta.Ubicacion;
-          document.getElementById('pagomin').textContent = `$${oferta.PagoMin}`;
-          document.getElementById('pagomax').textContent = `$${oferta.PagoMax}`;
-          document.getElementById('nombreempresa').textContent = desLimpiar(oferta.nombreempress);
-          document.getElementById('epicCalling').textContent = desLimpiar(oferta.EpicCalling);
-          document.getElementById('desde').textContent = new Date(oferta.Desde).toLocaleDateString();
-          document.getElementById('hasta').textContent = new Date(oferta.Hasta).toLocaleDateString();
-          document.getElementById('plazas').textContent = oferta.Plazas;
-          document.getElementById('nombrecontrato').textContent = oferta.nombrecontrato;
-          if( oferta.edadmin == 0){
+         // Mostrar solo si el dato está disponible
+function mostrarSiExiste(elementId, valor, mensajeVacio) {
+  let element = document.getElementById(elementId);
+  let parent = element.parentElement;
+  if (!valor || valor === 0 || valor === "") {
+      parent.style.display = 'none';
+  } else {
+      element.textContent = valor;
+      parent.style.display = 'block';
+  }
+}
 
-            document.getElementById('edadmin').textContent = "Datos no proporcionados por la empresa"
-          }else{
-            document.getElementById('edadmin').textContent = oferta.edadmin;
-          }
-          if( oferta.edadmax == 0){
+// Asignar valores a los campos o mostrar mensaje de "Datos no proporcionados"
+document.getElementById('idoferta').value = oferta.Id;
+mostrarSiExiste('titulo', oferta.Titulo);
+mostrarSiExiste('ubicacion', oferta.Ubicacion);
+mostrarSiExiste('pagomin', oferta.PagoMin ? `$${oferta.PagoMin}` : null);
+mostrarSiExiste('pagomax', oferta.PagoMax ? `$${oferta.PagoMax}` : null);
+mostrarSiExiste('nombreempresa', desLimpiar(oferta.nombreempress));
+mostrarSiExiste('epicCalling', desLimpiar(oferta.EpicCalling));
+mostrarSiExiste('desde', new Date(oferta.Desde).toLocaleDateString());
+mostrarSiExiste('hasta', new Date(oferta.Hasta).toLocaleDateString());
+mostrarSiExiste('plazas', oferta.Plazas);
+mostrarSiExiste('nombrecontrato', oferta.nombrecontrato);
+mostrarSiExiste('edadmin', oferta.edadmin !== 0 ? oferta.edadmin : "");
+mostrarSiExiste('edadmax', oferta.edadmax !== 0 ? oferta.edadmax : "");
+mostrarSiExiste('nombreeduc', oferta.nombreeduc);
 
-            document.getElementById('edadmax').textContent = "Datos no proporcionados por la empresa"
-          }else{
-            document.getElementById('edadmax').textContent = oferta.edadmax;
-          }
-          //document.getElementById('edadmax').textContent = oferta.edadmax;
-          document.getElementById('nombreeduc').textContent = oferta.nombreeduc;
           
           // Ofrecimientos
- // Llenar los ofrecimientos
- let listaOfrecimientos = document.getElementById('ofrecimientos');
- listaOfrecimientos.innerHTML = ''; // Limpiar antes de agregar nuevos
- oferta.Ofrecimientos.forEach(ofrecimiento => {
-     let item = document.createElement('li');
-     item.textContent = ofrecimiento.descripcion;
-     listaOfrecimientos.appendChild(item);
- });
+          let jobOffersSection = document.querySelector('.job-offers');
+
+          // Limpiar la sección antes de agregar nuevos elementos
+   
+          
+          // Verificar si hay ofrecimientos
+          if (oferta.Ofrecimientos.length > 0) {
+              // Crear el título "Lo que ofrecemos"
+              let titulo = document.createElement('h3');
+              titulo.textContent = 'Lo que ofrecemos';
+          
+              // Crear el ul con id "ofrecimientos"
+              let listaOfrecimientos = document.createElement('ul');
+              listaOfrecimientos.classList.add('offers-list');
+              listaOfrecimientos.id = 'ofrecimientos';
+          
+              // Llenar la lista con los ofrecimientos
+              oferta.Ofrecimientos.forEach(ofrecimiento => {
+                  let item = document.createElement('li');
+                  item.textContent = ofrecimiento.descripcion;
+                  listaOfrecimientos.appendChild(item);
+              });
+          
+              // Agregar el título y la lista a la sección
+              jobOffersSection.appendChild(titulo);
+              jobOffersSection.appendChild(listaOfrecimientos);
+          } else {
+              // Crear el título "Lo que ofrecemos"
+              let titulo = document.createElement('h3');
+              titulo.textContent = 'Lo que ofrecemos';
+          
+              // Crear el ul con id "ofrecimientos"
+              let listaOfrecimientos = document.createElement('ul');
+              listaOfrecimientos.classList.add('offers-list');
+              listaOfrecimientos.id = 'ofrecimientos';
+          
+              // Si no hay ofrecimientos, mostrar mensaje "Datos no proporcionados por el empleador"
+              // let item = document.createElement('li');
+              // item.textContent = 'Datos no proporcionados por el empleador';
+              // listaOfrecimientos.appendChild(item);
+          
+              // Agregar el título y la lista a la sección
+              jobOffersSection.appendChild(titulo);
+              jobOffersSection.appendChild(listaOfrecimientos);
+          }
+          
  
- // Llenar los requisitos
- let listaRequisitos = document.getElementById('requisitos');
- listaRequisitos.innerHTML = ''; // Limpiar antes de agregar nuevos
- oferta.Requisitos.forEach(requisito => {
-     let item = document.createElement('li');
-     item.textContent = requisito.descripcion;
-     listaRequisitos.appendChild(item);
- });
+          let jobRequirementsSection = document.querySelector('.job-requirements');
+
+          // Limpiar la sección antes de agregar nuevos elementos
+          jobRequirementsSection.innerHTML = '';
+          
+          // Verificar si hay requisitos
+          if (oferta.Requisitos.length > 0) {
+              // Crear el título "Requisitos para el puesto"
+              let titulo = document.createElement('h3');
+              titulo.textContent = 'Requisitos para el puesto';
+          
+              // Crear el ul con id "requisitos"
+              let listaRequisitos = document.createElement('ul');
+              listaRequisitos.classList.add('requirements-list');
+              listaRequisitos.id = 'requisitos';
+          
+              // Llenar la lista con los requisitos
+              oferta.Requisitos.forEach(requisito => {
+                  let item = document.createElement('li');
+                  item.textContent = requisito.descripcion;
+                  listaRequisitos.appendChild(item);
+              });
+          
+              // Agregar el título y la lista a la sección
+              jobRequirementsSection.appendChild(titulo);
+              jobRequirementsSection.appendChild(listaRequisitos);
+          } else {
+              // Crear el título "Requisitos para el puesto"
+              let titulo = document.createElement('h3');
+              titulo.textContent = 'Requisitos para el puesto';
+          
+              // Crear el ul con id "requisitos"
+              let listaRequisitos = document.createElement('ul');
+              listaRequisitos.classList.add('requirements-list');
+              listaRequisitos.id = 'requisitos';
+          
+              // Si no hay requisitos, mostrar mensaje "Datos no proporcionados por el empleador"
+              // let item = document.createElement('li');
+              // item.textContent = 'Datos no proporcionados por el empleador';
+              // listaRequisitos.appendChild(item);
+          
+              // Agregar el título y la lista a la sección
+              jobRequirementsSection.appendChild(titulo);
+              jobRequirementsSection.appendChild(listaRequisitos);
+          }
+          
 
    // Llenar los campos de resumen
    document.getElementById('resumen-titulo').textContent = oferta.Titulo;
@@ -300,6 +375,17 @@ var oferta = document.getElementById('idoferta').value;
   })
   .catch(error => console.error('Error:', error));
 }
+function cancelarofertas() {
+  var oferta = document.getElementById('idoferta').value;
+    var _pagina = _url + "Q=cancelaroferta&idoferta=" + oferta;
+  
+    fetch(_pagina)
+    .then(response => response.text())
+    .then(data => {
+      alert(data)
+    })
+    .catch(error => console.error('Error:', error));
+  }
 
 
 
