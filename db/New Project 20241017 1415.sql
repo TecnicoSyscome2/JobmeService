@@ -33,6 +33,7 @@ CREATE TABLE `aplicarofertas` (
   `fecha` date NOT NULL,
   `idcv` varchar(500) NOT NULL,
   `activa` int(10) unsigned NOT NULL,
+  `idempresa` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -41,8 +42,9 @@ CREATE TABLE `aplicarofertas` (
 --
 
 /*!40000 ALTER TABLE `aplicarofertas` DISABLE KEYS */;
-INSERT INTO `aplicarofertas` (`id`,`idcandidato`,`idoferta`,`fecha`,`idcv`,`activa`) VALUES 
- (1,'usuario01',1,'2024-10-14','1',1);
+INSERT INTO `aplicarofertas` (`id`,`idcandidato`,`idoferta`,`fecha`,`idcv`,`activa`,`idempresa`) VALUES 
+ (1,'usuario01',1,'2024-10-14','1',1,1),
+ (2,'usuario01',2,'2024-10-17','1',1,1);
 /*!40000 ALTER TABLE `aplicarofertas` ENABLE KEYS */;
 
 
@@ -463,6 +465,7 @@ CREATE TABLE `ofertasempleo` (
   `edadmin` int(10) unsigned default '0',
   `edadmax` int(10) unsigned default '0',
   `niveleduc` int(10) unsigned default '1',
+  `activo` int(10) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -471,13 +474,13 @@ CREATE TABLE `ofertasempleo` (
 --
 
 /*!40000 ALTER TABLE `ofertasempleo` DISABLE KEYS */;
-INSERT INTO `ofertasempleo` (`id`,`titulo`,`ubicacion`,`pagomin`,`pagomax`,`idempress`,`epiccalling`,`desde`,`hasta`,`plazas`,`contrato`,`edadmin`,`edadmax`,`niveleduc`) VALUES 
- (1,'Desarrollador c#','San Salvador','400.00','1000.00',1,'Quiere crear la tecnología del mañana para las nuevas empresas que empezarán en El Salvador?','2024-10-01','2024-10-30',2,1,20,30,5),
- (2,'Desarrollador Backend','San Salvador','300.00','500.00',1,'','2024-10-01','2024-10-30',1,0,0,0,0),
- (3,'Analista de Datos','San Salvador','350.00','450.00',1,'','2024-10-01','2024-10-30',1,0,0,0,0),
- (4,'Diseñador UI/UX','San Salvador','400.00','600.00',1,'','2024-10-01','2024-10-30',3,0,0,0,0),
- (5,'Ingeniero DevOps','Santa Tecla','450.00','650.00',11,'Crea  la nueva tecnolog(i)a para mejorar el ma(n)ana','2024-10-01','2024-10-30',1,0,0,0,0),
- (39,'Programador Jr','Santa Tecla ','400.00','1200.00',11,'Crea  la nueva tecnolog(i)a para mejorar el ma(n)ana','2024-10-10','2024-10-30',1,3,0,0,0);
+INSERT INTO `ofertasempleo` (`id`,`titulo`,`ubicacion`,`pagomin`,`pagomax`,`idempress`,`epiccalling`,`desde`,`hasta`,`plazas`,`contrato`,`edadmin`,`edadmax`,`niveleduc`,`activo`) VALUES 
+ (1,'Desarrollador c#','San Salvador','400.00','1000.00',1,'Quiere crear la tecnología del mañana para las nuevas empresas que empezarán en El Salvador?','2024-10-01','2024-10-30',2,1,20,30,5,1),
+ (2,'Desarrollador Backend','San Salvador','300.00','500.00',1,'','2024-10-01','2024-10-30',1,0,0,0,0,1),
+ (3,'Analista de Datos','San Salvador','350.00','450.00',1,'','2024-10-01','2024-10-30',1,0,0,0,0,1),
+ (4,'Diseñador UI/UX','San Salvador','400.00','600.00',1,'','2024-10-01','2024-10-30',3,0,0,0,0,1),
+ (5,'Ingeniero DevOps','Santa Tecla','450.00','650.00',11,'Crea  la nueva tecnolog(i)a para mejorar el ma(n)ana','2024-10-01','2024-10-30',1,0,0,0,0,1),
+ (39,'Programador Jr','Santa Tecla ','400.00','1200.00',11,'Crea  la nueva tecnolog(i)a para mejorar el ma(n)ana','2024-10-10','2024-10-30',1,3,0,0,0,1);
 /*!40000 ALTER TABLE `ofertasempleo` ENABLE KEYS */;
 
 
