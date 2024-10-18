@@ -633,3 +633,25 @@ function llenartipocontrato() {
         })
         .catch(error => console.error('Error al obtener los datos:', error));
       }
+        function cancelarofertas(idOferta) {
+          var oferta = idOferta;
+            var _pagina = _url + "Q=cancelaroferta&idoferta=" + oferta;
+          
+            fetch(_pagina)
+            .then(response => response.text())
+            .then(data => {
+              alert(data)
+            })
+            .catch(error => console.error('Error:', error));
+          }
+          function activarofertas(idOferta) {
+            var oferta = idOferta;
+              var _pagina = _url + "Q=reactivaroferta&idoferta=" + oferta;
+            
+              fetch(_pagina)
+              .then(response => response.text())
+              .then(data => {
+                alert(data)
+              })
+              .catch(error => console.error('Error:', error));
+            }

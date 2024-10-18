@@ -280,6 +280,52 @@ namespace JobmeServiceSyscome
                                 Console.WriteLine("Error al guardar datos: " + ex.Message);
                             }
                         }
+                        if (_q == "cancelaroferta")
+                        {
+                            try
+                            {
+                                string idoferta = query["idoferta"];
+                                string idcandidato = sessionInfo.Username;
+                                string fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                                var _conn = Conexion();
+                                var _comm = Comando(_conn);
+                                //_conn.Open();
+                                //_comm.CommandText = String.Format("Select id from aplicarofertas where idcandidato = '{0}' and idoferta = '{1}'", idcandidato, idoferta);
+                                //var aplicacion = _comm.ExecuteScalar();
+                                //string _aplicacion = aplicacion.ToString();
+                                //_conn.Close();
+                                _conn.Open();
+                                _comm.CommandText = String.Format(@"UPDATE ofertasempleo SET activo = '0' WHERE id = '{0}';", idoferta);
+                                _comm.ExecuteNonQuery();
+                                _conn.Close();
+                                _conn.Dispose();
+                                ServeHTML(request.Response, "Cancelacion de solicitud de oferta exitoso");
+                            }
+                            catch(Exception ex)
+                            {
+                                ServeHTML(request.Response, "Upss, Ocurrio un problema por favor intentelo de nuevo");
+                            }
+
+                        }
+                        if (_q == "reactivaroferta")
+                        {
+                            string idoferta = query["idoferta"];
+                            string idcandidato = sessionInfo.Username;
+                            string fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                            var _conn = Conexion();
+                            var _comm = Comando(_conn);
+                            //_conn.Open();
+                            //_comm.CommandText = String.Format("Select id from aplicarofertas where usuario = '{0}' and idoferta = '{1}'", idcandidato, idoferta);
+                            //var aplicacion = _comm.ExecuteScalar();
+                            //string _aplicacion = aplicacion.ToString();
+                            //_conn.Close();
+                            _conn.Open();
+                            _comm.CommandText = String.Format(@"UPDATE ofertasempleo SET activo = '1' WHERE id = '{0}';", idoferta);
+                            _comm.ExecuteNonQuery();
+                            _conn.Close();
+                            _conn.Dispose();
+                            ServeHTML(request.Response, "exito");
+                        }
                         else if (_q == "eliminar")
                         {
                             String _tabla = query["tabla"];
@@ -491,7 +537,6 @@ namespace JobmeServiceSyscome
                             _comm.CommandText = String.Format("Select id from aplicarofertas where usuario = '{0}' and idoferta = '{1}'", idcandidato, idoferta);
                             var aplicacion = _comm.ExecuteScalar();
                             string _aplicacion = aplicacion.ToString();
-
                             _conn.Close();
                             _conn.Open();
                             _comm.CommandText = String.Format(@"UPDATE aplicarofertas SET activa = '1' WHERE id = '{0}';", aplicacion);
@@ -833,10 +878,9 @@ namespace JobmeServiceSyscome
 
                 // Generar HTML para cada fila de trabajo
                 _retval += String.Format(@"
-            <div class='job-item'>
+            <div class='job-card-empleador' onClick='modalshow({5})'>
                 <div class='job-title'>{0}</div>
-                <div class='job-details'>Empresa: {1} | Ubicación: {2} | Salario: {3} - {4}</div>
-                <div class='job-apply'><a class='btn btn-dark' onClick='modalshow({5})' >Aplicar Ahora</a></div>
+                <span>Empresa: {1} | Ubicación: {2} | Salario: {3} - {4}</span>           
             </div>
             ", titulo, _empress, ubicacion, salarioMin, salarioMax, id) + Environment.NewLine;
             }
@@ -872,14 +916,13 @@ namespace JobmeServiceSyscome
                     
                 </div>
                     <a class='btn btn-dark' onClick='modalshow({7})' >Ver Detalles</a>
+                    <a class='btn btn-warning' onClick='activarofertas({7})' >Reactivar Oferta</a>
+                    <a class='btn btn-warning' onClick='cancelarofertas({7})' >Desactivar Oferta</a>
               </div>
             ", titulo, ubicacion, salarioMin, salarioMax, plazas, desde.ToString("dd/MM/yyyy"), contador, id) + Environment.NewLine;
             }
             return _retval;
         }
-
-
-
         public static string GenerarListaEmpleadores(DataTable pTabla)
         {
             string _retval = "";
@@ -897,16 +940,18 @@ namespace JobmeServiceSyscome
 
                 // Generar HTML para cada fila de trabajo
                 _retval += String.Format(@"
-             <div class='empresa-item'>  
+             <div class='application-card-empleador' onClick='llenarofertas({5})'>  
              <div class='empresa-logo'>
              <img src='/image/logo/logo.jpg' alt='Logo Empresa' onerror ='this.src='Sin Logo''></div>           
-             <div class='empresa-info'>
+             <div class='application-details-empleador'>
                <div class='empresa-nombre'>Nombre: {0}</div>
-               <div class='empresa-direccion'>Dirección: {1}</div>
-               <div class='empresa-correo'>Correo: {3}</div>
-               <div class='empresa-correo'>Telefono: {2}</div>  
-             </div>
-              <div class='job-apply-empress'><button class='btn btn-dark' onClick='llenarofertas({5})'> Oportunidades({6}) </button></div>
+               <span>Oportunidades Disponibles: #{6}</span>
+               <span>Dirección: {1}</span>
+               <span>Correo: {3}</span>
+               <span>Telefono: {2}</span> 
+               <a  class='btn btn-dark'>Datos de la Empresa</a>  
+             </div> 
+
              </div>
             ", titulo, direccion, telefono, correo, logo, id, contador) + Environment.NewLine;
             }
