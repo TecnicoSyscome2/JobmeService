@@ -915,9 +915,11 @@ namespace JobmeServiceSyscome
                     <span>Fecha de Publicación: {5}</span>
                     
                 </div>
-                    <a class='btn btn-dark' onClick='modalshow({7})' >Ver Detalles</a>
-                    <a class='btn btn-warning' onClick='activarofertas({7})' >Reactivar Oferta</a>
-                    <a class='btn btn-warning' onClick='cancelarofertas({7})' >Desactivar Oferta</a>
+<div class='d-flex justify-content-between'>
+ <a class='btn btn-dark me-1' onClick='modalshow({7})' >Detalles</a>
+                    <a class='btn btn-warning me-1' onClick='activarofertas({7})' >Reactivar</a>
+                    <a class='btn btn-warning' onClick='cancelarofertas({7})' >Desactivar</a></div>
+                   
               </div>
             ", titulo, ubicacion, salarioMin, salarioMax, plazas, desde.ToString("dd/MM/yyyy"), contador, id) + Environment.NewLine;
             }

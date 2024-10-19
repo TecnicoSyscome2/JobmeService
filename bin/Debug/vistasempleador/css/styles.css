@@ -534,7 +534,7 @@ h2 {
 
 .modal-content {
   background-color: #fff;
-  padding: 20px;
+  padding: 0px;
   border-radius: 10px;
   width: 100%;
   max-width: 700px;
@@ -651,7 +651,7 @@ h2 {
 
 /* Estilos para el resumen */
 #vistaoferta .summary {
-  background-color: #e9ecef;
+  background-color: #f9f9f9;
   padding: 15px;
   margin: 20px 0;
   width: 100%; /* Asegura que ocupe todo el ancho disponible */
@@ -763,6 +763,66 @@ h2 {
   background-color: #f9f9f9;
 }
 
+/* Estilos del botón principal */
+.dropdown-toggle {
+  background-color: #343a40; /* Color oscuro para el botón */
+  color: #fff; /* Texto blanco */
+  border: none; /* Sin borde */
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px; /* Borde redondeado */
+}
+
+.dropdown-toggle:hover {
+  background-color: #495057; /* Color al pasar el mouse */
+}
+
+/* Estilos del menú desplegable */
+.dropdown-menu {
+  background-color: #f8f9fa; /* Fondo claro */
+  border: 1px solid #dee2e6; /* Borde gris claro */
+  border-radius: 5px; /* Borde redondeado */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  min-width: 200px; /* Ancho mínimo del dropdown */
+}
+
+/* Estilos de los items del menú */
+.dropdown-item {
+  color: #343a40; /* Texto oscuro */
+  padding: 10px 20px;
+  font-size: 14px; /* Tamaño de fuente */
+}
+
+.dropdown-item:hover {
+  background-color: #e9ecef; /* Fondo gris claro al pasar el mouse */
+  color: #000; /* Texto negro al pasar el mouse */
+}
+
+/* Estilos para el último item (opcional) */
+.dropdown-item:last-child {
+  border-top: 1px solid #dee2e6; /* Línea separadora para el último item */
+}
+
+/* Ajustes de espaciado para el dropdown */
+.dropdown-menu {
+  padding: 0; /* Sin padding adicional en el menú */
+}
+
+.dropdown-item {
+  margin: 0; /* Sin margen entre items */
+}
+
+/* Estilos para el botón cerrado */
+.dropdown-toggle::after {
+  margin-left: 10px;
+}
+
+/* Ajuste del botón al abrir el menú */
+.dropdown-toggle[aria-expanded="true"] {
+  background-color: #212529; /* Color al estar abierto */
+}
+
+
 /* Estilos generales para la tabla */
 table {
   width: 100%;
@@ -856,6 +916,65 @@ table tbody td:nth-child(2) {
   }
 }
 
+
+/* Estilos del botón principal */
+.dropdown-toggle {
+  background-color: #343a40; /* Color oscuro para el botón */
+  color: #fff; /* Texto blanco */
+  border: none; /* Sin borde */
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px; /* Borde redondeado */
+}
+
+.dropdown-toggle:hover {
+  background-color: #495057; /* Color al pasar el mouse */
+}
+
+/* Estilos del menú desplegable */
+.dropdown-menu {
+  background-color: #f8f9fa; /* Fondo claro */
+  border: 1px solid #dee2e6; /* Borde gris claro */
+  border-radius: 5px; /* Borde redondeado */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  min-width: 200px; /* Ancho mínimo del dropdown */
+}
+
+/* Estilos de los items del menú */
+.dropdown-item {
+  color: #343a40; /* Texto oscuro */
+  padding: 10px 20px;
+  font-size: 14px; /* Tamaño de fuente */
+}
+
+.dropdown-item:hover {
+  background-color: #e9ecef; /* Fondo gris claro al pasar el mouse */
+  color: #000; /* Texto negro al pasar el mouse */
+}
+
+/* Estilos para el último item (opcional) */
+.dropdown-item:last-child {
+  border-top: 1px solid #dee2e6; /* Línea separadora para el último item */
+}
+
+/* Ajustes de espaciado para el dropdown */
+.dropdown-menu {
+  padding: 0; /* Sin padding adicional en el menú */
+}
+
+.dropdown-item {
+  margin: 0; /* Sin margen entre items */
+}
+
+/* Estilos para el botón cerrado */
+.dropdown-toggle::after {
+  margin-left: 10px;
+}
+
+/* Ajuste del botón al abrir el menú */
+.dropdown-toggle[aria-expanded="true"] {
+  background-color: #212529; /* Color al estar abierto */
+}
 
 hr {
   margin: 1rem 0;

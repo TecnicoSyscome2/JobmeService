@@ -239,8 +239,29 @@ function limpiar(pFrase) {
   pFrase = pFrase.replace(/ú/g, '(u)');
   pFrase = pFrase.replace(/ñ/g, '(n)');
   pFrase = pFrase.replace(/Ñ/g, '(N)');
+  pFrase = pFrase.replace(/Á/g, '(A)');
+  pFrase = pFrase.replace(/É/g, '(E)');
+  pFrase = pFrase.replace(/Í/g, '(I)');
+  pFrase = pFrase.replace(/Ó/g, '(O)');
+  pFrase = pFrase.replace(/Ú/g, '(U)');
   pFrase = pFrase.replace(/<br>/g, '\n');
   return pFrase;
+}
+function desLimpiar(pDato) {
+  pDato = pDato.replace(/\(a\)/g, 'á');
+  pDato = pDato.replace(/\(e\)/g, 'é');
+  pDato = pDato.replace(/\(i\)/g, 'í');
+  pDato = pDato.replace(/\(o\)/g, 'ó');
+  pDato = pDato.replace(/\(u\)/g, 'ú');
+  pDato = pDato.replace(/\(n\)/g, 'ñ');
+  pDato = pDato.replace(/\(N\)/g, 'Ñ');
+  pDato = pDato.replace(/\(A\)/g, 'Á'); // Agregado
+  pDato = pDato.replace(/\(E\)/g, 'É'); // Agregado
+  pDato = pDato.replace(/\(I\)/g, 'Í'); // Agregado
+  pDato = pDato.replace(/\(O\)/g, 'Ó'); // Agregado
+  pDato = pDato.replace(/\(U\)/g, 'Ú'); // Agregado
+  pDato = pDato.replace(/\n/g, '<br>')
+  return pDato;
 }
 
 function cargarFormularioofertasempleo() {
@@ -463,6 +484,84 @@ function llenartipocontrato() {
         obtenerOfertaEmpleo(empresa);
       
       }
+
+            function cargarvistaoferta(empresa) {
+        // Código HTML del formulario
+        const formularioHTML = `
+         <input type="number"  id="idoferta" name="idoferta" value="" hidden>
+              <!-- Sección Título -->
+              <section class="job-title">
+                  <h2 id="titulo">Título de la Oferta</h2>
+                  
+              </section>
+            
+            
+        <section class="job-details">
+           <h3>Detalles del Empleo</h3>
+<p style="display: none;"><strong>Nombre de la Empresa: </strong> <span id="nombreempresa"></span></p>
+<p style="display: none;"><strong>Ubicación: </strong> <span id="ubicacion"></span></p>
+<p style="display: none;"><strong>Salario: </strong> De <span id="pagomin"></span> a <span id="pagomax"></span></p>
+<p style="display: none;"><strong>Oportunidad Disponible: </strong> Desde <span id="desde"></span> Hasta <span id="hasta"></span></p>
+<p style="display: none;"><strong>Tipo de Contrato:</strong> <span id="nombrecontrato"></span></p>
+<p style="display: none;"><strong>Disponibles: </strong> <span id="plazas"></span></p>
+<p style="display: none;"><strong>Edad Mínima: </strong> <span id="edadmin"></span></p>
+<p style="display: none;"><strong>Edad Máxima: </strong> <span id="edadmax"></span></p>
+<p style="display: none;"><strong>Nivel Educativo: </strong> <span id="nombreeduc"></span></p>
+        </section>
+        
+        <!-- Descripción de Epic Calling -->
+        <section class="job-epic-calling">
+          
+            <p id="epicCalling">Descripción del Epic Calling</p>
+        </section>
+
+<section class="job-offers" >
+
+</section>
+        <a  class="apply-button" onClick="aplicarofertas()">Aplicar Ahora</a>
+      <div class="summary" id="ofrecimientos">
+          <h4>Resumen del Puesto</h4>
+          <p><strong>Título:</strong> <span id="resumen-titulo">Desarrollador Full-Stack Senior</span></p>
+          <p><strong>Ubicación:</strong> <span id="resumen-ubicacion">Ciudad de México</span></p>
+          <p><strong>Salario:</strong> <span id="resumen-salario">$30,000 - $45,000 MXN</span></p>
+          <p><strong>Fechas:</strong> <span id="resumen-fechas">01/10/2024 - 01/10/2025</span></p>
+          <p><strong>Plazas:</strong> <span id="resumen-plazas">3</span></p>
+      </div>
+      
+      `;   
+        // Insertar el formulario en el div con id 'contenido'
+        document.getElementById("containesvistaoferta").innerHTML = formularioHTML;
+        // Llama a la función después de que el formulario haya sido cargado
+        obtenerOfertaEmpleo(empresa);
+      
+      }
+
+            function cargarvista() {
+        // Código HTML del formulario
+        const formularioHTML = `
+                        <div class="container-ofertas-empleador">
+                    <!-- Sección Izquierda: Ofertas de Empleo -->
+                    <div class="left-section-empleador"id="ofertasitem">
+
+            
+                        <!-- Más ofertas se pueden añadir aquí -->
+                    </div>
+            
+                    <!-- Sección Derecha: Aplicaciones de los Candidatos -->
+                    <div class="right-section-empleador" id="candidatositem">
+                      
+            
+                        <!-- Más aplicaciones se pueden añadir aquí -->
+                    </div>
+            </div>
+      
+      `;   
+        // Insertar el formulario en el div con id 'contenido'
+        document.getElementById("contenido").innerHTML = formularioHTML;
+        // Llama a la función después de que el formulario haya sido cargado
+        llenarofertas()
+      
+      }
       
       function modalshow(empresa) {
         
@@ -655,3 +754,10 @@ function llenartipocontrato() {
               })
               .catch(error => console.error('Error:', error));
             }
+
+           
+
+
+function goBack() {
+    window.history.go(-1); // Ir a la página anterior
+}
