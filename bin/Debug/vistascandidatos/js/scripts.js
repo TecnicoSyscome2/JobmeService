@@ -3,16 +3,14 @@
 
 //var _url = "http://localhost:9010/?";
 var _url = "http://192.168.1.35:9010/?"
+var _urlrutas = "http://192.168.1.35:9010/"
 function ActualizarPagina(url2) {
-  var _pagina = _url + url2;
+  var _pagina = _urlrutas + url2;
   fetch(_pagina)
   .then(response => response.text())
   .then(data => {
     document.getElementById("contenido").innerHTML = data;
-    if(url2="form_empleadoresinterno"){
-      cargarFormularioofertasempleo()
-     
-    }
+
 
   })
   .catch(error => console.error('Error:', error));
@@ -387,104 +385,122 @@ function cancelarofertas() {
     .catch(error => console.error('Error:', error));
   }
 
+  function cargarDatosCandidato() {
+    // Realizar la solicitud GET al servidor con el idCandidato como parámetro en la URL
+    fetch( _url + 'q=formulariodatoscandidato', {  // Reemplaza '/ruta/api/candidato' con la ruta correcta de tu servidor
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(candidatos => {
+        if (candidatos.length > 0) {
+            const candidato = candidatos[0]; // Usar el primer candidato recibido
+
+            // Seleccionar todos los elementos con la clase "data"
+            const campos = document.querySelectorAll('.data');
+
+            // Iterar sobre cada campo y rellenarlo dinámicamente
+            campos.forEach(campo => {
+                const campoId = campo.id; // Obtener el ID del campo
+                if (campoId && candidato.hasOwnProperty(campoId)) {
+                    if (campo.type === "date") {
+                        campo.value = candidato[campoId].split('T')[0]; // Ajustar el formato de la fecha
+                    } else {
+                        campo.value = candidato[campoId]; // Asignar el valor correspondiente
+                    }
+                }
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error al cargar los datos del candidato:', error);
+    });
+}
 
 
+function cargarvistadatoscandidato() {
+  // Código HTML del formulario
+  const formularioHTML = `
+       <div class="card-candidato">
+        <div class="card-header-candidato">Datos del Candidato</div>
+        <div class="card-body-candidato">
+            <!-- Espacio para la foto del candidato -->
+            <div class="foto-candidato">
+                <div class="foto-candidato-placeholder">
+                    <img src="path/to/foto.jpg" alt="Foto del Candidato">
+                </div>
+            </div>
 
-// function verimagen(codigo) {
-//   var _codigo = codigo;
+            <!-- Espacio para los datos personales -->
+            <div class="info-candidato">
+                <!-- Primera columna (Nombre, Apellido, Correo) -->
+                <div class="columna-datos">
+                    <div>
+                <label for="nombre">Nombre</label>
+                <input type="text" id="Nombre" class="data" disabled>
+            </div>
+            <div>
+                <label for="apellido">Apellido</label>
+                <input type="text" id="Apellido" class="data" disabled>
+            </div>
+            <div>
+                <label for="fech_nacim">Fecha de Nacimiento</label>
+                <input type="date" id="FechaNacimiento" class="data" disabled>
+            </div>
 
-//   $.ajax({
-//     url: _url + "q=verimg&id=" + _codigo,
-//     method: 'GET',
-//     xhrFields: {
-//       responseType: 'blob' // La respuesta se maneja como un blob
-//     },
-//     success: function (data) {
-//       // Crear una URL de objeto a partir del blob recibido
-//       var url = window.URL.createObjectURL(data);
+                </div>
+                
+                <!-- Segunda columna (Teléfono, LinkedIn) -->
+                <div class="columna-datos">
+                    <div>
+                <label for="telefono">Teléfono</label>
+                <input type="text" id="Telefono" class="data" disabled>
+            </div>
+            <div>
+                <label for="correo">Correo Electrónico</label>
+                <input type="email" id="Correo" class="data" disabled>
+            </div>
+            <div>
+                <label for="linkedin">LinkedIn</label>
+                <input type="text" id="LinkedIn" class="data" disabled>
+            </div>
+                </div>
+                <div class="columna-datos">
+                    <div>
+                        <label for="pais">País</label>
+                        <input type="text" id="pais" class="data" disabled>
+                    </div>
+                    <div>
+                        <label for="departamento">Departamento</label>
+                        <input type="text" id="departamento" class="data" disabled>
+                    </div>
+                    <div>
+                        <label for="municipio">Municipio</label>
+                        <input type="text" id="municipio" class="data" disabled>
+                    </div> 
+                </div>
+            </div>
+        </div>
 
-//       // Encontrar el div con id 'imgempl' y agregar una imagen dentro de él
-//       var imgDiv = document.getElementById('imgempl');
-//       imgDiv.innerHTML = ''; // Limpiar el contenido previo
-//       var img = document.createElement('img');
-//       img.src = url;
-//       img.alt = 'Imagen generada';
-//       img.style.maxWidth = '100%'; // Ajustar el tamaño de la imagen si es necesario
-//       img.style.width = '500px'; // Establecer el ancho del contenedor
-//       img.style.height = '500px'; // Establecer la altura del contenedor
-//       imgDiv.appendChild(img);
-
-
-
-//       // Liberar el objeto URL después de usarlo si ya no se necesita
-//       // window.URL.revokeObjectURL(url);
-//     },
-//     error: function (xhr, status, error) {
-//       console.error('Error al generar la imagen: ', status, error);
-//     }
-//   });
-
-// }
-
-
-
-
-// async function obtenerYLLenarOfertaEmpleo(idOferta) {
-//   try {
-//       const response = await fetch(`https://localhost:5001/api/ofertaempleo/${idOferta}`);
-//       const data = await response.json();
-      
-//       // Llamar a la función para llenar el formulario con los datos recibidos
-//       llenarFormularioOferta(data);
-//   } catch (error) {
-//       console.error('Error al obtener la oferta de empleo:', error);
-//   }
-// }
-
-// // Función para llenar los campos del formulario
-// function llenarFormularioOferta(data) {
-//   document.getElementById('id').value = data.Id;
-//   document.getElementById('titulo').value = data.Titulo;
-//   document.getElementById('ubicacion').value = data.Ubicacion;
-//   document.getElementById('pagomin').value = data.PagoMin;
-//   document.getElementById('pagomax').value = data.PagoMax;
-//   document.getElementById('idempress').value = data.IdEmpresa;
-//   document.getElementById('epiccalling').value = data.EpicCalling;
-//   document.getElementById('desde').value = data.Desde.split('T')[0]; // Fecha en formato YYYY-MM-DD
-//   document.getElementById('hasta').value = data.Hasta.split('T')[0];
-//   document.getElementById('plazas').value = data.Plazas;
-//   document.getElementById('contrato').value = data.Contrato;
-
-//   // Limpiar las listas de ofrecimientos y requisitos antes de llenarlas
-//   const ofrecimientosList = document.getElementById('ofrecimientos');
-//   ofrecimientosList.innerHTML = '';
-//   data.Ofrecimientos.forEach(ofrecimiento => {
-//       let li = document.createElement('li');
-//       li.textContent = ofrecimiento;
-//       ofrecimientosList.appendChild(li);
-//   });
-
-//   const requisitosList = document.getElementById('requisitos');
-//   requisitosList.innerHTML = '';
-//   data.Requisitos.forEach(requisito => {
-//       let li = document.createElement('li');
-//       li.textContent = requisito;
-//       requisitosList.appendChild(li);
-//   });
-// }
-// Obtener el modal y el botón de apertura/cierre
+        <!-- Espacio para otros datos debajo de la foto y datos personales -->
+        <div class="otros-datos">
 
 
-// Cerrar el modal cuando se hace clic fuera del contenido del modal
-// window.onclick = function(event) {
-//   if (event.target === modal) {
-//     modal.style.display = "none";
-//   }
-// }
+            <div>
+                <label for="cv">CV</label>
+                <input type="text" id="cv" disabled>
+            </div>
+        </div>
+    </div>
+</div>
+`;   
+  // Insertar el formulario en el div con id 'contenido'
+  document.getElementById("contenido").innerHTML = formularioHTML;
+  // Llama a la función después de que el formulario haya sido cargado
+  cargarDatosCandidato()
+
+}
 
 
-
-
-            // Obtener elementos del DOM
-       
-        

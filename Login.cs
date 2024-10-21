@@ -630,7 +630,7 @@ namespace JobmeServiceSyscome
                             {
                                 Console.WriteLine("Error" + ex.Message);
                             }
-                        }
+                        }                     
                     }
                     catch (Exception ex)
                     {

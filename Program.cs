@@ -568,6 +568,55 @@ namespace JobmeServiceSyscome
                             String Html = GenerarListaEmpleadores(dt);
                             ServeHTML(request.Response, Html);
                         }
+                        if (_q == "formulariodatoscandidato")
+                        {
+                            try
+                            {
+                                List<Candidato> _lista = new List<Candidato>();
+                                var _conn = Conexion();
+                                var _comm = Comando(_conn);
+                                DataTable _t = Query(String.Format("select * from candidato where usuario = '{0}'", sessionInfo.Username));
+                                foreach (DataRow _r in _t.Rows)
+                                {
+                                    Candidato _d = new Candidato();
+                                    _d.Usuario = _r[0].ToString();
+                                    _d.Nombre = _r[2].ToString();
+                                    _d.Apellido = _r[3].ToString();
+                                    _conn.Open();
+                                    _comm.CommandText = String.Format("Select nombre from pais where id = '{0}'", _r[4].ToString());
+                                    var pais = _comm.ExecuteReader();
+                                    pais.Read();
+                                    string _pais = pais.GetString(0);
+                                    _conn.Close();
+                                    _d.Pais = _pais;
+                                    _conn.Open();
+                                    _comm.CommandText = String.Format("Select nombre_departamento from departamento where id_departamento = '{0}'", _r[5].ToString());
+                                    var departamento = _comm.ExecuteReader();
+                                    departamento.Read();
+                                    string _departamento = departamento.GetString(0);
+                                    _conn.Close();
+                                    _d.Departamento = _departamento;
+                                    //_conn.Open();
+                                    //_comm.CommandText = String.Format("Select nombre_municipio from municipio where id_municipio = '{0}'", _r[6].ToString());
+                                    //var municipio = _comm.ExecuteReader();
+                                    //municipio.Read();
+                                    //string _municipio = municipio.GetString(0);
+                                    //_conn.Close();
+                                    //_d.Municipio = _municipio;
+                                    _d.FechaNacimiento = Convert.ToDateTime(_r[7].ToString());
+                                    _d.Telefono = _r[8].ToString();
+                                    _d.Correo = _r[9].ToString();
+                                    _d.LinkedIn = _r[10].ToString();
+                                    _lista.Add(_d);
+                                }
+                                ServerFileConJSON(request.Response, JsonConvert.SerializeObject(_lista));
+                                Console.WriteLine("Exito");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Error" + ex.Message);
+                            }
+                        }
                     }
                     catch (Exception ex) 
                     {
@@ -586,6 +635,10 @@ namespace JobmeServiceSyscome
                         if (url == " form_candidatos")
                         {
                             filePath = Path.Combine(rootDirectory, "form_candidatos.html");
+                        }
+                        if (url == "frm_perfil_candidato")
+                        {
+                            filePath = Path.Combine(rootDirectory, "views/frm_perfil_candidato.html");
                         }
                         if (url == "verimg")
                         {
@@ -644,6 +697,25 @@ namespace JobmeServiceSyscome
                 string json = JsonConvert.SerializeObject(data);
                 writer.Write(json);
                 writer.Flush();
+            }
+        }
+        private static void ServerFileConJSON(HttpListenerResponse response, string json)
+        {
+            try
+            {
+                byte[] buffer = Encoding.UTF8.GetBytes(json);
+                response.ContentType = "application/json";
+                response.ContentLength64 = buffer.Length;
+                response.OutputStream.Write(buffer, 0, buffer.Length);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error : {ex.Message}");
+                Serve500(response);
+            }
+            finally
+            {
+                response.OutputStream.Close();
             }
         }
         private static void ServeFile(HttpListenerResponse response, string filePath)
