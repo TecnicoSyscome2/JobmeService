@@ -419,6 +419,178 @@ function cancelarofertas() {
     });
 }
 
+async function subircv() {
+  const fileInput = document.getElementById('fileInput2');
+  const file = fileInput.files[0];
+  const nombre = document.getElementById('Nombre').value;
+  const apellido = document.getElementById('Apellido').value;
+  const url = _url; // Asegúrate de que _url2 esté definida correctamente
+  if (!file) {
+    document.getElementById('responseMessage').innerText = 'Please select a file first.';
+    return;
+  }
+  try {
+    // Convertir el archivo a base64
+    const base64String = await convertToBase64(file);
+
+    const data = {
+      q: 'guardarCV',
+      cv: base64String,
+      nombre: limpiar(nombre),
+      apellido: limpiar(apellido)
+    };
+
+    console.log("Datos enviados:", JSON.stringify(data)); // Verifica el contenido de 'data'
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (response.ok) {
+      const text = await response.text();
+      document.getElementById('responseMessage').innerText = text;
+    } else {
+      const errorText = await response.text();
+      console.error('Error de respuesta:', errorText);
+      document.getElementById('responseMessage').innerText = 'Failed to upload image.';
+    }
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    document.getElementById('responseMessage').innerText = 'Error uploading image.';
+  }
+}
+function convertToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = error => reject(error);
+    reader.readAsDataURL(file);
+  });
+}
+function vercv() {
+
+  var xhr = new XMLHttpRequest();
+
+
+  xhr.open('GET', _url + "q=descargarCV", true);
+  
+  xhr.responseType = 'blob'; // La respuesta se maneja como un blob
+  
+  xhr.onload = function() {
+      if (xhr.status === 200) {
+          // Crear una URL de objeto a partir del blob recibido
+          var url = window.URL.createObjectURL(xhr.response);
+          // Crear un enlace temporal para la descarga
+          window.open(url, '_blank');
+          // var a = document.createElement('a');
+          // a.href = url;
+          // a.download = 'cv.pdf'; // Nombre del archivo PDF
+          // document.body.appendChild(a); // Agregar el enlace al DOM
+          // a.click(); // Simular un clic para iniciar la descarga
+          // document.body.removeChild(a); // Eliminar el enlace del DOM
+      } else {
+          console.error('Error al generar el reporte: ', xhr.status, xhr.statusText);
+      }
+  };
+
+  xhr.onerror = function() {
+      console.error('Error en la solicitud.');
+  };
+
+  xhr.send();
+}
+
+
+
+async function SubirImagen() {
+  const fileInput = document.getElementById('fileInput');
+  const file = fileInput.files[0];
+  const nombre = document.getElementById('Nombre').value;
+  const url = _url; // Asegúrate de que _url2 esté definida correctamente
+
+  if (!file) {
+    document.getElementById('responseMessage').innerText = 'Please select a file first.';
+    return;
+  }
+  try {
+    const base64String = await convertToBase64empl(file);
+    const data = {
+      q: 'guardarImagen',
+      img: base64String,
+      nombre: limpiar(nombre),   
+    };
+    console.log("Datos enviados:", JSON.stringify(data)); // Verifica el contenido de 'data'
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (response.ok) {
+      const text = await response.text();
+      document.getElementById('responseMessage').innerText = text;
+    } else {
+      const errorText = await response.text();
+      console.error('Error de respuesta:', errorText);
+      document.getElementById('responseMessage').innerText = 'Failed to upload image.';
+    }
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    document.getElementById('responseMessage').innerText = 'Error uploading image.';
+  }
+}
+function convertToBase64empl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = error => reject(error);
+    reader.readAsDataURL(file);
+  });
+}
+
+
+function verimagen() {
+  var xhr = new XMLHttpRequest();
+  var _url = ''; // Asegúrate de definir la URL aquí
+
+  xhr.open('GET', _url + "/verimg", true);
+  xhr.responseType = 'blob'; // La respuesta se maneja como un blob
+
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      // Crear una URL de objeto a partir del blob recibido
+      var url = window.URL.createObjectURL(xhr.response);
+
+      // Encontrar el div con id 'imgempl' y agregar una imagen dentro de él
+      var imgDiv = document.getElementById('imgempl');
+      imgDiv.innerHTML = ''; // Limpiar el contenido previo
+
+      var img = document.createElement('img');
+      img.src = url;
+      img.alt = 'Imagen generada';
+      img.style.maxWidth = '100%'; // Ajustar el tamaño de la imagen si es necesario
+      img.style.width = '500px'; // Establecer el ancho del contenedor
+      img.style.height = '500px'; // Establecer la altura del contenedor
+      imgDiv.appendChild(img);
+
+      // Liberar el objeto URL después de usarlo si ya no se necesita
+      // window.URL.revokeObjectURL(url);
+    } else {
+      console.error('Error al generar la imagen: ', xhr.status, xhr.statusText);
+    }
+  };
+
+  xhr.onerror = function() {
+    console.error('Error en la solicitud.');
+  };
+
+  xhr.send();
+}
+
+
 
 function cargarvistadatoscandidato() {
   // Código HTML del formulario
@@ -429,8 +601,13 @@ function cargarvistadatoscandidato() {
             <!-- Espacio para la foto del candidato -->
             <div class="foto-candidato">
                 <div class="foto-candidato-placeholder">
-                    <img src="path/to/foto.jpg" alt="Foto del Candidato">
+                      <div id="imgempl" alt="Imagen" ></div>
+                   
                 </div>
+              <div class='row'>
+                <a  class="apply-button " onClick="SubirImagen()">Subir Imagen</a>
+                <input class="col-md"  type="file" id="fileInput" name="image" accept="image/*" >
+              </div>
             </div>
 
             <!-- Espacio para los datos personales -->
@@ -439,15 +616,15 @@ function cargarvistadatoscandidato() {
                 <div class="columna-datos">
                     <div>
                 <label for="nombre">Nombre</label>
-                <input type="text" id="Nombre" class="data" disabled>
+                <input type="text" id="Nombre" class="data" >
             </div>
             <div>
                 <label for="apellido">Apellido</label>
-                <input type="text" id="Apellido" class="data" disabled>
+                <input type="text" id="Apellido" class="data" >
             </div>
             <div>
                 <label for="fech_nacim">Fecha de Nacimiento</label>
-                <input type="date" id="FechaNacimiento" class="data" disabled>
+                <input type="date" id="FechaNacimiento" class="data" >
             </div>
 
                 </div>
@@ -456,29 +633,29 @@ function cargarvistadatoscandidato() {
                 <div class="columna-datos">
                     <div>
                 <label for="telefono">Teléfono</label>
-                <input type="text" id="Telefono" class="data" disabled>
+                <input type="text" id="Telefono" class="data" >
             </div>
             <div>
                 <label for="correo">Correo Electrónico</label>
-                <input type="email" id="Correo" class="data" disabled>
+                <input type="email" id="Correo" class="data" >
             </div>
             <div>
                 <label for="linkedin">LinkedIn</label>
-                <input type="text" id="LinkedIn" class="data" disabled>
+                <input type="text" id="LinkedIn" class="data" >
             </div>
                 </div>
                 <div class="columna-datos">
                     <div>
                         <label for="pais">País</label>
-                        <input type="text" id="pais" class="data" disabled>
+                        <input type="text" id="Pais" class="data" >
                     </div>
                     <div>
                         <label for="departamento">Departamento</label>
-                        <input type="text" id="departamento" class="data" disabled>
+                        <input type="text" id="Departamento" class="data" >
                     </div>
                     <div>
                         <label for="municipio">Municipio</label>
-                        <input type="text" id="municipio" class="data" disabled>
+                        <input type="text" id="Municipio" class="data" >
                     </div> 
                 </div>
             </div>
@@ -488,10 +665,17 @@ function cargarvistadatoscandidato() {
         <div class="otros-datos">
 
 
-            <div>
+            <div class="row">
                 <label for="cv">CV</label>
-                <input type="text" id="cv" disabled>
+                  <input type="file" id="fileInput2" name="cv" accept=".pdf" >
+                   <div>
+             <a  class="apply-button " onClick="subircv()">Subir PDF</a>
+             <a  class="apply-button " onClick="vercv()">Ver CV</a>
+            
+             </div>
             </div>
+            
+            
         </div>
     </div>
 </div>
@@ -500,7 +684,7 @@ function cargarvistadatoscandidato() {
   document.getElementById("contenido").innerHTML = formularioHTML;
   // Llama a la función después de que el formulario haya sido cargado
   cargarDatosCandidato()
-
+  verimagen()
 }
 
 

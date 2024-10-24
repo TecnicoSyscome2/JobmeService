@@ -630,7 +630,104 @@ namespace JobmeServiceSyscome
                             {
                                 Console.WriteLine("Error" + ex.Message);
                             }
-                        }                     
+                        }
+                        if (_q == "guardarImagen")
+                        {
+
+                            bool b = false;
+                            String msj = "Error";
+                            String logodataexist = (string)json["img"];
+                            string _nombre = (string)json["nombre"];
+                            string _idcandidato = sessionInfo.Username;
+                            String logo = (string)json["img"];
+
+                            if (!string.IsNullOrEmpty(logodataexist))
+                            {                            
+                                string directorioBase = Path.Combine(Environment.CurrentDirectory, "IMAGENCANDIDATO");
+                                //La direccion de abajo es la ruta de pruebas local (Josue Lopez)
+                                //String directorioBase = Path.Combine("C:\\", "Users", "PC", "Documents", "Github", "BancoopreEstandar", "BancoopreWeb00", "Imagenes", "MaeascoDui");
+                                if (!Directory.Exists(directorioBase))
+                                {
+                                    Directory.CreateDirectory(directorioBase);
+                                }
+
+                                byte[] imageBytes = Convert.FromBase64String(logo);
+                                string fileType = _c.TipoArch(imageBytes);
+                                String ext = fileType == "PDF" ? ".pdf" : ".png";
+                                //File.WriteAllBytes(directorioBase, imageBytes);
+                                String ruta = "_E-" + DesLimpiar(_nombre) + ext;
+                                File.WriteAllBytes(Path.Combine(directorioBase + "\\" + "_E-" + DesLimpiar(_nombre) + ext), imageBytes);
+                                String _insert = String.Format("update candidato set rutaimg = '{0}' where usuario = '{1}'",
+                                      ruta, _idcandidato);
+                                var _conn = _c.Conexion3();
+                                var _comm = _c.Comando3(_conn);
+
+
+
+
+                                _conn.Open();
+                                _comm.CommandText = _insert;
+                                try
+                                {
+                                    _comm.ExecuteNonQuery();
+                                    _conn.Close();
+                                }
+                                catch (Exception ex)
+                                {
+                                    //ServeHTMLError(request.Response, ex.Message);
+                                    Console.WriteLine("Error al guardar la imagen: " + ex.Message);
+                                    b = false;
+                                }
+
+                            }
+                        }
+                        if (_q == "guardarCV")
+                        {
+
+                            bool b = false;
+                            String msj = "Error";
+                            String cvdataexist = (string)json["cv"];
+                            string _nombre = (string)json["nombre"];
+                            string _apellido = (string)json["apellido"];
+                            String _usuario = sessionInfo.Username;
+                            String cv = (string)json["cv"];
+                            if (!string.IsNullOrEmpty(cvdataexist))
+                            {
+                                _nombre = _nombre + "-" + _apellido;
+                                string directorioBase = Path.Combine(Environment.CurrentDirectory, "CV");
+                                //La direccion de abajo es la ruta de pruebas local (Josue Lopez)
+                                //String directorioBase = Path.Combine("C:\\", "Users", "PC", "Documents", "Github", "BancoopreEstandar", "BancoopreWeb00", "Imagenes", "MaeascoDui");
+                                if (!Directory.Exists(directorioBase))
+                                {
+                                    Directory.CreateDirectory(directorioBase);
+                                }
+
+                                byte[] imageBytes = Convert.FromBase64String(cv);
+                                string fileType = _c.TipoArch(imageBytes);
+                                String ext = fileType == "PDF" ? ".pdf" : ".png";
+                                //File.WriteAllBytes(directorioBase, imageBytes);
+                                String ruta = _usuario + "_N-" + DesLimpiar(_nombre) + ext;
+                                File.WriteAllBytes(Path.Combine(directorioBase + "\\" + _usuario + "_N-" +DesLimpiar(_nombre) + ext), imageBytes);
+                                string _insert = String.Format(@"UPDATE cv_candidatos SET nombre = '{0}', rutacv = '{1}' " +
+                                    "WHERE usuario = '{2}';",
+                                     _nombre, ruta, _usuario);
+                                var _conn = _c.Conexion3();
+                                var _comm = _c.Comando3(_conn);
+                                _conn.Open();
+                                _comm.CommandText = _insert;
+                                try
+                                {
+                                    _comm.ExecuteNonQuery();
+                                    _conn.Close();
+                                }
+                                catch (Exception ex)
+                                {
+                                    //ServeHTMLError(request.Response, ex.Message);
+                                    Console.WriteLine("Error al guardar el cv");                               
+                                }                               
+                            }                         
+                        }
+
                     }
                     catch (Exception ex)
                     {
@@ -679,7 +776,7 @@ namespace JobmeServiceSyscome
                         Program _c = new Program();      
                         String _insert = "";
                        
-                        if (_q == "guardarImagenes")
+                        if (_q == "guardarCV")
                         {
 
                             bool b = false;
@@ -874,7 +971,105 @@ namespace JobmeServiceSyscome
                                 Console.WriteLine("Error al guardar datos: " + ex.Message);
                             }
                         }
+                        if (_q == "agregar_sin_app")
+                        {
+                            string nombre = query["nombre"];
+                            string telefono = query["telefono"];
+                            string correo = query["correo"];
+                           
 
+                            try
+                            {
+                                String _tabla = "candidatos_sin";
+                                String _insert = "REPLACE INTO " + _tabla + " (nombre, telefono, correo) VALUES (@nombre, @telefono, @correo)";
+
+                                using (var _conn = Conexion())
+                                using (var _comm = Comando(_conn))
+                                {
+                                    _comm.CommandText = _insert;
+                                    _comm.Parameters.AddWithValue("@nombre", nombre);
+                                    _comm.Parameters.AddWithValue("@telefono", telefono);
+                                    _comm.Parameters.AddWithValue("@correo", correo);
+
+                                    _conn.Open();
+                                    _comm.ExecuteNonQuery();
+                                    ServeHTML(request.Response, "Registro Guardado Con éxito");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Error al guardar datos: " + ex.Message);
+                                ServeHTMLError(request.Response, ex.Message);
+                            }
+                        }
+                        if (_q == "cancelaroferta_sin app")
+                        {
+                            try
+                            {
+                                //string idoferta = query["idoferta"];
+                                //string idcandidato = sessionInfo.Username;
+                                //string fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                                //var _conn = Conexion();
+                                //var _comm = Comando(_conn);
+                                ////_conn.Open();
+                                ////_comm.CommandText = String.Format("Select id from aplicarofertas where idcandidato = '{0}' and idoferta = '{1}'", idcandidato, idoferta);
+                                ////var aplicacion = _comm.ExecuteScalar();
+                                ////string _aplicacion = aplicacion.ToString();
+                                ////_conn.Close();
+                                //_conn.Open();
+                                //_comm.CommandText = String.Format(@"UPDATE ofertasempleo SET activo = '0' WHERE id = '{0}';", idoferta);
+                                //_comm.ExecuteNonQuery();
+                                //_conn.Close();
+                                //_conn.Dispose();
+                                //ServeHTML(request.Response, "Cancelacion de solicitud de oferta exitoso");
+                            }
+                            catch (Exception ex)
+                            {
+                                ServeHTML(request.Response, "Upss, Ocurrio un problema por favor intentelo de nuevo");
+                            }
+
+                        }
+                        if (_q == "reactivaroferta_sin_app")
+                        {
+                            //string idoferta = query["idoferta"];
+                            //string idcandidato = sessionInfo.Username;
+                            //string fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                            //var _conn = Conexion();
+                            //var _comm = Comando(_conn);
+                            ////_conn.Open();
+                            ////_comm.CommandText = String.Format("Select id from aplicarofertas where usuario = '{0}' and idoferta = '{1}'", idcandidato, idoferta);
+                            ////var aplicacion = _comm.ExecuteScalar();
+                            ////string _aplicacion = aplicacion.ToString();
+                            ////_conn.Close();
+                            //_conn.Open();
+                            //_comm.CommandText = String.Format(@"UPDATE ofertasempleo SET activo = '1' WHERE id = '{0}';", idoferta);
+                            //_comm.ExecuteNonQuery();
+                            //_conn.Close();
+                            //_conn.Dispose();
+                            //ServeHTML(request.Response, "exito");
+                        }
+                        if (_q == "listaofertasempleo_sin_app")
+                        {
+                            String empresa = query["empresa"];
+                            String nombre = query["nombre"];
+                            String cons = String.Format(@"SELECT * FROM ofertasempleo where idempress = {0}", empresa
+                            );
+                            DataTable dt = new DataTable();
+                            dt = Query(cons);
+                    
+                            ServerFileConJSON(request.Response, JsonConvert.SerializeObject(dt));
+                        }
+                        if (_q == "listaempresas_sin_app")
+                        {
+                            String empresa = query["empresa"];
+                            String nombre = query["nombre"];
+                            String cons = String.Format(@"SELECT * FROM empleador"
+                            );
+                            DataTable dt = new DataTable();
+                            dt = Query(cons);
+                 
+                            ServerFileConJSON(request.Response, JsonConvert.SerializeObject(dt));
+                        }
                         if (_q == "agregar_sin_empleador")
                         {
                             DataTable t = JsonConvert.DeserializeObject<DataTable>(query["datos"]);
@@ -1076,6 +1271,42 @@ namespace JobmeServiceSyscome
                 response.OutputStream.Close();
             }
         }
+
+        public static string Limpiar(string pFrase)
+        {
+            pFrase = pFrase.Replace("á", "(a)");
+            pFrase = pFrase.Replace("é", "(e)");
+            pFrase = pFrase.Replace("í", "(i)");
+            pFrase = pFrase.Replace("ó", "(o)");
+            pFrase = pFrase.Replace("ú", "(u)");
+            pFrase = pFrase.Replace("ñ", "(n)");
+            pFrase = pFrase.Replace("Ñ", "(N)");
+            pFrase = pFrase.Replace("Á", "(A)");
+            pFrase = pFrase.Replace("É", "(E)");
+            pFrase = pFrase.Replace("Í", "(I)");
+            pFrase = pFrase.Replace("Ó", "(O)");
+            pFrase = pFrase.Replace("Ú", "(U)");
+            pFrase = pFrase.Replace("<br>", "\n");
+            return pFrase;
+        }
+        public static String DesLimpiar(String pDato)
+        {
+            pDato = pDato.Replace("(a)", "á");
+            pDato = pDato.Replace("(e)", "é");
+            pDato = pDato.Replace("(i)", "í");
+            pDato = pDato.Replace("(o)", "ó");
+            pDato = pDato.Replace("(u)", "ú");
+            pDato = pDato.Replace("(n)", "ñ");
+            pDato = pDato.Replace("(N)", "Ñ");
+            pDato = pDato.Replace("(A)", "Á"); // Agregado
+            pDato = pDato.Replace("(E)", "É"); // Agregado
+            pDato = pDato.Replace("(I)", "Í"); // Agregado
+            pDato = pDato.Replace("(O)", "Ó"); // Agregado
+            pDato = pDato.Replace("(U)", "Ú"); // Agregado
+            pDato = pDato.Replace("\n", "<br>");
+            return pDato;
+        }
+
         private static string GetContentType(string filePath)
         {
             // Determina el tipo de contenido en función de la extensión del archivo

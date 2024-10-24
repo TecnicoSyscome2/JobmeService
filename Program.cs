@@ -596,13 +596,13 @@ namespace JobmeServiceSyscome
                                     string _departamento = departamento.GetString(0);
                                     _conn.Close();
                                     _d.Departamento = _departamento;
-                                    //_conn.Open();
-                                    //_comm.CommandText = String.Format("Select nombre_municipio from municipio where id_municipio = '{0}'", _r[6].ToString());
-                                    //var municipio = _comm.ExecuteReader();
-                                    //municipio.Read();
-                                    //string _municipio = municipio.GetString(0);
-                                    //_conn.Close();
-                                    //_d.Municipio = _municipio;
+                                    _conn.Open();
+                                    _comm.CommandText = String.Format("Select nombre_distrito from distrito where id_distrito = '{0}'", _r[6].ToString());
+                                    var municipio = _comm.ExecuteReader();
+                                    municipio.Read();
+                                    string _municipio = municipio.GetString(0);
+                                    _conn.Close();
+                                    _d.Municipio = _municipio;
                                     _d.FechaNacimiento = Convert.ToDateTime(_r[7].ToString());
                                     _d.Telefono = _r[8].ToString();
                                     _d.Correo = _r[9].ToString();
@@ -616,6 +616,11 @@ namespace JobmeServiceSyscome
                             {
                                 Console.WriteLine("Error" + ex.Message);
                             }
+                        }
+                        if (_q == "descargarCV") {
+                             string archivo = EjecutarConsultastring(String.Format("Select rutacv from cv_candidatos where usuario = '{0}'", sessionInfo.Username));
+                             string ruta = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CV/" + archivo);
+                            ServeFile(request.Response, ruta);
                         }
                     }
                     catch (Exception ex) 
@@ -644,20 +649,19 @@ namespace JobmeServiceSyscome
                         {
                             string originalString = url3;
                             string modifiedString = originalString.Replace("?", "");
-                            String _codigo = modifiedString;
+                            String _usuarioid = sessionInfo.Username;
                             String _ruta = "";
                             var _conn = Conexion();
                             var _comm = Comando(_conn);
-
                             _conn.Open();
-                            _comm.CommandText = String.Format("Select ruta from emplimg where codempl = {0}", _codigo);
+                            _comm.CommandText = String.Format("Select rutaimg from candidato where usuario = '{0}'", _usuarioid);
                             var ruta = _comm.ExecuteReader();
                             ruta.Read();
                             _ruta = ruta.GetString(0);
 
                             _conn.Close();
                             _conn.Dispose();
-                            filePath = Path.Combine(Directory.GetCurrentDirectory(), "images", _ruta);
+                            filePath = Path.Combine(Directory.GetCurrentDirectory(), "IMAGENCANDIDATO", _ruta);
                         }
                         if (File.Exists(filePath))
                         {
